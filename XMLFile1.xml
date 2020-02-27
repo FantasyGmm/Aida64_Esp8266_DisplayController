@@ -1,0 +1,692 @@
+﻿<AIDA>
+  <sys>
+    <id>SDATE</id>
+    <label>Date</label>
+    <value>2020/2/25</value>
+  </sys>
+  <sys>
+    <id>STIME</id>
+    <label>Time</label>
+    <value>23:53:42</value>
+  </sys>
+  <sys>
+    <id>STIMENS</id>
+    <label>Time (HH:MM)</label>
+    <value>23:53</value>
+  </sys>
+  <sys>
+    <id>SUPTIME</id>
+    <label>UpTime</label>
+    <value>12:30:43</value>
+  </sys>
+  <sys>
+    <id>SUPTIMENS</id>
+    <label>UpTime (HH:MM)</label>
+    <value>12:30</value>
+  </sys>
+  <sys>
+    <id>SCPUCLK</id>
+    <label>CPU Clock</label>
+    <value>4275</value>
+  </sys>
+  <sys>
+    <id>SCC-1-1</id>
+    <label>CPU Core #1 Clock</label>
+    <value>4275</value>
+  </sys>
+  <sys>
+    <id>SCC-1-2</id>
+    <label>CPU Core #2 Clock</label>
+    <value>4250</value>
+  </sys>
+  <sys>
+    <id>SCC-1-3</id>
+    <label>CPU Core #3 Clock</label>
+    <value>4250</value>
+  </sys>
+  <sys>
+    <id>SCC-1-4</id>
+    <label>CPU Core #4 Clock</label>
+    <value>4250</value>
+  </sys>
+  <sys>
+    <id>SCC-1-5</id>
+    <label>CPU Core #5 Clock</label>
+    <value>4250</value>
+  </sys>
+  <sys>
+    <id>SCC-1-6</id>
+    <label>CPU Core #6 Clock</label>
+    <value>4250</value>
+  </sys>
+  <sys>
+    <id>SCC-1-7</id>
+    <label>CPU Core #7 Clock</label>
+    <value>3600</value>
+  </sys>
+  <sys>
+    <id>SCC-1-8</id>
+    <label>CPU Core #8 Clock</label>
+    <value>4250</value>
+  </sys>
+  <sys>
+    <id>SCPUMUL</id>
+    <label>CPU Multiplier</label>
+    <value>42.75</value>
+  </sys>
+  <sys>
+    <id>SCPUFSB</id>
+    <label>CPU FSB</label>
+    <value>100</value>
+  </sys>
+  <sys>
+    <id>SMEMCLK</id>
+    <label>Memory Clock</label>
+    <value>1600</value>
+  </sys>
+  <sys>
+    <id>SMEMSPEED</id>
+    <label>Memory Speed</label>
+    <value>DDR4-3200</value>
+  </sys>
+  <sys>
+    <id>SDRAMFSB</id>
+    <label>DRAM:FSB Ratio</label>
+    <value>48:3</value>
+  </sys>
+  <sys>
+    <id>SMEMTIM</id>
+    <label>Memory Timings</label>
+    <value>18-20-20-36 CR1</value>
+  </sys>
+  <sys>
+    <id>SBIOSVER</id>
+    <label>BIOS Version</label>
+    <value>2.60</value>
+  </sys>
+  <sys>
+    <id>SCPUUTI</id>
+    <label>CPU Utilization</label>
+    <value>2</value>
+  </sys>
+  <sys>
+    <id>SCPU1UTI</id>
+    <label>CPU1 Utilization</label>
+    <value>15</value>
+  </sys>
+  <sys>
+    <id>SCPU2UTI</id>
+    <label>CPU2 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU3UTI</id>
+    <label>CPU3 Utilization</label>
+    <value>10</value>
+  </sys>
+  <sys>
+    <id>SCPU4UTI</id>
+    <label>CPU4 Utilization</label>
+    <value>15</value>
+  </sys>
+  <sys>
+    <id>SCPU5UTI</id>
+    <label>CPU5 Utilization</label>
+    <value>10</value>
+  </sys>
+  <sys>
+    <id>SCPU6UTI</id>
+    <label>CPU6 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU7UTI</id>
+    <label>CPU7 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU8UTI</id>
+    <label>CPU8 Utilization</label>
+    <value>21</value>
+  </sys>
+  <sys>
+    <id>SCPU9UTI</id>
+    <label>CPU9 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU10UTI</id>
+    <label>CPU10 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU11UTI</id>
+    <label>CPU11 Utilization</label>
+    <value>5</value>
+  </sys>
+  <sys>
+    <id>SCPU12UTI</id>
+    <label>CPU12 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU13UTI</id>
+    <label>CPU13 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU14UTI</id>
+    <label>CPU14 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU15UTI</id>
+    <label>CPU15 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SCPU16UTI</id>
+    <label>CPU16 Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SMEMUTI</id>
+    <label>Memory Utilization</label>
+    <value>50</value>
+  </sys>
+  <sys>
+    <id>SUSEDMEM</id>
+    <label>Used Memory</label>
+    <value>8116</value>
+  </sys>
+  <sys>
+    <id>SFREEMEM</id>
+    <label>Free Memory</label>
+    <value>8221</value>
+  </sys>
+  <sys>
+    <id>SVIRTMEMUTI</id>
+    <label>Virtual Memory Utilization</label>
+    <value>59</value>
+  </sys>
+  <sys>
+    <id>SUSEDVIRTMEM</id>
+    <label>Used Virtual Memory</label>
+    <value>14231</value>
+  </sys>
+  <sys>
+    <id>SFREEVIRTMEM</id>
+    <label>Free Virtual Memory</label>
+    <value>9786</value>
+  </sys>
+  <sys>
+    <id>SPROCESSES</id>
+    <label>Processes</label>
+    <value>270</value>
+  </sys>
+  <sys>
+    <id>SUSERS</id>
+    <label>Users</label>
+    <value>1</value>
+  </sys>
+  <sys>
+    <id>SDRVCUTI</id>
+    <label>Drive C: Utilization</label>
+    <value>45</value>
+  </sys>
+  <sys>
+    <id>SDRVCUSEDSPC</id>
+    <label>Drive C: Used Space</label>
+    <value>108</value>
+  </sys>
+  <sys>
+    <id>SDRVCFREESPC</id>
+    <label>Drive C: Free Space</label>
+    <value>130</value>
+  </sys>
+  <sys>
+    <id>SDRVDUTI</id>
+    <label>Drive D: Utilization</label>
+    <value>31</value>
+  </sys>
+  <sys>
+    <id>SDRVDUSEDSPC</id>
+    <label>Drive D: Used Space</label>
+    <value>30.8</value>
+  </sys>
+  <sys>
+    <id>SDRVDFREESPC</id>
+    <label>Drive D: Free Space</label>
+    <value>69.2</value>
+  </sys>
+  <sys>
+    <id>SDRVFUTI</id>
+    <label>Drive F: Utilization</label>
+    <value>84</value>
+  </sys>
+  <sys>
+    <id>SDRVFUSEDSPC</id>
+    <label>Drive F: Used Space</label>
+    <value>393</value>
+  </sys>
+  <sys>
+    <id>SDRVFFREESPC</id>
+    <label>Drive F: Free Space</label>
+    <value>72.8</value>
+  </sys>
+  <sys>
+    <id>SDRVGUTI</id>
+    <label>Drive G: Utilization</label>
+    <value>90</value>
+  </sys>
+  <sys>
+    <id>SDRVGUSEDSPC</id>
+    <label>Drive G: Used Space</label>
+    <value>918</value>
+  </sys>
+  <sys>
+    <id>SDRVGFREESPC</id>
+    <label>Drive G: Free Space</label>
+    <value>106</value>
+  </sys>
+  <sys>
+    <id>SDRVHUTI</id>
+    <label>Drive H: Utilization</label>
+    <value>72</value>
+  </sys>
+  <sys>
+    <id>SDRVHUSEDSPC</id>
+    <label>Drive H: Used Space</label>
+    <value>360</value>
+  </sys>
+  <sys>
+    <id>SDRVHFREESPC</id>
+    <label>Drive H: Free Space</label>
+    <value>140</value>
+  </sys>
+  <sys>
+    <id>SDRVIUTI</id>
+    <label>Drive I: Utilization</label>
+    <value>21</value>
+  </sys>
+  <sys>
+    <id>SDRVIUSEDSPC</id>
+    <label>Drive I: Used Space</label>
+    <value>50.7</value>
+  </sys>
+  <sys>
+    <id>SDRVIFREESPC</id>
+    <label>Drive I: Free Space</label>
+    <value>188</value>
+  </sys>
+  <sys>
+    <id>SSMASTA</id>
+    <label>SMART Status</label>
+    <value>OK</value>
+  </sys>
+  <sys>
+    <id>SDSK1ACT</id>
+    <label>Disk 1 Activity</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SDSK1READSPD</id>
+    <label>Disk 1 Read Speed</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SDSK1WRITESPD</id>
+    <label>Disk 1 Write Speed</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SDSK2ACT</id>
+    <label>Disk 2 Activity</label>
+    <value>1</value>
+  </sys>
+  <sys>
+    <id>SDSK2READSPD</id>
+    <label>Disk 2 Read Speed</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SDSK2WRITESPD</id>
+    <label>Disk 2 Write Speed</label>
+    <value>0.1</value>
+  </sys>
+  <sys>
+    <id>SDSK3ACT</id>
+    <label>Disk 3 Activity</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SDSK3READSPD</id>
+    <label>Disk 3 Read Speed</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SDSK3WRITESPD</id>
+    <label>Disk 3 Write Speed</label>
+    <value>0.1</value>
+  </sys>
+  <sys>
+    <id>SGPU1CLK</id>
+    <label>GPU Clock</label>
+    <value>139</value>
+  </sys>
+  <sys>
+    <id>SGPU1MEMCLK</id>
+    <label>GPU Memory Clock</label>
+    <value>202</value>
+  </sys>
+  <sys>
+    <id>SGPU1UTI</id>
+    <label>GPU Utilization</label>
+    <value>2</value>
+  </sys>
+  <sys>
+    <id>SGPU1MCUTI</id>
+    <label>GPU MC Utilization</label>
+    <value>3</value>
+  </sys>
+  <sys>
+    <id>SGPU1VEUTI</id>
+    <label>GPU VE Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SGPU1BIUTI</id>
+    <label>GPU BI Utilization</label>
+    <value>0</value>
+  </sys>
+  <sys>
+    <id>SGPU1USEDDEMEM</id>
+    <label>GPU Used Dedicated Memory</label>
+    <value>934</value>
+  </sys>
+  <sys>
+    <id>SGPU1USEDDYMEM</id>
+    <label>GPU Used Dynamic Memory</label>
+    <value>31</value>
+  </sys>
+  <sys>
+    <id>SGPU1BUSTYP</id>
+    <label>GPU Bus Type</label>
+    <value>PCI-E 3.0 x16 @ 1.1 x16</value>
+  </sys>
+  <sys>
+    <id>SGPU1PERFCAP</id>
+    <label>GPU PerfCap Reason</label>
+    <value>Utilization</value>
+  </sys>
+  <sys>
+    <id>SVMEMUSAGE</id>
+    <label>Video Memory Utilization</label>
+    <value>17</value>
+  </sys>
+  <sys>
+    <id>SUSEDVMEM</id>
+    <label>Used Video Memory</label>
+    <value>1019</value>
+  </sys>
+  <sys>
+    <id>SFREEVMEM</id>
+    <label>Free Video Memory</label>
+    <value>5125</value>
+  </sys>
+  <sys>
+    <id>SSLISTA</id>
+    <label>SLI Status</label>
+    <value>ÒÑ½ûÓÃ</value>
+  </sys>
+  <sys>
+    <id>SPRIIPADDR</id>
+    <label>Primary IP Address</label>
+    <value>192.168.31.148</value>
+  </sys>
+  <sys>
+    <id>SEXTIPADDR</id>
+    <label>External IP Address</label>
+    <value>118.113.132.193</value>
+  </sys>
+  <sys>
+    <id>SNIC1DLRATE</id>
+    <label>NIC1 Download Rate</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC1ULRATE</id>
+    <label>NIC1 Upload Rate</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC1TOTDL</id>
+    <label>NIC1 Total Download</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC1TOTUL</id>
+    <label>NIC1 Total Upload</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC1CONNSPD</id>
+    <label>NIC1 Connection Speed</label>
+    <value>10</value>
+  </sys>
+  <sys>
+    <id>SNIC2DLRATE</id>
+    <label>NIC2 Download Rate</label>
+    <value>1.1</value>
+  </sys>
+  <sys>
+    <id>SNIC2ULRATE</id>
+    <label>NIC2 Upload Rate</label>
+    <value>1.2</value>
+  </sys>
+  <sys>
+    <id>SNIC2TOTDL</id>
+    <label>NIC2 Total Download</label>
+    <value>8109.8</value>
+  </sys>
+  <sys>
+    <id>SNIC2TOTUL</id>
+    <label>NIC2 Total Upload</label>
+    <value>1968.9</value>
+  </sys>
+  <sys>
+    <id>SNIC2CONNSPD</id>
+    <label>NIC2 Connection Speed</label>
+    <value>1000</value>
+  </sys>
+  <sys>
+    <id>SNIC3DLRATE</id>
+    <label>NIC3 Download Rate</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC3ULRATE</id>
+    <label>NIC3 Upload Rate</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC3TOTDL</id>
+    <label>NIC3 Total Download</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC3TOTUL</id>
+    <label>NIC3 Total Upload</label>
+    <value>0.0</value>
+  </sys>
+  <sys>
+    <id>SNIC3CONNSPD</id>
+    <label>NIC3 Connection Speed</label>
+    <value>100</value>
+  </sys>
+  <sys>
+    <id>SDESKRES</id>
+    <label>Desktop Resolution</label>
+    <value>1920 x 1080</value>
+  </sys>
+  <sys>
+    <id>SVREFRATE</id>
+    <label>Vertical Refresh Rate</label>
+    <value>60</value>
+  </sys>
+  <sys>
+    <id>SMASTVOL</id>
+    <label>Master Volume</label>
+    <value>6</value>
+  </sys>
+  <sys>
+    <id>SBATT</id>
+    <label>Battery</label>
+    <value>No Battery</value>
+  </sys>
+  <sys>
+    <id>SRTSSFPS</id>
+    <label>RTSS FPS</label>
+    <value>0</value>
+  </sys>
+  <temp>
+    <id>TMOBO</id>
+    <label>Motherboard</label>
+    <value>42</value>
+  </temp>
+  <temp>
+    <id>TCPU</id>
+    <label>CPU</label>
+    <value>59</value>
+  </temp>
+  <temp>
+    <id>TCPUDIO</id>
+    <label>CPU Diode</label>
+    <value>60</value>
+  </temp>
+  <temp>
+    <id>TEC1</id>
+    <label>EC1</label>
+    <value>0</value>
+  </temp>
+  <temp>
+    <id>TEC2</id>
+    <label>EC2</label>
+    <value>0</value>
+  </temp>
+  <temp>
+    <id>TGPU1DIO</id>
+    <label>GPU Diode</label>
+    <value>40</value>
+  </temp>
+  <temp>
+    <id>THDD1</id>
+    <label>WDC WD5000AAKX-08U6AA0</label>
+    <value>38</value>
+  </temp>
+  <temp>
+    <id>THDD2</id>
+    <label>WDC WD20EZRZ-00Z5HB0</label>
+    <value>38</value>
+  </temp>
+  <temp>
+    <id>THDD3</id>
+    <label>SAMSUNG MZVLW256HEHP-00000</label>
+    <value>42</value>
+  </temp>
+  <fan>
+    <id>FCPU</id>
+    <label>CPU</label>
+    <value>1146</value>
+  </fan>
+  <fan>
+    <id>FGPU1</id>
+    <label>GPU</label>
+    <value>0</value>
+  </fan>
+  <duty>
+    <id>DGPU1</id>
+    <label>GPU</label>
+    <value>0</value>
+  </duty>
+  <volt>
+    <id>VCPU</id>
+    <label>CPU Core</label>
+    <value>1.384</value>
+  </volt>
+  <volt>
+    <id>VCPUVID</id>
+    <label>CPU VID</label>
+    <value>1.100</value>
+  </volt>
+  <volt>
+    <id>V33V</id>
+    <label>+3.3 V</label>
+    <value>3.360</value>
+  </volt>
+  <volt>
+    <id>VP5V</id>
+    <label>+5 V</label>
+    <value>5.080</value>
+  </volt>
+  <volt>
+    <id>VP12V</id>
+    <label>+12 V</label>
+    <value>12.000</value>
+  </volt>
+  <volt>
+    <id>VDIMM</id>
+    <label>DIMM</label>
+    <value>1.360</value>
+  </volt>
+  <volt>
+    <id>VCPUNB</id>
+    <label>CPU/NB</label>
+    <value>0.896</value>
+  </volt>
+  <volt>
+    <id>VCPUVDD</id>
+    <label>CPU VDD</label>
+    <value>0.881</value>
+  </volt>
+  <volt>
+    <id>VCPUVDDNB</id>
+    <label>CPU VDDNB</label>
+    <value>1.375</value>
+  </volt>
+  <volt>
+    <id>VGPU1</id>
+    <label>GPU Core</label>
+    <value>0.625</value>
+  </volt>
+  <curr>
+    <id>CCPUVDD</id>
+    <label>CPU VDD</label>
+    <value>29.10</value>
+  </curr>
+  <curr>
+    <id>CCPUVDDNB</id>
+    <label>CPU VDDNB</label>
+    <value>6.13</value>
+  </curr>
+  <pwr>
+    <id>PCPUPKG</id>
+    <label>CPU Package</label>
+    <value>32.93</value>
+  </pwr>
+  <pwr>
+    <id>PCPUVDD</id>
+    <label>CPU VDD</label>
+    <value>25.64</value>
+  </pwr>
+  <pwr>
+    <id>PCPUVDDNB</id>
+    <label>CPU VDDNB</label>
+    <value>8.43</value>
+  </pwr>
+  <pwr>
+    <id>PGPU1TDPP</id>
+    <label>GPU TDP%</label>
+    <value>5</value>
+  </pwr>
+</AIDA>
