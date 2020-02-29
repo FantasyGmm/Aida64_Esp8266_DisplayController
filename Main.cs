@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.MemoryMappedFiles;
+using System.Net;
 using System.Xml.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -17,6 +21,10 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
+        public UdpClient udpClient;
+        public UdpClient udpServer;
+        public IPEndPoint removteip = new IPEndPoint(IPAddress.Any, 8266);
+        public SynchronizationContext SyncContext = null;
         public void GetAidaInfo()
         {
             string tmp = string.Empty + "<AIDA>";
@@ -35,34 +43,230 @@ namespace Aida64_Esp8266_DisplayControler
                 mappedFile.Dispose();
                 tmp += "</AIDA>";
                 XDocument xmldoc = XDocument.Parse(tmp);
-                IEnumerable<XElement> allEnumerator = xmldoc.Element("AIDA").Elements("sys");
-                foreach (var element in allEnumerator)
-                {
-                    logBox.AppendText("name:" + element.Element("id").Value + "value:" + element.Element("value").Value + Environment.NewLine);
-                    id.Add(element.Element("id").Value);
-                    value.Add(element.Element("value").Value);
-                }
-                logBox.AppendText(id.Count.ToString());
+                IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
+                InsertInfo(sysEnumerator);
+                IEnumerable<XElement> tempEnumerator = xmldoc.Element("AIDA").Elements("temp");
+                InsertInfo(tempEnumerator);
+                IEnumerable<XElement> fanEnumerator = xmldoc.Element("AIDA").Elements("fan");
+                InsertInfo(fanEnumerator);
+                IEnumerable<XElement> voltEnumerator = xmldoc.Element("AIDA").Elements("volt");
+                InsertInfo(voltEnumerator);
+                IEnumerable<XElement> pwrEnumerator = xmldoc.Element("AIDA").Elements("pwr");
+                InsertInfo(pwrEnumerator);
             }
-            catch (Exception)
+            catch (Exception )
             {
                 MessageBox.Show("请开启AIDA64内存共享功能,并保持AIDA64后台运行");
             }
+        }
+        public void InsertInfo(IEnumerable<XElement> xel)
+        {
+            foreach (var element in xel)
+            {
+                switch (element.Element("id").Value)
+                {
+                    case "SCPUCLK": //CPU频率
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "SCPUUTI": //CPU使用率
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "SMEMUTI": //内存使用率
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "SGPU1CLK": //GPU频率
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "SGPU1UTI": //GPU使用率
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "SVMEMUSAGE": //显存使用率
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "TMOBO": //主板温度
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "TCPU": //CPU温度
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "TGPU1DIO": //GPU温度
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "FCPU": //CPU风扇转速
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "FGPU1": //GPU风扇转速
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "VCPU": //CPU电压
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "VGPU1": //GPU电压
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    case "PCPUPKG": //CPU Package功耗
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                    default:
+                        break;
+                        /*  备用代码   */
+                        /*
+                        case "":
+                            id.Add(element.Element("id").Value);
+                            value.Add(element.Element("value").Value);
+                            break;
+                         */
+                }
+            }
+        }
 
+        public void UdpClInit()
+        {
+            udpClient = new UdpClient(removteip);
+            int statuscode = -1;
+            Task recivesTask = new Task(() =>
+            {
+                if (statuscode != -1)
+                {
+                    while (true)
+                    {
+                        byte[] pack = udpClient.Receive(ref removteip);
+                        if (pack.Length > 2)
+                        {
+                            switch (pack[1].ToString())
+                            {
+                                /*
+                                case "":
+                                    break;
+                                case "":
+                                    break;
+                                case "":
+                                    break;
+                                case "":
+                                    break;
+                                case "":
+                                    break;
+                                case "":
+                                    break;
+                                    */
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    while (true)
+                    {
+                        byte[] pack = udpClient.Receive(ref removteip);
+                        if (pack.Length > 2)
+                        {
+                            switch (pack[0])
+                            {
+                                case 0x0:
+                                    statuscode = 0;
+                                    SyncContext.Send(SetLogbox, "Esp8266 is Online");
+                                    break;
+                                case 0x1:
+                                    statuscode = 1;
+                                    SyncContext.Send(SetLogbox, "Esp8266 Run Success");
+                                    break;
+                                case 0x2:
+                                    statuscode = 2;
+                                    SyncContext.Send(SetLogbox, "Esp8266 Run Faild");
+                                    break; ;
+                            }
+                        }
+                    }
+                }
+            });
+            recivesTask.Start();
+        }
+        public void Queryselested()
+        {
+            if (cpuBox.Checked)
+                selested.Add("TCPU");
+        }
+
+        public void UdpServer()
+        {
+            udpServer = new UdpClient(removteip);
+            string data = null;
+            lock (id)
+            {
+                lock (value)
+                {
+                    lock (selested)
+                    {
+                        foreach (var sel in selested)
+                        {
+                            if (sel == selested[selested.Count - 1])
+                            {
+                                data += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)];
+                            }
+                            else
+                            {
+                                data += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)] + "|";
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            Task sendTask = new Task(() =>
+                {
+                    udpServer.Send(Encoding.UTF8.GetBytes(data), Encoding.UTF8.GetBytes(data).Length);
+                });
+            sendTask.Start();
+        }
+
+        public void SetLogbox(object o)
+        {
+            this.logBox.AppendText(o as string);
         }
         private void Main_Load(object sender, EventArgs e)
         {
-
+            SyncContext = SynchronizationContext.Current;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = !timer1.Enabled;
+            getData.Enabled = !getData.Enabled;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            id.Clear();
+            value.Clear();
             GetAidaInfo();
+            if (removteip.Address == IPAddress.Any)
+            {
+                UdpClInit();
+            }
+        }
+
+        private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            logBox.ResetText();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            getData.Enabled = false;
         }
     }
 }

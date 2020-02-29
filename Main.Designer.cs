@@ -29,33 +29,36 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清空日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tmpBox = new System.Windows.Forms.GroupBox();
             this.hddBox = new System.Windows.Forms.CheckBox();
             this.ramBox = new System.Windows.Forms.CheckBox();
             this.gpuBox = new System.Windows.Forms.CheckBox();
             this.cpuBox = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupbox2 = new System.Windows.Forms.GroupBox();
+            this.runServer = new System.Windows.Forms.Button();
+            this.uitBox = new System.Windows.Forms.GroupBox();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.menuStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.getData = new System.Windows.Forms.Timer(this.components);
+            this.pauseSend = new System.Windows.Forms.Button();
+            this.selectAll = new System.Windows.Forms.Button();
+            this.unSelectAll = new System.Windows.Forms.Button();
+            this.menuStrip.SuspendLayout();
+            this.tmpBox.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.设置ToolStripMenuItem,
             this.关于ToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(434, 25);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(434, 25);
+            this.menuStrip.TabIndex = 0;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // 设置ToolStripMenuItem
             // 
@@ -68,8 +71,9 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
+            this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
@@ -77,18 +81,18 @@
             this.关于ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.关于ToolStripMenuItem.Text = "关于";
             // 
-            // groupBox1
+            // tmpBox
             // 
-            this.groupBox1.Controls.Add(this.hddBox);
-            this.groupBox1.Controls.Add(this.ramBox);
-            this.groupBox1.Controls.Add(this.gpuBox);
-            this.groupBox1.Controls.Add(this.cpuBox);
-            this.groupBox1.Location = new System.Drawing.Point(14, 62);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 71);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "温度";
+            this.tmpBox.Controls.Add(this.hddBox);
+            this.tmpBox.Controls.Add(this.ramBox);
+            this.tmpBox.Controls.Add(this.gpuBox);
+            this.tmpBox.Controls.Add(this.cpuBox);
+            this.tmpBox.Location = new System.Drawing.Point(14, 62);
+            this.tmpBox.Name = "tmpBox";
+            this.tmpBox.Size = new System.Drawing.Size(200, 71);
+            this.tmpBox.TabIndex = 1;
+            this.tmpBox.TabStop = false;
+            this.tmpBox.Text = "温度";
             // 
             // hddBox
             // 
@@ -130,24 +134,24 @@
             this.cpuBox.Text = "CPU";
             this.cpuBox.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // runServer
             // 
-            this.button1.Location = new System.Drawing.Point(14, 28);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "启动服务器";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.runServer.Location = new System.Drawing.Point(14, 28);
+            this.runServer.Name = "runServer";
+            this.runServer.Size = new System.Drawing.Size(75, 23);
+            this.runServer.TabIndex = 4;
+            this.runServer.Text = "启动服务器";
+            this.runServer.UseVisualStyleBackColor = true;
+            this.runServer.Click += new System.EventHandler(this.button1_Click);
             // 
-            // groupbox2
+            // uitBox
             // 
-            this.groupbox2.Location = new System.Drawing.Point(14, 139);
-            this.groupbox2.Name = "groupbox2";
-            this.groupbox2.Size = new System.Drawing.Size(200, 100);
-            this.groupbox2.TabIndex = 5;
-            this.groupbox2.TabStop = false;
-            this.groupbox2.Text = "使用率";
+            this.uitBox.Location = new System.Drawing.Point(14, 139);
+            this.uitBox.Name = "uitBox";
+            this.uitBox.Size = new System.Drawing.Size(200, 100);
+            this.uitBox.TabIndex = 5;
+            this.uitBox.TabStop = false;
+            this.uitBox.Text = "使用率";
             // 
             // logBox
             // 
@@ -159,30 +163,61 @@
             this.logBox.Size = new System.Drawing.Size(411, 111);
             this.logBox.TabIndex = 6;
             // 
-            // timer1
+            // getData
             // 
-            this.timer1.Interval = 3000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.getData.Interval = 3000;
+            this.getData.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // pauseSend
+            // 
+            this.pauseSend.Location = new System.Drawing.Point(96, 27);
+            this.pauseSend.Name = "pauseSend";
+            this.pauseSend.Size = new System.Drawing.Size(75, 23);
+            this.pauseSend.TabIndex = 7;
+            this.pauseSend.Text = "暂停发送";
+            this.pauseSend.UseVisualStyleBackColor = true;
+            this.pauseSend.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // selectAll
+            // 
+            this.selectAll.Location = new System.Drawing.Point(178, 26);
+            this.selectAll.Name = "selectAll";
+            this.selectAll.Size = new System.Drawing.Size(75, 23);
+            this.selectAll.TabIndex = 8;
+            this.selectAll.Text = "全选";
+            this.selectAll.UseVisualStyleBackColor = true;
+            // 
+            // unSelectAll
+            // 
+            this.unSelectAll.Location = new System.Drawing.Point(260, 25);
+            this.unSelectAll.Name = "unSelectAll";
+            this.unSelectAll.Size = new System.Drawing.Size(75, 23);
+            this.unSelectAll.TabIndex = 9;
+            this.unSelectAll.Text = "全不选";
+            this.unSelectAll.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 461);
+            this.Controls.Add(this.unSelectAll);
+            this.Controls.Add(this.selectAll);
+            this.Controls.Add(this.pauseSend);
             this.Controls.Add(this.logBox);
-            this.Controls.Add(this.groupbox2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.uitBox);
+            this.Controls.Add(this.runServer);
+            this.Controls.Add(this.tmpBox);
+            this.Controls.Add(this.menuStrip);
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "Main";
             this.ShowIcon = false;
             this.Text = "Aida64_Esp8266_DisplayControler";
             this.Load += new System.EventHandler(this.Main_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
+            this.tmpBox.ResumeLayout(false);
+            this.tmpBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -190,19 +225,22 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem 设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.GroupBox tmpBox;
+        private System.Windows.Forms.Button runServer;
         private System.Windows.Forms.CheckBox ramBox;
         private System.Windows.Forms.CheckBox gpuBox;
         private System.Windows.Forms.CheckBox cpuBox;
-        private System.Windows.Forms.GroupBox groupbox2;
+        private System.Windows.Forms.GroupBox uitBox;
         private System.Windows.Forms.CheckBox hddBox;
         public System.Windows.Forms.TextBox logBox;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer getData;
+        private System.Windows.Forms.Button pauseSend;
+        private System.Windows.Forms.Button selectAll;
+        private System.Windows.Forms.Button unSelectAll;
     }
 }
 
