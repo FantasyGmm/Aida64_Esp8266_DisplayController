@@ -138,6 +138,8 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void UdpClInit()
         {
+            if (recivesTask == null)
+                return;
             if (recivesTask.Status == TaskStatus.Running)
                 return;
             udpClient = new UdpClient(removteip);
@@ -199,15 +201,12 @@ namespace Aida64_Esp8266_DisplayControler
             });
             recivesTask.Start();
         }
-        public void Queryselested()
-        {
-            if (cpuBox.Checked)
-                selested.Add("TCPU");
-        }
 
         public void UdpServer()
         {
-            if(sendTask.Status == TaskStatus.Running)
+            if (sendTask.Status == null)
+                return;
+            if (sendTask.Status == TaskStatus.Running)
                 return;
             udpServer = new UdpClient(removteip);
             string data = null;
@@ -239,7 +238,11 @@ namespace Aida64_Esp8266_DisplayControler
                 });
             sendTask.Start();
         }
-
+        public void Queryselested()
+        {
+            if (cpuTmp.Checked)
+                selested.Add("TCPU");
+        }
         public void SetLogbox(object o)
         {
             this.logBox.AppendText(o as string);
