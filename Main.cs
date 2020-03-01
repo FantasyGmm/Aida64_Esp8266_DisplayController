@@ -123,9 +123,7 @@ namespace Aida64_Esp8266_DisplayControler
                         id.Add(element.Element("id").Value);
                         value.Add(element.Element("value").Value);
                         break;
-                    default:
-                        break;
-                        /*  备用代码   */
+                    /*  备用代码   */
                         /*
                         case "":
                             id.Add(element.Element("id").Value);
@@ -208,8 +206,6 @@ namespace Aida64_Esp8266_DisplayControler
             });
             recivesTask.Start();
 
-
-
             //Server
 
             if (sendTask.Status == null)
@@ -262,13 +258,13 @@ namespace Aida64_Esp8266_DisplayControler
             SyncContext = SynchronizationContext.Current;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Runserver_Click(object sender, EventArgs e)
         {
-            getData.Enabled = !getData.Enabled;
+            getAidaData.Enabled = !getAidaData.Enabled;
             UdpCS();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void GetAidaData_Tick(object sender, EventArgs e)
         {
             id.Clear();
             value.Clear();
@@ -281,17 +277,12 @@ namespace Aida64_Esp8266_DisplayControler
             logBox.ResetText();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            getData.Enabled = false;
-        }
-
         private void SelButton_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             tmpBox.Enabled = !tmpBox.Enabled;
             utiBox.Enabled = !utiBox.Enabled;
@@ -316,7 +307,7 @@ namespace Aida64_Esp8266_DisplayControler
                 return buffur;
             }
         }
-        private void sendGif_Tick(object sender, EventArgs e)
+        private void SendGif_Tick(object sender, EventArgs e)
         {
             if (biliButton.Checked)
             {
@@ -389,7 +380,7 @@ namespace Aida64_Esp8266_DisplayControler
             biliButton.Enabled = !biliButton.Enabled;
         }
 
-        private void sendData_Tick(object sender, EventArgs e)
+        private void SendData_Tick(object sender, EventArgs e)
         {
 
         }

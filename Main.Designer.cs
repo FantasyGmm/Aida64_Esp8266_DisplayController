@@ -45,8 +45,7 @@
             this.gpuUTI = new System.Windows.Forms.CheckBox();
             this.cpuUTI = new System.Windows.Forms.CheckBox();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.getData = new System.Windows.Forms.Timer(this.components);
-            this.pauseSend = new System.Windows.Forms.Button();
+            this.getAidaData = new System.Windows.Forms.Timer(this.components);
             this.selectAll = new System.Windows.Forms.Button();
             this.unSelectAll = new System.Windows.Forms.Button();
             this.clkBox = new System.Windows.Forms.GroupBox();
@@ -168,7 +167,7 @@
             this.runServer.TabIndex = 4;
             this.runServer.Text = "启动服务器";
             this.runServer.UseVisualStyleBackColor = true;
-            this.runServer.Click += new System.EventHandler(this.button1_Click);
+            this.runServer.Click += new System.EventHandler(this.Runserver_Click);
             // 
             // utiBox
             // 
@@ -233,20 +232,10 @@
             this.logBox.Size = new System.Drawing.Size(359, 111);
             this.logBox.TabIndex = 6;
             // 
-            // getData
+            // getAidaData
             // 
-            this.getData.Interval = 3000;
-            this.getData.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // pauseSend
-            // 
-            this.pauseSend.Location = new System.Drawing.Point(96, 28);
-            this.pauseSend.Name = "pauseSend";
-            this.pauseSend.Size = new System.Drawing.Size(75, 23);
-            this.pauseSend.TabIndex = 7;
-            this.pauseSend.Text = "暂停发送";
-            this.pauseSend.UseVisualStyleBackColor = true;
-            this.pauseSend.Click += new System.EventHandler(this.button2_Click);
+            this.getAidaData.Interval = 3000;
+            this.getAidaData.Tick += new System.EventHandler(this.GetAidaData_Tick);
             // 
             // selectAll
             // 
@@ -345,7 +334,7 @@
             this.checkBox1.TabIndex = 8;
             this.checkBox1.Text = "启用动画";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // selButton
             // 
@@ -431,11 +420,11 @@
             // 
             // sendData
             // 
-            this.sendData.Tick += new System.EventHandler(this.sendData_Tick);
+            this.sendData.Tick += new System.EventHandler(this.SendData_Tick);
             // 
             // sendGif
             // 
-            this.sendGif.Tick += new System.EventHandler(this.sendGif_Tick);
+            this.sendGif.Tick += new System.EventHandler(this.SendGif_Tick);
             // 
             // Main
             // 
@@ -447,7 +436,6 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.unSelectAll);
             this.Controls.Add(this.selectAll);
-            this.Controls.Add(this.pauseSend);
             this.Controls.Add(this.runServer);
             this.Controls.Add(this.clkBox);
             this.Controls.Add(this.utiBox);
@@ -489,8 +477,7 @@
         private System.Windows.Forms.GroupBox utiBox;
         private System.Windows.Forms.CheckBox hddTmp;
         public System.Windows.Forms.TextBox logBox;
-        private System.Windows.Forms.Timer getData;
-        private System.Windows.Forms.Button pauseSend;
+        private System.Windows.Forms.Timer getAidaData;
         private System.Windows.Forms.Button selectAll;
         private System.Windows.Forms.Button unSelectAll;
         private System.Windows.Forms.CheckBox ramUTI;
