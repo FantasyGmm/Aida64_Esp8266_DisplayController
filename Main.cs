@@ -136,8 +136,9 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        public void UdpClInit()
+        public void UdpCS()
         {
+            //Client
             if (recivesTask == null)
                 return;
             if (recivesTask.Status == TaskStatus.Running)
@@ -153,7 +154,7 @@ namespace Aida64_Esp8266_DisplayControler
                         byte[] pack = udpClient.Receive(ref removteip);
                         if (pack.Length > 2)
                         {
-                            switch (pack[1].ToString())
+                            switch (pack[0].ToString())
                             {
                                 /*
                                 case "":
@@ -170,6 +171,7 @@ namespace Aida64_Esp8266_DisplayControler
                                     break;
                                     */
                             }
+
                         }
                     }
                 }
@@ -180,7 +182,12 @@ namespace Aida64_Esp8266_DisplayControler
                         byte[] pack = udpClient.Receive(ref removteip);
                         if (pack.Length > 2)
                         {
-                            switch (pack[0])
+                            byte[] cdata = new byte[4];
+                            for (int i = 1; i < 5; i++)
+                            {
+                                cdata[i - 1] = pack[i];
+                            }
+                            switch (BitConverter.ToInt32(cdata, 0))
                             {
                                 case 0x0:
                                     statuscode = 0;
@@ -200,16 +207,17 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             });
             recivesTask.Start();
-        }
 
-        public void UdpServer()
-        {
+
+
+            //Server
+
             if (sendTask.Status == null)
                 return;
             if (sendTask.Status == TaskStatus.Running)
                 return;
             udpServer = new UdpClient(removteip);
-            string data = null;
+            string sdata = null;
             lock (id)
             {
                 lock (value)
@@ -220,11 +228,11 @@ namespace Aida64_Esp8266_DisplayControler
                         {
                             if (sel == selested[selested.Count - 1])
                             {
-                                data += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)];
+                                sdata += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)];
                             }
                             else
                             {
-                                data += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)] + "|";
+                                sdata += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)] + "|";
                             }
 
                         }
@@ -233,12 +241,14 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
             sendTask = new Task(() =>
-                {
-                    udpServer.Send(Encoding.UTF8.GetBytes(data), Encoding.UTF8.GetBytes(data).Length);
-                });
+            {
+                udpServer.Send(Encoding.UTF8.GetBytes(sdata), Encoding.UTF8.GetBytes(sdata).Length);
+            });
             sendTask.Start();
+
         }
-        public void Queryselested()
+
+        public void QuerySelested()
         {
             if (cpuTmp.Checked)
                 selested.Add("TCPU");
@@ -255,7 +265,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void button1_Click(object sender, EventArgs e)
         {
             getData.Enabled = !getData.Enabled;
-
+            UdpCS();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -263,9 +273,7 @@ namespace Aida64_Esp8266_DisplayControler
             id.Clear();
             value.Clear();
             GetAidaInfo();
-            Queryselested();
-            UdpClInit();
-            UdpServer();
+            QuerySelested();
         }
 
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -276,6 +284,110 @@ namespace Aida64_Esp8266_DisplayControler
         private void button2_Click(object sender, EventArgs e)
         {
             getData.Enabled = false;
+        }
+
+        private void SelButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            tmpBox.Enabled = !tmpBox.Enabled;
+            utiBox.Enabled = !utiBox.Enabled;
+            clkBox.Enabled = !clkBox.Enabled;
+            sendData.Enabled = !sendData.Enabled;
+            sendGif.Enabled = sendGif.Enabled;
+            asusButton.Enabled = true;
+            baButton.Enabled = true;
+            biliButton.Enabled = true;
+            customButton.Enabled = true;
+        }
+        protected byte[] AuthGetFileData(string fileUrl)
+        {
+            using (FileStream fs = new FileStream(fileUrl, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                byte[] buffur = new byte[fs.Length];
+                using (BinaryWriter bw = new BinaryWriter(fs))
+                {
+                    bw.Write(buffur);
+                    bw.Close();
+                }
+                return buffur;
+            }
+        }
+        private void sendGif_Tick(object sender, EventArgs e)
+        {
+            if (biliButton.Checked)
+            {
+                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
+                {
+                    byte[] img = AuthGetFileData(file);
+                    udpServer.Send(img,img.Length);
+                }
+            }
+
+            if (baButton.Checked)
+            {
+                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
+                {
+                    byte[] img = AuthGetFileData(file);
+                    udpServer.Send(img, img.Length);
+                }
+            }
+
+            if (asusButton.Checked)
+            {
+                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
+                {
+                    byte[] img = AuthGetFileData(file);
+                    udpServer.Send(img, img.Length);
+                }
+            }
+
+            if (customButton.Checked)
+            {
+                if (customPath.Text == string.Empty)
+                    return;
+                    foreach (var file in Directory.GetFiles(customPath.Text))
+                {
+                    byte[] img = AuthGetFileData(file);
+                    udpServer.Send(img, img.Length);
+                }
+            }
+        }
+
+        private void BaButton_CheckedChanged(object sender, EventArgs e)
+        {
+            asusButton.Enabled = !asusButton.Enabled;
+            biliButton.Enabled = !biliButton.Enabled;
+            customButton.Enabled = !customButton.Enabled;
+        }
+
+        private void BiliButton_CheckedChanged(object sender, EventArgs e)
+        {
+            asusButton.Enabled = !asusButton.Enabled;
+            baButton.Enabled = !baButton.Enabled;
+            customButton.Enabled = !customButton.Enabled;
+        }
+
+        private void AsusButton_CheckedChanged(object sender, EventArgs e)
+        {
+            baButton.Enabled = !baButton.Enabled;
+            biliButton.Enabled = !biliButton.Enabled;
+            customButton.Enabled = !customButton.Enabled;
+        }
+
+        private void CustomButton_CheckedChanged(object sender, EventArgs e)
+        {
+            asusButton.Enabled = !asusButton.Enabled;
+            baButton.Enabled = !baButton.Enabled;
+            biliButton.Enabled = !biliButton.Enabled;
+        }
+
+        private void sendData_Tick(object sender, EventArgs e)
+        {
+
         }
     }
 }
