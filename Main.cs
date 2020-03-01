@@ -322,6 +322,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
                 {
+                    pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
                     udpServer.Send(img,img.Length);
                 }
@@ -331,6 +332,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
                 {
+                    pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
                     udpServer.Send(img, img.Length);
                 }
@@ -340,6 +342,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
                 {
+                    pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
                     udpServer.Send(img, img.Length);
                 }
@@ -349,8 +352,9 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 if (customPath.Text == string.Empty)
                     return;
-                    foreach (var file in Directory.GetFiles(customPath.Text))
+                foreach (var file in Directory.GetFiles(customPath.Text))
                 {
+                    pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
                     udpServer.Send(img, img.Length);
                 }

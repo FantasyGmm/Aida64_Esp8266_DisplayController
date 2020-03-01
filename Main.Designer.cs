@@ -64,7 +64,7 @@
             this.biliButton = new System.Windows.Forms.RadioButton();
             this.asusButton = new System.Windows.Forms.RadioButton();
             this.baButton = new System.Windows.Forms.RadioButton();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.sendData = new System.Windows.Forms.Timer(this.components);
             this.sendGif = new System.Windows.Forms.Timer(this.components);
             this.menuStrip.SuspendLayout();
@@ -72,7 +72,7 @@
             this.utiBox.SuspendLayout();
             this.clkBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -328,7 +328,7 @@
             this.groupBox1.Controls.Add(this.biliButton);
             this.groupBox1.Controls.Add(this.asusButton);
             this.groupBox1.Controls.Add(this.baButton);
-            this.groupBox1.Controls.Add(this.pictureBox1);
+            this.groupBox1.Controls.Add(this.pictureBox);
             this.groupBox1.Location = new System.Drawing.Point(178, 62);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(196, 208);
@@ -421,13 +421,13 @@
             this.baButton.UseVisualStyleBackColor = true;
             this.baButton.CheckedChanged += new System.EventHandler(this.BaButton_CheckedChanged);
             // 
-            // pictureBox1
+            // pictureBox
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(29, 138);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 64);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pictureBox.Location = new System.Drawing.Point(29, 138);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(128, 64);
+            this.pictureBox.TabIndex = 0;
+            this.pictureBox.TabStop = false;
             // 
             // sendData
             // 
@@ -469,7 +469,7 @@
             this.clkBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -504,7 +504,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.RadioButton customButton;
         private System.Windows.Forms.RadioButton biliButton;
         private System.Windows.Forms.RadioButton asusButton;
