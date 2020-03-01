@@ -23,6 +23,8 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> selested = new List<string>();
         public UdpClient udpClient;
         public UdpClient udpServer;
+        public Task recivesTask;
+        public Task sendTask;
         public IPEndPoint removteip = new IPEndPoint(IPAddress.Any, 8266);
         public SynchronizationContext SyncContext = null;
         public void GetAidaInfo()
@@ -136,9 +138,11 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void UdpClInit()
         {
+            if (recivesTask.Status == TaskStatus.Running)
+                return;
             udpClient = new UdpClient(removteip);
             int statuscode = -1;
-            Task recivesTask = new Task(() =>
+            recivesTask = new Task(() =>
             {
                 if (statuscode != -1)
                 {
@@ -203,6 +207,8 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void UdpServer()
         {
+            if(sendTask.Status == TaskStatus.Running)
+                return;
             udpServer = new UdpClient(removteip);
             string data = null;
             lock (id)
@@ -227,7 +233,7 @@ namespace Aida64_Esp8266_DisplayControler
                     }
                 }
             }
-            Task sendTask = new Task(() =>
+            sendTask = new Task(() =>
                 {
                     udpServer.Send(Encoding.UTF8.GetBytes(data), Encoding.UTF8.GetBytes(data).Length);
                 });
@@ -246,6 +252,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void button1_Click(object sender, EventArgs e)
         {
             getData.Enabled = !getData.Enabled;
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -253,10 +260,9 @@ namespace Aida64_Esp8266_DisplayControler
             id.Clear();
             value.Clear();
             GetAidaInfo();
-            if (removteip.Address == IPAddress.Any)
-            {
-                UdpClInit();
-            }
+            Queryselested();
+            UdpClInit();
+            UdpServer();
         }
 
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
