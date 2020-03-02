@@ -355,7 +355,6 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             });
             recivesTask.Start();
-
         }
 
         private void Runserver_Click(object sender, EventArgs e)
@@ -391,11 +390,15 @@ namespace Aida64_Esp8266_DisplayControler
             rpmBox.Enabled = !rpmBox.Enabled;
             volBox.Enabled = !volBox.Enabled;
             sendData.Enabled = !sendData.Enabled;
-            sendGif.Enabled = sendGif.Enabled;
+            sendGif.Enabled = !sendGif.Enabled;
             asusButton.Enabled = true;
+            asusButton.Checked = false;
             baButton.Enabled = true;
+            baButton.Checked = false;
             biliButton.Enabled = true;
+            biliButton.Checked = false;
             customButton.Enabled = true;
+            customButton.Checked = false;
         }
 
         private byte[] Convent2BMP(string file)
