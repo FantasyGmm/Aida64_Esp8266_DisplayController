@@ -66,12 +66,20 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.sendData = new System.Windows.Forms.Timer(this.components);
             this.sendGif = new System.Windows.Forms.Timer(this.components);
+            this.clientcbx = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.cbxSendAll = new System.Windows.Forms.CheckBox();
+            this.btnReboot = new System.Windows.Forms.Button();
+            this.btnDisplay = new System.Windows.Forms.Button();
+            this.btnLed = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
             this.clkBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -81,7 +89,7 @@
             this.关于ToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(390, 25);
+            this.menuStrip.Size = new System.Drawing.Size(1331, 25);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -112,7 +120,7 @@
             this.tmpBox.Controls.Add(this.ramTmp);
             this.tmpBox.Controls.Add(this.gpuTmp);
             this.tmpBox.Controls.Add(this.cpuTmp);
-            this.tmpBox.Location = new System.Drawing.Point(14, 62);
+            this.tmpBox.Location = new System.Drawing.Point(771, 104);
             this.tmpBox.Name = "tmpBox";
             this.tmpBox.Size = new System.Drawing.Size(157, 71);
             this.tmpBox.TabIndex = 1;
@@ -161,7 +169,7 @@
             // 
             // runServer
             // 
-            this.runServer.Location = new System.Drawing.Point(15, 28);
+            this.runServer.Location = new System.Drawing.Point(524, 53);
             this.runServer.Name = "runServer";
             this.runServer.Size = new System.Drawing.Size(75, 23);
             this.runServer.TabIndex = 4;
@@ -175,7 +183,7 @@
             this.utiBox.Controls.Add(this.ramUTI);
             this.utiBox.Controls.Add(this.gpuUTI);
             this.utiBox.Controls.Add(this.cpuUTI);
-            this.utiBox.Location = new System.Drawing.Point(14, 139);
+            this.utiBox.Location = new System.Drawing.Point(771, 181);
             this.utiBox.Name = "utiBox";
             this.utiBox.Size = new System.Drawing.Size(157, 77);
             this.utiBox.TabIndex = 5;
@@ -224,7 +232,7 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(15, 314);
+            this.logBox.Location = new System.Drawing.Point(772, 347);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
@@ -239,7 +247,7 @@
             // 
             // selectAll
             // 
-            this.selectAll.Location = new System.Drawing.Point(178, 28);
+            this.selectAll.Location = new System.Drawing.Point(361, 52);
             this.selectAll.Name = "selectAll";
             this.selectAll.Size = new System.Drawing.Size(75, 23);
             this.selectAll.TabIndex = 8;
@@ -248,7 +256,7 @@
             // 
             // unSelectAll
             // 
-            this.unSelectAll.Location = new System.Drawing.Point(260, 28);
+            this.unSelectAll.Location = new System.Drawing.Point(443, 52);
             this.unSelectAll.Name = "unSelectAll";
             this.unSelectAll.Size = new System.Drawing.Size(75, 23);
             this.unSelectAll.TabIndex = 9;
@@ -259,7 +267,7 @@
             // 
             this.clkBox.Controls.Add(this.gpuClk);
             this.clkBox.Controls.Add(this.cpuClk);
-            this.clkBox.Location = new System.Drawing.Point(14, 222);
+            this.clkBox.Location = new System.Drawing.Point(771, 264);
             this.clkBox.Name = "clkBox";
             this.clkBox.Size = new System.Drawing.Size(157, 48);
             this.clkBox.TabIndex = 10;
@@ -293,7 +301,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(86, 282);
+            this.textBox1.Location = new System.Drawing.Point(843, 322);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(55, 21);
             this.textBox1.TabIndex = 11;
@@ -301,7 +309,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 287);
+            this.label1.Location = new System.Drawing.Point(782, 327);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -318,7 +326,7 @@
             this.groupBox1.Controls.Add(this.asusButton);
             this.groupBox1.Controls.Add(this.baButton);
             this.groupBox1.Controls.Add(this.pictureBox);
-            this.groupBox1.Location = new System.Drawing.Point(178, 62);
+            this.groupBox1.Location = new System.Drawing.Point(935, 104);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(196, 208);
             this.groupBox1.TabIndex = 13;
@@ -412,7 +420,7 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(29, 138);
+            this.pictureBox.Location = new System.Drawing.Point(13, 138);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
@@ -426,11 +434,84 @@
             // 
             this.sendGif.Tick += new System.EventHandler(this.SendGif_Tick);
             // 
+            // clientcbx
+            // 
+            this.clientcbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.clientcbx.FormattingEnabled = true;
+            this.clientcbx.Location = new System.Drawing.Point(14, 52);
+            this.clientcbx.Name = "clientcbx";
+            this.clientcbx.Size = new System.Drawing.Size(157, 20);
+            this.clientcbx.TabIndex = 14;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 37);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 12);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "终端列表";
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.cbxSendAll);
+            this.panel1.Controls.Add(this.btnReboot);
+            this.panel1.Controls.Add(this.btnDisplay);
+            this.panel1.Controls.Add(this.btnLed);
+            this.panel1.Location = new System.Drawing.Point(14, 94);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(312, 206);
+            this.panel1.TabIndex = 16;
+            // 
+            // cbxSendAll
+            // 
+            this.cbxSendAll.AutoSize = true;
+            this.cbxSendAll.Location = new System.Drawing.Point(22, 9);
+            this.cbxSendAll.Name = "cbxSendAll";
+            this.cbxSendAll.Size = new System.Drawing.Size(120, 16);
+            this.cbxSendAll.TabIndex = 3;
+            this.cbxSendAll.Text = "发送至所有客户端";
+            this.cbxSendAll.UseVisualStyleBackColor = true;
+            // 
+            // btnReboot
+            // 
+            this.btnReboot.Location = new System.Drawing.Point(162, 53);
+            this.btnReboot.Name = "btnReboot";
+            this.btnReboot.Size = new System.Drawing.Size(64, 32);
+            this.btnReboot.TabIndex = 2;
+            this.btnReboot.Text = "重启";
+            this.btnReboot.UseVisualStyleBackColor = true;
+            this.btnReboot.Click += new System.EventHandler(this.btnReboot_Click);
+            // 
+            // btnDisplay
+            // 
+            this.btnDisplay.Location = new System.Drawing.Point(92, 53);
+            this.btnDisplay.Name = "btnDisplay";
+            this.btnDisplay.Size = new System.Drawing.Size(64, 32);
+            this.btnDisplay.TabIndex = 1;
+            this.btnDisplay.Text = "开屏";
+            this.btnDisplay.UseVisualStyleBackColor = true;
+            this.btnDisplay.Click += new System.EventHandler(this.btnDisplay_Click);
+            // 
+            // btnLed
+            // 
+            this.btnLed.Location = new System.Drawing.Point(22, 53);
+            this.btnLed.Name = "btnLed";
+            this.btnLed.Size = new System.Drawing.Size(64, 32);
+            this.btnLed.TabIndex = 0;
+            this.btnLed.Text = "开灯";
+            this.btnLed.UseVisualStyleBackColor = true;
+            this.btnLed.Click += new System.EventHandler(this.btnLed_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 433);
+            this.ClientSize = new System.Drawing.Size(1331, 631);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.clientcbx);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
@@ -445,6 +526,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Main";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Aida64_Esp8266_DisplayControler";
             this.Load += new System.EventHandler(this.Main_Load);
             this.menuStrip.ResumeLayout(false);
@@ -458,6 +540,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -502,6 +586,13 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Timer sendData;
         private System.Windows.Forms.Timer sendGif;
+        private System.Windows.Forms.ComboBox clientcbx;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btnDisplay;
+        private System.Windows.Forms.Button btnLed;
+        private System.Windows.Forms.Button btnReboot;
+        private System.Windows.Forms.CheckBox cbxSendAll;
     }
 }
 

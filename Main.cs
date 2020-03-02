@@ -9,11 +9,34 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace Aida64_Esp8266_DisplayControler
 {
     public partial class Main : Form
     {
+
+
+
+        public struct Packet
+        {
+           public byte cmd;
+           public byte ver;
+           public short len;
+           public byte[] data;
+           
+            public Packet(byte c, byte[] d = null, short l = 0)
+            {
+                cmd = c;
+                ver = 1;
+                len = l;
+                data = d;
+            }
+
+        };
+
+
         public Main()
         {
             InitializeComponent();
@@ -21,12 +44,30 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
-        public UdpClient udpClient;
-        public UdpClient udpServer;
+        public UdpClient Udp;
         public Task recivesTask;
         public Task sendTask;
-        public IPEndPoint removteip = new IPEndPoint(IPAddress.Any, 8266);
-        public SynchronizationContext SyncContext = null;
+        public SynchronizationContext Sync = null;
+
+        public List<string> clientList = new List<string>();
+
+
+
+
+        const byte PACKET_ALIVE = 0X0;
+        const byte PACKET_OK = 0X1;
+        const byte PACKET_FAIL = 0X2;
+
+        const byte PACKET_DISPLAY_IMG = 0XF;
+        const byte PACKET_DISPLAY_INFO = 0X10;
+        const byte PACKET_GET_INFO = 0X11;
+        const byte PACKET_TOGGLE_LED = 0X12;
+        const byte PACKET_TOGGLE_DISPLAY = 0X13;
+        const byte PACKET_REBOOT = 0X14;
+
+
+
+
         public void GetAidaInfo()
         {
             string tmp = string.Empty + "<AIDA>";
@@ -56,7 +97,7 @@ namespace Aida64_Esp8266_DisplayControler
                 IEnumerable<XElement> pwrEnumerator = xmldoc.Element("AIDA").Elements("pwr");
                 InsertInfo(pwrEnumerator);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 MessageBox.Show("请开启AIDA64内存共享功能,并保持AIDA64后台运行");
             }
@@ -123,7 +164,7 @@ namespace Aida64_Esp8266_DisplayControler
                         id.Add(element.Element("id").Value);
                         value.Add(element.Element("value").Value);
                         break;
-                    /*  备用代码   */
+                        /*  备用代码   */
                         /*
                         case "":
                             id.Add(element.Element("id").Value);
@@ -136,75 +177,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void UdpCS()
         {
-            //Client
-            if (recivesTask == null)
-                return;
-            if (recivesTask.Status == TaskStatus.Running)
-                return;
-            udpClient = new UdpClient(removteip);
-            int statuscode = -1;
-            recivesTask = new Task(() =>
-            {
-                if (statuscode != -1)
-                {
-                    while (true)
-                    {
-                        byte[] pack = udpClient.Receive(ref removteip);
-                        if (pack.Length > 2)
-                        {
-                            switch (pack[0].ToString())
-                            {
-                                /*
-                                case "":
-                                    break;
-                                case "":
-                                    break;
-                                case "":
-                                    break;
-                                case "":
-                                    break;
-                                case "":
-                                    break;
-                                case "":
-                                    break;
-                                    */
-                            }
-
-                        }
-                    }
-                }
-                else
-                {
-                    while (true)
-                    {
-                        byte[] pack = udpClient.Receive(ref removteip);
-                        if (pack.Length > 2)
-                        {
-                            byte[] cdata = new byte[4];
-                            for (int i = 1; i < 5; i++)
-                            {
-                                cdata[i - 1] = pack[i];
-                            }
-                            switch (BitConverter.ToInt32(cdata, 0))
-                            {
-                                case 0x0:
-                                    statuscode = 0;
-                                    SyncContext.Send(SetLogbox, "Esp8266 is Online");
-                                    break;
-                                case 0x1:
-                                    statuscode = 1;
-                                    SyncContext.Send(SetLogbox, "Esp8266 Run Success");
-                                    break;
-                                case 0x2:
-                                    statuscode = 2;
-                                    SyncContext.Send(SetLogbox, "Esp8266 Run Faild");
-                                    break; ;
-                            }
-                        }
-                    }
-                }
-            });
-            recivesTask.Start();
+            /*
 
             //Server
 
@@ -212,7 +185,10 @@ namespace Aida64_Esp8266_DisplayControler
                 return;
             if (sendTask.Status == TaskStatus.Running)
                 return;
-            udpServer = new UdpClient(removteip);
+
+            IPEndPoint localIp = new IPEndPoint(IPAddress.Any, 8266);
+
+            udpServer = new UdpClient(localIp);
             string sdata = null;
             lock (id)
             {
@@ -241,6 +217,66 @@ namespace Aida64_Esp8266_DisplayControler
                 udpServer.Send(Encoding.UTF8.GetBytes(sdata), Encoding.UTF8.GetBytes(sdata).Length);
             });
             sendTask.Start();
+            */
+
+        }
+
+
+
+
+
+
+        public void setLogbox(object o)
+        {
+            this.logBox.AppendText(o as string + "\r\n");
+        }
+
+
+        public void setButtonText(object o)
+        {
+            var sa = o as string[];
+
+            Type FormType = this.GetType();
+            FieldInfo[] fi = FormType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+            foreach (FieldInfo info in fi)
+            {
+
+
+                if (info.FieldType == typeof(Button))
+                {
+
+                    Button b = (info.GetValue(this)) as Button;
+
+                    if (b.Name == sa[0])
+                    {
+                        b.Text = sa[1] == "0" ? "开灯" : "关灯";
+                    }
+                }
+
+            }
+
+        }
+
+
+        public void addClientBox(object o)
+        {
+            clientcbx.Items.Add(o as string);
+        }
+
+
+
+
+
+        public void addClient(IPEndPoint addr)
+        {
+            string s = addr.ToString();
+
+            if (clientcbx.Items.IndexOf(s) < 0)
+            {
+                Sync.Send(addClientBox, s);
+            }
+
 
         }
 
@@ -249,13 +285,106 @@ namespace Aida64_Esp8266_DisplayControler
             if (cpuTmp.Checked)
                 selested.Add("TCPU");
         }
-        public void SetLogbox(object o)
+
+
+        public byte[] buildPacket(byte cmd, byte[] data = null)
         {
-            this.logBox.AppendText(o as string);
+            
+            int len = data == null ? 0 : data.Length;
+
+            if (len > 65535)
+                return null;
+
+            MemoryStream mem = new MemoryStream();
+            mem.WriteByte(cmd);
+            mem.WriteByte(0x1);
+            mem.Write(BitConverter.GetBytes((short)len), 0, 2);
+            
+
+            if (data != null)
+                mem.Write(data, 0, len);
+
+            return mem.ToArray();
+
         }
+
+
+        public Packet parsePacket(byte[] ba)
+        {
+            byte cmd = ba[0];
+            short len = BitConverter.ToInt16(ba, 1);
+            Packet p = new Packet(cmd);
+
+            if (ba.Length != len + 4)
+                return p;
+
+
+            byte[] data = new byte[len];
+            Array.Copy(ba, 4, data, 0, len);
+            p.data = data;
+            return p;
+        }
+
+ 
         private void Main_Load(object sender, EventArgs e)
         {
-            SyncContext = SynchronizationContext.Current;
+
+
+
+
+            
+
+            /*
+            return Array.FindAll(assemblyArray, delegate (Type type)
+            {
+                return (type.BaseType.FullName == allType && type.FullName != mainType);
+            });
+            */
+
+            Sync = SynchronizationContext.Current;
+            IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
+            Udp = new UdpClient(remoteAddr);
+
+
+            recivesTask = new Task(() =>
+            {
+
+                while (true)
+                {
+                    byte[] pack = Udp.Receive(ref remoteAddr);
+
+                    if (pack.Length > 2)
+                    {
+                        Sync.Send(setLogbox, pack[0].ToString());
+
+
+                        var p = parsePacket(pack);
+
+
+
+                        switch (p.cmd)
+                        {
+                            case PACKET_ALIVE:
+                                addClient(remoteAddr);
+                                break;
+                            case PACKET_GET_INFO:
+                                Sync.Post(setLogbox, p.data);
+                                break;
+                            case PACKET_TOGGLE_LED:
+                                var i = 0;
+                                break;
+                            default:
+                                
+                                break;
+                        }
+
+                    }
+                }
+
+
+            });
+
+            recivesTask.Start();
         }
 
         private void Runserver_Click(object sender, EventArgs e)
@@ -315,7 +444,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
-                    udpServer.Send(img,img.Length);
+                    Udp.Send(img, img.Length);
                 }
             }
 
@@ -325,7 +454,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
-                    udpServer.Send(img, img.Length);
+                    Udp.Send(img, img.Length);
                 }
             }
 
@@ -335,7 +464,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
-                    udpServer.Send(img, img.Length);
+                    Udp.Send(img, img.Length);
                 }
             }
 
@@ -347,7 +476,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     pictureBox.ImageLocation = file;
                     byte[] img = AuthGetFileData(file);
-                    udpServer.Send(img, img.Length);
+                    Udp.Send(img, img.Length);
                 }
             }
         }
@@ -383,6 +512,29 @@ namespace Aida64_Esp8266_DisplayControler
         private void SendData_Tick(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnLed_Click(object sender, EventArgs e)
+        {
+            if (clientcbx.Text.IndexOf(":") < 0)
+                return;
+
+            string[] s = clientcbx.Text.Split(':');
+
+            byte[] ba = buildPacket(PACKET_TOGGLE_LED, Encoding.Default.GetBytes("test hello"));
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
+            Udp.Send(ba, ba.Length, addr);
+            //
+        }
+
+        private void btnDisplay_Click(object sender, EventArgs e)
+        {
+            //
+        }
+
+        private void btnReboot_Click(object sender, EventArgs e)
+        {
+            //
         }
     }
 }
