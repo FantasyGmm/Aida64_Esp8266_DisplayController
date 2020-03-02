@@ -35,6 +35,7 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmpBox = new System.Windows.Forms.GroupBox();
             this.hddTmp = new System.Windows.Forms.CheckBox();
+            this.mbTmp = new System.Windows.Forms.CheckBox();
             this.gpuTmp = new System.Windows.Forms.CheckBox();
             this.cpuTmp = new System.Windows.Forms.CheckBox();
             this.runServer = new System.Windows.Forms.Button();
@@ -71,13 +72,12 @@
             this.btnReboot = new System.Windows.Forms.Button();
             this.btnDisplay = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
-            this.mbTmp = new System.Windows.Forms.CheckBox();
             this.rpmBox = new System.Windows.Forms.GroupBox();
-            this.cpuRpm = new System.Windows.Forms.CheckBox();
             this.gpuRpm = new System.Windows.Forms.CheckBox();
+            this.cpuRpm = new System.Windows.Forms.CheckBox();
             this.volBox = new System.Windows.Forms.GroupBox();
-            this.cpuVol = new System.Windows.Forms.CheckBox();
             this.gpuVol = new System.Windows.Forms.CheckBox();
+            this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
@@ -145,6 +145,16 @@
             this.hddTmp.TabIndex = 3;
             this.hddTmp.Text = "HDD";
             this.hddTmp.UseVisualStyleBackColor = true;
+            // 
+            // mbTmp
+            // 
+            this.mbTmp.AutoSize = true;
+            this.mbTmp.Location = new System.Drawing.Point(82, 21);
+            this.mbTmp.Name = "mbTmp";
+            this.mbTmp.Size = new System.Drawing.Size(48, 16);
+            this.mbTmp.TabIndex = 2;
+            this.mbTmp.Text = "主板";
+            this.mbTmp.UseVisualStyleBackColor = true;
             // 
             // gpuTmp
             // 
@@ -430,6 +440,7 @@
             // 
             // sendGif
             // 
+            this.sendGif.Interval = 41;
             this.sendGif.Tick += new System.EventHandler(this.SendGif_Tick);
             // 
             // clientcbx
@@ -502,16 +513,6 @@
             this.btnLed.UseVisualStyleBackColor = true;
             this.btnLed.Click += new System.EventHandler(this.BtnLed_Click);
             // 
-            // mbTmp
-            // 
-            this.mbTmp.AutoSize = true;
-            this.mbTmp.Location = new System.Drawing.Point(82, 21);
-            this.mbTmp.Name = "mbTmp";
-            this.mbTmp.Size = new System.Drawing.Size(48, 16);
-            this.mbTmp.TabIndex = 2;
-            this.mbTmp.Text = "主板";
-            this.mbTmp.UseVisualStyleBackColor = true;
-            // 
             // rpmBox
             // 
             this.rpmBox.Controls.Add(this.gpuRpm);
@@ -523,16 +524,6 @@
             this.rpmBox.TabStop = false;
             this.rpmBox.Text = "风扇转速";
             // 
-            // cpuRpm
-            // 
-            this.cpuRpm.AutoSize = true;
-            this.cpuRpm.Location = new System.Drawing.Point(12, 21);
-            this.cpuRpm.Name = "cpuRpm";
-            this.cpuRpm.Size = new System.Drawing.Size(42, 16);
-            this.cpuRpm.TabIndex = 0;
-            this.cpuRpm.Text = "CPU";
-            this.cpuRpm.UseVisualStyleBackColor = true;
-            // 
             // gpuRpm
             // 
             this.gpuRpm.AutoSize = true;
@@ -542,6 +533,16 @@
             this.gpuRpm.TabIndex = 1;
             this.gpuRpm.Text = "GPU";
             this.gpuRpm.UseVisualStyleBackColor = true;
+            // 
+            // cpuRpm
+            // 
+            this.cpuRpm.AutoSize = true;
+            this.cpuRpm.Location = new System.Drawing.Point(12, 21);
+            this.cpuRpm.Name = "cpuRpm";
+            this.cpuRpm.Size = new System.Drawing.Size(42, 16);
+            this.cpuRpm.TabIndex = 0;
+            this.cpuRpm.Text = "CPU";
+            this.cpuRpm.UseVisualStyleBackColor = true;
             // 
             // volBox
             // 
@@ -554,16 +555,6 @@
             this.volBox.TabStop = false;
             this.volBox.Text = "电压功耗";
             // 
-            // cpuVol
-            // 
-            this.cpuVol.AutoSize = true;
-            this.cpuVol.Location = new System.Drawing.Point(12, 21);
-            this.cpuVol.Name = "cpuVol";
-            this.cpuVol.Size = new System.Drawing.Size(42, 16);
-            this.cpuVol.TabIndex = 0;
-            this.cpuVol.Text = "CPU";
-            this.cpuVol.UseVisualStyleBackColor = true;
-            // 
             // gpuVol
             // 
             this.gpuVol.AutoSize = true;
@@ -573,6 +564,16 @@
             this.gpuVol.TabIndex = 1;
             this.gpuVol.Text = "GPU";
             this.gpuVol.UseVisualStyleBackColor = true;
+            // 
+            // cpuVol
+            // 
+            this.cpuVol.AutoSize = true;
+            this.cpuVol.Location = new System.Drawing.Point(12, 21);
+            this.cpuVol.Name = "cpuVol";
+            this.cpuVol.Size = new System.Drawing.Size(42, 16);
+            this.cpuVol.TabIndex = 0;
+            this.cpuVol.Text = "CPU";
+            this.cpuVol.UseVisualStyleBackColor = true;
             // 
             // timerInterval
             // 
