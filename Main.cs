@@ -165,6 +165,42 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
+        public void QuerySelested()
+        {
+            if (cpuTmp.Checked)
+                selested.Add("TCPU");       //CPU温度
+            if (gpuTmp.Checked)
+                selested.Add("TGPU1DIO");   //GPU温度
+            /*
+            if(hddTmp.Checked)
+                selested.Add();
+                */
+            if (mbTmp.Checked)
+                selested.Add("TMOBO");      //主板温度
+            if (gpuClk.Checked)
+                selested.Add("SGPU1CLK");   //GPU频率
+            if (cpuClk.Checked)
+                selested.Add("SCPUCLK");    //CPU频率
+            if (cpuUTI.Checked)
+                selested.Add("SCPUUTI");    //CPU使用率
+            if (gpuUTI.Checked)
+                selested.Add("SGPU1UTI");   //GPU使用率
+            if(ramUTI.Checked)
+                selested.Add("SMEMUTI");    //RAM使用率
+            if(vramUTI.Checked)
+                selested.Add("SVMEMUSAGE"); //显存使用率
+            if(cpuRpm.Checked)
+                selested.Add("FCPU");       //CPU风扇转速
+            if(gpuRpm.Checked)
+                selested.Add("FGPU1");      //GPU风扇转速
+            if(gpuVol.Checked)
+                selested.Add("VGPU1");
+            if (cpuVol.Checked)
+            {
+                selested.Add("VCPU");
+                selested.Add("PCPUPKG");
+            }
+        }
         public void UdpCS()
         {
             /*
@@ -220,8 +256,7 @@ namespace Aida64_Esp8266_DisplayControler
         public void SetButtonText(object o)
         {
             var sa = o as string[];
-
-            Type FormType = this.GetType();
+            Type FormType = GetType();
             FieldInfo[] fi = FormType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
             foreach (FieldInfo info in fi)
             {
@@ -233,7 +268,6 @@ namespace Aida64_Esp8266_DisplayControler
                         b.Text = sa[1] == "0" ? "开灯" : "关灯";
                     }
                 }
-
             }
         }
 
@@ -250,21 +284,6 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 Sync.Send(AddClientBox, s);
             }
-        }
-
-        public void QuerySelested()
-        {
-            if (cpuTmp.Checked)
-                selested.Add("TCPU");
-            if(gpuTmp.Checked)
-                selested.Add("TGPU1DIO");
-            /*
-            if(hddTmp.Checked)
-                selested.Add();
-                */
-            if (mbTmp.Checked)
-                selested.Add("TMOBO");
-
         }
 
         public byte[] BuildPacket(byte cmd, byte[] data = null)
@@ -336,6 +355,7 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             });
             recivesTask.Start();
+
         }
 
         private void Runserver_Click(object sender, EventArgs e)
@@ -348,6 +368,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             id.Clear();
             value.Clear();
+            selested.Clear();
             GetAidaInfo();
             QuerySelested();
         }
@@ -367,6 +388,8 @@ namespace Aida64_Esp8266_DisplayControler
             tmpBox.Enabled = !tmpBox.Enabled;
             utiBox.Enabled = !utiBox.Enabled;
             clkBox.Enabled = !clkBox.Enabled;
+            rpmBox.Enabled = !rpmBox.Enabled;
+            volBox.Enabled = !volBox.Enabled;
             sendData.Enabled = !sendData.Enabled;
             sendGif.Enabled = sendGif.Enabled;
             asusButton.Enabled = true;
@@ -494,6 +517,13 @@ namespace Aida64_Esp8266_DisplayControler
         private void BtnReboot_Click(object sender, EventArgs e)
         {
             //
+        }
+
+        private void timerInterval_ValueChanged(object sender, EventArgs e)
+        {
+            getAidaData.Interval = (int) timerInterval.Value;
+            sendData.Interval = (int) timerInterval.Value;
+            sendGif.Interval = (int) timerInterval.Value;
         }
     }
 }

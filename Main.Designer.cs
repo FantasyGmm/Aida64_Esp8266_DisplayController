@@ -51,7 +51,6 @@
             this.gpuClk = new System.Windows.Forms.CheckBox();
             this.cpuClk = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -73,6 +72,13 @@
             this.btnDisplay = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
             this.mbTmp = new System.Windows.Forms.CheckBox();
+            this.rpmBox = new System.Windows.Forms.GroupBox();
+            this.cpuRpm = new System.Windows.Forms.CheckBox();
+            this.gpuRpm = new System.Windows.Forms.CheckBox();
+            this.volBox = new System.Windows.Forms.GroupBox();
+            this.cpuVol = new System.Windows.Forms.CheckBox();
+            this.gpuVol = new System.Windows.Forms.CheckBox();
+            this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -80,6 +86,9 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
+            this.rpmBox.SuspendLayout();
+            this.volBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -89,7 +98,7 @@
             this.关于ToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(743, 25);
+            this.menuStrip.Size = new System.Drawing.Size(731, 25);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -222,7 +231,7 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(361, 347);
+            this.logBox.Location = new System.Drawing.Point(360, 436);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
@@ -259,7 +268,7 @@
             this.clkBox.Controls.Add(this.cpuClk);
             this.clkBox.Location = new System.Drawing.Point(360, 264);
             this.clkBox.Name = "clkBox";
-            this.clkBox.Size = new System.Drawing.Size(157, 48);
+            this.clkBox.Size = new System.Drawing.Size(157, 57);
             this.clkBox.TabIndex = 10;
             this.clkBox.TabStop = false;
             this.clkBox.Text = "频率";
@@ -289,17 +298,10 @@
             this.notifyIcon1.Text = "notifyIcon";
             this.notifyIcon1.Visible = true;
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(432, 322);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(55, 21);
-            this.textBox1.TabIndex = 11;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(371, 327);
+            this.label1.Location = new System.Drawing.Point(535, 347);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -316,7 +318,7 @@
             this.groupBox1.Controls.Add(this.asusButton);
             this.groupBox1.Controls.Add(this.baButton);
             this.groupBox1.Controls.Add(this.pictureBox);
-            this.groupBox1.Location = new System.Drawing.Point(524, 104);
+            this.groupBox1.Location = new System.Drawing.Point(524, 113);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(196, 208);
             this.groupBox1.TabIndex = 13;
@@ -504,17 +506,94 @@
             this.mbTmp.Text = "主板";
             this.mbTmp.UseVisualStyleBackColor = true;
             // 
+            // rpmBox
+            // 
+            this.rpmBox.Controls.Add(this.gpuRpm);
+            this.rpmBox.Controls.Add(this.cpuRpm);
+            this.rpmBox.Location = new System.Drawing.Point(361, 327);
+            this.rpmBox.Name = "rpmBox";
+            this.rpmBox.Size = new System.Drawing.Size(156, 48);
+            this.rpmBox.TabIndex = 17;
+            this.rpmBox.TabStop = false;
+            this.rpmBox.Text = "风扇转速";
+            // 
+            // cpuRpm
+            // 
+            this.cpuRpm.AutoSize = true;
+            this.cpuRpm.Location = new System.Drawing.Point(12, 21);
+            this.cpuRpm.Name = "cpuRpm";
+            this.cpuRpm.Size = new System.Drawing.Size(42, 16);
+            this.cpuRpm.TabIndex = 0;
+            this.cpuRpm.Text = "CPU";
+            this.cpuRpm.UseVisualStyleBackColor = true;
+            // 
+            // gpuRpm
+            // 
+            this.gpuRpm.AutoSize = true;
+            this.gpuRpm.Location = new System.Drawing.Point(81, 20);
+            this.gpuRpm.Name = "gpuRpm";
+            this.gpuRpm.Size = new System.Drawing.Size(42, 16);
+            this.gpuRpm.TabIndex = 1;
+            this.gpuRpm.Text = "GPU";
+            this.gpuRpm.UseVisualStyleBackColor = true;
+            // 
+            // volBox
+            // 
+            this.volBox.Controls.Add(this.gpuVol);
+            this.volBox.Controls.Add(this.cpuVol);
+            this.volBox.Location = new System.Drawing.Point(361, 383);
+            this.volBox.Name = "volBox";
+            this.volBox.Size = new System.Drawing.Size(156, 47);
+            this.volBox.TabIndex = 18;
+            this.volBox.TabStop = false;
+            this.volBox.Text = "电压功耗";
+            // 
+            // cpuVol
+            // 
+            this.cpuVol.AutoSize = true;
+            this.cpuVol.Location = new System.Drawing.Point(12, 21);
+            this.cpuVol.Name = "cpuVol";
+            this.cpuVol.Size = new System.Drawing.Size(42, 16);
+            this.cpuVol.TabIndex = 0;
+            this.cpuVol.Text = "CPU";
+            this.cpuVol.UseVisualStyleBackColor = true;
+            // 
+            // gpuVol
+            // 
+            this.gpuVol.AutoSize = true;
+            this.gpuVol.Location = new System.Drawing.Point(81, 20);
+            this.gpuVol.Name = "gpuVol";
+            this.gpuVol.Size = new System.Drawing.Size(42, 16);
+            this.gpuVol.TabIndex = 1;
+            this.gpuVol.Text = "GPU";
+            this.gpuVol.UseVisualStyleBackColor = true;
+            // 
+            // timerInterval
+            // 
+            this.timerInterval.Location = new System.Drawing.Point(594, 343);
+            this.timerInterval.Name = "timerInterval";
+            this.timerInterval.Size = new System.Drawing.Size(93, 21);
+            this.timerInterval.TabIndex = 19;
+            this.timerInterval.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.timerInterval.ValueChanged += new System.EventHandler(this.timerInterval_ValueChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(743, 479);
+            this.ClientSize = new System.Drawing.Size(731, 558);
+            this.Controls.Add(this.timerInterval);
+            this.Controls.Add(this.volBox);
+            this.Controls.Add(this.rpmBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.clientcbx);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.unSelectAll);
             this.Controls.Add(this.selectAll);
             this.Controls.Add(this.runServer);
@@ -542,6 +621,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.rpmBox.ResumeLayout(false);
+            this.rpmBox.PerformLayout();
+            this.volBox.ResumeLayout(false);
+            this.volBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -571,7 +655,6 @@
         private System.Windows.Forms.CheckBox gpuClk;
         private System.Windows.Forms.CheckBox cpuClk;
         public System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pictureBox;
@@ -593,6 +676,13 @@
         private System.Windows.Forms.Button btnReboot;
         private System.Windows.Forms.CheckBox cbxSendAll;
         private System.Windows.Forms.CheckBox mbTmp;
+        private System.Windows.Forms.GroupBox rpmBox;
+        private System.Windows.Forms.CheckBox cpuRpm;
+        private System.Windows.Forms.CheckBox gpuRpm;
+        private System.Windows.Forms.GroupBox volBox;
+        private System.Windows.Forms.CheckBox gpuVol;
+        private System.Windows.Forms.CheckBox cpuVol;
+        private System.Windows.Forms.NumericUpDown timerInterval;
     }
 }
 
