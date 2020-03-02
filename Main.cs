@@ -256,13 +256,21 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (cpuTmp.Checked)
                 selested.Add("TCPU");
+            if(gpuTmp.Checked)
+                selested.Add("TGPU1DIO");
+            /*
+            if(hddTmp.Checked)
+                selested.Add();
+                */
+            if (mbTmp.Checked)
+                selested.Add("TMOBO");
+
         }
 
         public byte[] BuildPacket(byte cmd, byte[] data = null)
         {
             
             int len = data == null ? 0 : data.Length;
-
             if (len > 65535)
                 return null;
             MemoryStream mem = new MemoryStream();
@@ -274,13 +282,11 @@ namespace Aida64_Esp8266_DisplayControler
             return mem.ToArray();
         }
 
-
         public Packet ParsePacket(byte[] ba)
         {
             byte cmd = ba[0];
             short len = BitConverter.ToInt16(ba, 1);
             Packet p = new Packet(cmd);
-
             if (ba.Length != len + 4)
                 return p;
             byte[] data = new byte[len];
@@ -289,7 +295,6 @@ namespace Aida64_Esp8266_DisplayControler
             return p;
         }
 
- 
         private void Main_Load(object sender, EventArgs e)
         {
             /*

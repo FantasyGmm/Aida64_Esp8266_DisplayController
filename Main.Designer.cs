@@ -35,7 +35,6 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tmpBox = new System.Windows.Forms.GroupBox();
             this.hddTmp = new System.Windows.Forms.CheckBox();
-            this.ramTmp = new System.Windows.Forms.CheckBox();
             this.gpuTmp = new System.Windows.Forms.CheckBox();
             this.cpuTmp = new System.Windows.Forms.CheckBox();
             this.runServer = new System.Windows.Forms.Button();
@@ -73,6 +72,7 @@
             this.btnReboot = new System.Windows.Forms.Button();
             this.btnDisplay = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
+            this.mbTmp = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -89,7 +89,7 @@
             this.关于ToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1331, 25);
+            this.menuStrip.Size = new System.Drawing.Size(743, 25);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -117,10 +117,10 @@
             // tmpBox
             // 
             this.tmpBox.Controls.Add(this.hddTmp);
-            this.tmpBox.Controls.Add(this.ramTmp);
+            this.tmpBox.Controls.Add(this.mbTmp);
             this.tmpBox.Controls.Add(this.gpuTmp);
             this.tmpBox.Controls.Add(this.cpuTmp);
-            this.tmpBox.Location = new System.Drawing.Point(771, 104);
+            this.tmpBox.Location = new System.Drawing.Point(360, 104);
             this.tmpBox.Name = "tmpBox";
             this.tmpBox.Size = new System.Drawing.Size(157, 71);
             this.tmpBox.TabIndex = 1;
@@ -136,16 +136,6 @@
             this.hddTmp.TabIndex = 3;
             this.hddTmp.Text = "HDD";
             this.hddTmp.UseVisualStyleBackColor = true;
-            // 
-            // ramTmp
-            // 
-            this.ramTmp.AutoSize = true;
-            this.ramTmp.Location = new System.Drawing.Point(82, 21);
-            this.ramTmp.Name = "ramTmp";
-            this.ramTmp.Size = new System.Drawing.Size(42, 16);
-            this.ramTmp.TabIndex = 2;
-            this.ramTmp.Text = "RAM";
-            this.ramTmp.UseVisualStyleBackColor = true;
             // 
             // gpuTmp
             // 
@@ -183,7 +173,7 @@
             this.utiBox.Controls.Add(this.ramUTI);
             this.utiBox.Controls.Add(this.gpuUTI);
             this.utiBox.Controls.Add(this.cpuUTI);
-            this.utiBox.Location = new System.Drawing.Point(771, 181);
+            this.utiBox.Location = new System.Drawing.Point(360, 181);
             this.utiBox.Name = "utiBox";
             this.utiBox.Size = new System.Drawing.Size(157, 77);
             this.utiBox.TabIndex = 5;
@@ -232,7 +222,7 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(772, 347);
+            this.logBox.Location = new System.Drawing.Point(361, 347);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
@@ -267,7 +257,7 @@
             // 
             this.clkBox.Controls.Add(this.gpuClk);
             this.clkBox.Controls.Add(this.cpuClk);
-            this.clkBox.Location = new System.Drawing.Point(771, 264);
+            this.clkBox.Location = new System.Drawing.Point(360, 264);
             this.clkBox.Name = "clkBox";
             this.clkBox.Size = new System.Drawing.Size(157, 48);
             this.clkBox.TabIndex = 10;
@@ -301,7 +291,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(843, 322);
+            this.textBox1.Location = new System.Drawing.Point(432, 322);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(55, 21);
             this.textBox1.TabIndex = 11;
@@ -309,7 +299,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(782, 327);
+            this.label1.Location = new System.Drawing.Point(371, 327);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -326,7 +316,7 @@
             this.groupBox1.Controls.Add(this.asusButton);
             this.groupBox1.Controls.Add(this.baButton);
             this.groupBox1.Controls.Add(this.pictureBox);
-            this.groupBox1.Location = new System.Drawing.Point(935, 104);
+            this.groupBox1.Location = new System.Drawing.Point(524, 104);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(196, 208);
             this.groupBox1.TabIndex = 13;
@@ -504,11 +494,21 @@
             this.btnLed.UseVisualStyleBackColor = true;
             this.btnLed.Click += new System.EventHandler(this.BtnLed_Click);
             // 
+            // mbTmp
+            // 
+            this.mbTmp.AutoSize = true;
+            this.mbTmp.Location = new System.Drawing.Point(82, 21);
+            this.mbTmp.Name = "mbTmp";
+            this.mbTmp.Size = new System.Drawing.Size(48, 16);
+            this.mbTmp.TabIndex = 2;
+            this.mbTmp.Text = "主板";
+            this.mbTmp.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1331, 631);
+            this.ClientSize = new System.Drawing.Size(743, 479);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.clientcbx);
@@ -555,7 +555,6 @@
         private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
         private System.Windows.Forms.GroupBox tmpBox;
         private System.Windows.Forms.Button runServer;
-        private System.Windows.Forms.CheckBox ramTmp;
         private System.Windows.Forms.CheckBox gpuTmp;
         private System.Windows.Forms.CheckBox cpuTmp;
         private System.Windows.Forms.GroupBox utiBox;
@@ -593,6 +592,7 @@
         private System.Windows.Forms.Button btnLed;
         private System.Windows.Forms.Button btnReboot;
         private System.Windows.Forms.CheckBox cbxSendAll;
+        private System.Windows.Forms.CheckBox mbTmp;
     }
 }
 
