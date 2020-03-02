@@ -482,7 +482,7 @@
             this.btnReboot.TabIndex = 2;
             this.btnReboot.Text = "重启";
             this.btnReboot.UseVisualStyleBackColor = true;
-            this.btnReboot.Click += new System.EventHandler(this.btnReboot_Click);
+            this.btnReboot.Click += new System.EventHandler(this.BtnReboot_Click);
             // 
             // btnDisplay
             // 
@@ -492,7 +492,7 @@
             this.btnDisplay.TabIndex = 1;
             this.btnDisplay.Text = "开屏";
             this.btnDisplay.UseVisualStyleBackColor = true;
-            this.btnDisplay.Click += new System.EventHandler(this.btnDisplay_Click);
+            this.btnDisplay.Click += new System.EventHandler(this.BtnDisplay_Click);
             // 
             // btnLed
             // 
@@ -502,7 +502,7 @@
             this.btnLed.TabIndex = 0;
             this.btnLed.Text = "开灯";
             this.btnLed.UseVisualStyleBackColor = true;
-            this.btnLed.Click += new System.EventHandler(this.btnLed_Click);
+            this.btnLed.Click += new System.EventHandler(this.BtnLed_Click);
             // 
             // Main
             // 
