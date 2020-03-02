@@ -399,6 +399,8 @@ namespace Aida64_Esp8266_DisplayControler
             biliButton.Checked = false;
             customButton.Enabled = true;
             customButton.Checked = false;
+            customPath.Enabled = true;
+            selButton.Enabled = true;
         }
 
         private byte[] Convent2BMP(string file)

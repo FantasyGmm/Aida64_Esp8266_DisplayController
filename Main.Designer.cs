@@ -338,6 +338,7 @@
             // 
             // selButton
             // 
+            this.selButton.Enabled = false;
             this.selButton.Location = new System.Drawing.Point(147, 104);
             this.selButton.Name = "selButton";
             this.selButton.Size = new System.Drawing.Size(27, 21);
@@ -348,6 +349,7 @@
             // 
             // customPath
             // 
+            this.customPath.Enabled = false;
             this.customPath.Location = new System.Drawing.Point(13, 104);
             this.customPath.Name = "customPath";
             this.customPath.Size = new System.Drawing.Size(128, 21);
@@ -365,6 +367,7 @@
             // customButton
             // 
             this.customButton.AutoSize = true;
+            this.customButton.Enabled = false;
             this.customButton.Location = new System.Drawing.Point(104, 63);
             this.customButton.Name = "customButton";
             this.customButton.Size = new System.Drawing.Size(59, 16);
@@ -377,6 +380,7 @@
             // biliButton
             // 
             this.biliButton.AutoSize = true;
+            this.biliButton.Enabled = false;
             this.biliButton.Location = new System.Drawing.Point(104, 41);
             this.biliButton.Name = "biliButton";
             this.biliButton.Size = new System.Drawing.Size(71, 16);
@@ -389,6 +393,7 @@
             // asusButton
             // 
             this.asusButton.AutoSize = true;
+            this.asusButton.Enabled = false;
             this.asusButton.Location = new System.Drawing.Point(13, 63);
             this.asusButton.Name = "asusButton";
             this.asusButton.Size = new System.Drawing.Size(47, 16);
@@ -401,6 +406,7 @@
             // baButton
             // 
             this.baButton.AutoSize = true;
+            this.baButton.Enabled = false;
             this.baButton.Location = new System.Drawing.Point(13, 41);
             this.baButton.Name = "baButton";
             this.baButton.Size = new System.Drawing.Size(71, 16);
