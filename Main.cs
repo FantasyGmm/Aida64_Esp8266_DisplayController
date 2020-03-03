@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -37,6 +39,8 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
+
+
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
@@ -274,6 +278,7 @@ namespace Aida64_Esp8266_DisplayControler
         public void AddClientBox(object o)
         {
             clientcbx.Items.Add(o as string);
+            clientList.Add(o as string);
         }
 
         public void AddClient(IPEndPoint addr)
@@ -290,8 +295,10 @@ namespace Aida64_Esp8266_DisplayControler
         {
             
             int len = data == null ? 0 : data.Length;
+
             if (len > 65535)
                 return null;
+
             MemoryStream mem = new MemoryStream();
             mem.WriteByte(cmd);
             mem.WriteByte(0x1);
@@ -316,6 +323,8 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void Main_Load(object sender, EventArgs e)
         {
+
+
             /*
             return Array.FindAll(assemblyArray, delegate (Type type)
             {
@@ -403,13 +412,115 @@ namespace Aida64_Esp8266_DisplayControler
             selButton.Enabled = true;
         }
 
+        public static byte[] getSingleBitmap(Bitmap pimage)
+        {
+            Bitmap source = null;
+
+            // If original bitmap is not already in 32 BPP, ARGB format, then convert
+            if (pimage.PixelFormat != PixelFormat.Format32bppArgb)
+            {
+                source = new Bitmap(pimage.Width, pimage.Height, PixelFormat.Format32bppArgb);
+                source.SetResolution(pimage.HorizontalResolution, pimage.VerticalResolution);
+                using (Graphics g = Graphics.FromImage(source))
+                {
+                    g.DrawImageUnscaled(pimage, 0, 0);
+                }
+            }
+            else
+            {
+                source = pimage;
+            }
+
+            // Lock source bitmap in memory
+            BitmapData sourceData = source.LockBits(new Rectangle(0, 0, source.Width, source.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            // Copy image data to binary array
+            int imageSize = sourceData.Stride * sourceData.Height;
+            byte[] sourceBuffer = new byte[imageSize];
+            Marshal.Copy(sourceData.Scan0, sourceBuffer, 0, imageSize);
+
+            // Unlock source bitmap
+            source.UnlockBits(sourceData);
+
+            // Create destination bitmap
+            Bitmap destination = new Bitmap(source.Width, source.Height, PixelFormat.Format1bppIndexed);
+
+            // Lock destination bitmap in memory
+            BitmapData destinationData = destination.LockBits(new Rectangle(0, 0, destination.Width, destination.Height), ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
+
+            // Create destination buffer
+            imageSize = destinationData.Stride * destinationData.Height;
+            byte[] destinationBuffer = new byte[imageSize];
+
+            int sourceIndex = 0;
+            int destinationIndex = 0;
+            int pixelTotal = 0;
+            byte destinationValue = 0;
+            int pixelValue = 128;
+            int height = source.Height;
+            int width = source.Width;
+            int threshold = 500;
+
+            // Iterate lines
+            for (int y = 0; y < height; y++)
+            {
+                sourceIndex = y * sourceData.Stride;
+                destinationIndex = y * destinationData.Stride;
+                destinationValue = 0;
+                pixelValue = 128;
+
+                // Iterate pixels
+                for (int x = 0; x < width; x++)
+                {
+                    // Compute pixel brightness (i.e. total of Red, Green, and Blue values)
+                    pixelTotal = sourceBuffer[sourceIndex + 1] + sourceBuffer[sourceIndex + 2] + sourceBuffer[sourceIndex + 3];
+                    if (pixelTotal > threshold)
+                    {
+                        destinationValue += (byte)pixelValue;
+                    }
+                    if (pixelValue == 1)
+                    {
+                        destinationBuffer[destinationIndex] = destinationValue;
+                        destinationIndex++;
+                        destinationValue = 0;
+                        pixelValue = 128;
+                    }
+                    else
+                    {
+                        pixelValue >>= 1;
+                    }
+                    sourceIndex += 4;
+                }
+                if (pixelValue != 128)
+                {
+                    destinationBuffer[destinationIndex] = destinationValue;
+                }
+            }
+
+            // Copy binary image data to destination bitmap
+            Marshal.Copy(destinationBuffer, 0, destinationData.Scan0, imageSize);
+
+            // Unlock destination bitmap
+            destination.UnlockBits(destinationData);
+
+            // Dispose of source if not originally supplied bitmap
+            if (source != pimage)
+            {
+                source.Dispose();
+            }
+
+            MemoryStream ms = new MemoryStream();
+            destination.Save(ms, ImageFormat.Bmp);
+            return ms.ToArray();
+
+        }
+
+
         private byte[] Convent2BMP(string file)
         {
-            Bitmap source = new Bitmap(file);
-            Bitmap bmp = new Bitmap(source.Width, source.Height, PixelFormat.Format8bppIndexed);
-            MemoryStream ms = new MemoryStream();
-            bmp.Save(ms,ImageFormat.Bmp);
-            return ms.GetBuffer();
+            Bitmap bmp = new Bitmap(file);
+            var data = getSingleBitmap(bmp);
+            return data;
         }
         //文件流转byte[]
         protected byte[] AuthGetFileData(string fileUrl)
@@ -427,47 +538,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void SendGif_Tick(object sender, EventArgs e)
         {
-            if (biliButton.Checked)
-            {
-                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
-                {
-                    pictureBox.ImageLocation = file;
-                    byte[] img =BuildPacket(PACKET_DISPLAY_IMG, Convent2BMP(file));
-                    Udp.Send(img, img.Length);
-                }
-            }
-
-            if (baButton.Checked)
-            {
-                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
-                {
-                    pictureBox.ImageLocation = file;
-                    byte[] img = BuildPacket(PACKET_DISPLAY_IMG, Convent2BMP(file));
-                    Udp.Send(img, img.Length);
-                }
-            }
-
-            if (asusButton.Checked)
-            {
-                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
-                {
-                    pictureBox.ImageLocation = file;
-                    byte[] img = BuildPacket(PACKET_DISPLAY_IMG, Convent2BMP(file));
-                    Udp.Send(img, img.Length);
-                }
-            }
-
-            if (customButton.Checked)
-            {
-                if (customPath.Text == string.Empty)
-                    return;
-                foreach (var file in Directory.GetFiles(customPath.Text))
-                {
-                    pictureBox.ImageLocation = file;
-                    byte[] img = BuildPacket(PACKET_DISPLAY_IMG, Convent2BMP(file));
-                    Udp.Send(img, img.Length);
-                }
-            }
+   
         }
 
         private void BaButton_CheckedChanged(object sender, EventArgs e)
@@ -508,7 +579,7 @@ namespace Aida64_Esp8266_DisplayControler
             if (clientcbx.Text.IndexOf(":") < 0)
                 return;
             string[] s = clientcbx.Text.Split(':');
-            byte[] ba = BuildPacket(PACKET_TOGGLE_LED, Encoding.Default.GetBytes("test hello"));
+            byte[] ba = BuildPacket(PACKET_TOGGLE_LED);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
             //
@@ -521,7 +592,12 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnReboot_Click(object sender, EventArgs e)
         {
-            //
+            if (clientcbx.Text.IndexOf(":") < 0)
+                return;
+            string[] s = clientcbx.Text.Split(':');
+            byte[] ba = BuildPacket(PACKET_REBOOT);
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
+            Udp.Send(ba, ba.Length, addr);
         }
 
         private void timerInterval_ValueChanged(object sender, EventArgs e)
@@ -529,6 +605,107 @@ namespace Aida64_Esp8266_DisplayControler
             getAidaData.Interval = (int) timerInterval.Value;
             sendData.Interval = (int) timerInterval.Value;
             sendGif.Interval = (int) timerInterval.Value;
+        }
+
+        private void btnSendGif_Click(object sender, EventArgs e)
+        {
+
+            
+            Task sendtask = new Task(() =>
+            {
+                var addrstr = clientList[0];
+
+                if (addrstr.IndexOf(":") < 0)
+                    return;
+
+                string[] s = addrstr.Split(':');
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
+
+
+                if (biliButton.Checked)
+                {
+                    foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
+                    {
+                        byte[] ib = Convent2BMP(file);
+                        MemoryStream ms = new MemoryStream();
+                        ms.Write(ib, 0, ib.Length);
+                        pictureBox.Image = Image.FromStream(ms);
+                        var offset = BitConverter.ToInt32(ib, 10);
+                        byte[] data = new byte[ib.Length - offset];
+                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
+                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+                        Udp.Send(packet, packet.Length, addr);
+                        Thread.Sleep(100);
+                    }
+                }
+
+                if (baButton.Checked)
+                {
+                    foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
+                    {
+                        byte[] ib = Convent2BMP(file);
+                        MemoryStream ms = new MemoryStream();
+                        ms.Write(ib, 0, ib.Length);
+                        pictureBox.Image = Image.FromStream(ms);
+                        var offset = BitConverter.ToInt32(ib, 10);
+                        byte[] data = new byte[ib.Length - offset];
+                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
+                        Array.Reverse(data);
+                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+                        Udp.Send(packet, packet.Length, addr);
+                        Thread.Sleep(100);
+                    }
+                }
+
+                if (asusButton.Checked)
+                {
+                    foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\aoki"))
+                    {
+                        byte[] ib = Convent2BMP(file);
+                        MemoryStream ms = new MemoryStream();
+                        ms.Write(ib, 0, ib.Length);
+                        pictureBox.Image = Image.FromStream(ms);
+                        var offset = BitConverter.ToInt32(ib, 10);
+                        byte[] data = new byte[ib.Length - offset];
+                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
+
+                        //data = new byte[] { 0xf1, 0xf2, 0xf3, 0xf4};
+
+                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+                        Udp.Send(packet, packet.Length, addr);
+
+                        var sha1 = new SHA1CryptoServiceProvider();
+                        byte[] sha = sha1.ComputeHash(data);
+                        var result = BitConverter.ToString(sha).Replace("-", "");
+                        Sync.Send(SetLogbox, result);
+                        Thread.Sleep(50);
+                    }
+                }
+
+                if (customButton.Checked)
+                {
+                    if (customPath.Text == string.Empty)
+                        return;
+                    foreach (var file in Directory.GetFiles(customPath.Text))
+                    {
+                        byte[] ib = Convent2BMP(file);
+                        MemoryStream ms = new MemoryStream();
+                        ms.Write(ib, 0, ib.Length);
+                        pictureBox.Image = Image.FromStream(ms);
+                        var offset = BitConverter.ToInt32(ib, 10);
+                        byte[] data = new byte[ib.Length - offset];
+                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
+                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+                        Udp.Send(packet, packet.Length, addr);
+                        Thread.Sleep(100);
+                    }
+                }
+
+                
+            });
+
+
+            sendtask.Start();
         }
     }
 }

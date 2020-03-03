@@ -79,6 +79,7 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
+            this.btnSendGif = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -464,6 +465,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnSendGif);
             this.panel1.Controls.Add(this.cbxSendAll);
             this.panel1.Controls.Add(this.btnReboot);
             this.panel1.Controls.Add(this.btnDisplay);
@@ -485,7 +487,7 @@
             // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(162, 53);
+            this.btnReboot.Location = new System.Drawing.Point(153, 59);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -495,7 +497,7 @@
             // 
             // btnDisplay
             // 
-            this.btnDisplay.Location = new System.Drawing.Point(92, 53);
+            this.btnDisplay.Location = new System.Drawing.Point(83, 59);
             this.btnDisplay.Name = "btnDisplay";
             this.btnDisplay.Size = new System.Drawing.Size(64, 32);
             this.btnDisplay.TabIndex = 1;
@@ -505,7 +507,7 @@
             // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(22, 53);
+            this.btnLed.Location = new System.Drawing.Point(13, 59);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -587,6 +589,16 @@
             0,
             0});
             this.timerInterval.ValueChanged += new System.EventHandler(this.timerInterval_ValueChanged);
+            // 
+            // btnSendGif
+            // 
+            this.btnSendGif.Location = new System.Drawing.Point(223, 59);
+            this.btnSendGif.Name = "btnSendGif";
+            this.btnSendGif.Size = new System.Drawing.Size(64, 32);
+            this.btnSendGif.TabIndex = 20;
+            this.btnSendGif.Text = "发图";
+            this.btnSendGif.UseVisualStyleBackColor = true;
+            this.btnSendGif.Click += new System.EventHandler(this.btnSendGif_Click);
             // 
             // Main
             // 
@@ -690,6 +702,7 @@
         private System.Windows.Forms.CheckBox gpuVol;
         private System.Windows.Forms.CheckBox cpuVol;
         private System.Windows.Forms.NumericUpDown timerInterval;
+        private System.Windows.Forms.Button btnSendGif;
     }
 }
 
