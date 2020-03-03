@@ -650,7 +650,7 @@ namespace Aida64_Esp8266_DisplayControler
                         var offset = BitConverter.ToInt32(ib, 10);
                         byte[] data = new byte[ib.Length - offset];
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        Array.Reverse(data);
+                        
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
                         Thread.Sleep(100);
@@ -668,17 +668,27 @@ namespace Aida64_Esp8266_DisplayControler
                         var offset = BitConverter.ToInt32(ib, 10);
                         byte[] data = new byte[ib.Length - offset];
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
+                        //Array.Reverse(data);
+                        MemoryStream m = new MemoryStream();
 
-                        //data = new byte[] { 0xf1, 0xf2, 0xf3, 0xf4};
+                        for (int i = 64; i > 0; i--)
+                        {
+                            for (int j = 16; j > 0; j--)
+                            {
+                                var index = 128 * i / 8 - j;
+                                m.WriteByte(data[index]);
+                                
+                            }
+                        }
 
-                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+                        FileStream fs = File.Open(Directory.GetCurrentDirectory() + "/" + Path.GetFileName(file), FileMode.OpenOrCreate);
+                        fs.Write(ib, 0, 62);
+                        fs.Write(m.ToArray(), 0, (int)m.Length);
+                        fs.Close();
+                       
+                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, m.ToArray());
                         Udp.Send(packet, packet.Length, addr);
-
-                        var sha1 = new SHA1CryptoServiceProvider();
-                        byte[] sha = sha1.ComputeHash(data);
-                        var result = BitConverter.ToString(sha).Replace("-", "");
-                        Sync.Send(SetLogbox, result);
-                        Thread.Sleep(50);
+                        Thread.Sleep(100);
                     }
                 }
 
