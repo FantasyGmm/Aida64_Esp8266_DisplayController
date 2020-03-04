@@ -6,17 +6,19 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Net;
 using System.Xml.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 
 namespace Aida64_Esp8266_DisplayControler
 {
+    /*
+     * TODO:
+     * 加入动画自选下拉框，自适应识别是打包好的dat文件或者文件夹
+     */
     public partial class Main : Form
     {
         public struct Packet
@@ -39,14 +41,14 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
-
+        
 
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
         public UdpClient Udp;
         public Task recivesTask;
-        public Task sendTask;
+        public Task sendtask;
         public SynchronizationContext Sync = null;
 
         public List<string> clientList = new List<string>();
@@ -159,6 +161,7 @@ namespace Aida64_Esp8266_DisplayControler
                         value.Add(element.Element("value").Value);
                         break;
                         /*  备用代码   */
+
                         /*
                         case "":
                             id.Add(element.Element("id").Value);
@@ -325,6 +328,15 @@ namespace Aida64_Esp8266_DisplayControler
         private void Runserver_Click(object sender, EventArgs e)
         {
             getAidaData.Enabled = !getAidaData.Enabled;
+            if (getAidaData.Enabled)
+            {
+                runServer.Text = "关闭UDP链接";
+                sendtask.Dispose();
+            }
+            else
+            {
+                runServer.Text = "启动UDP链接";
+            }
         }
 
         private void GetAidaData_Tick(object sender, EventArgs e)
@@ -353,8 +365,7 @@ namespace Aida64_Esp8266_DisplayControler
             clkBox.Enabled = !clkBox.Enabled;
             rpmBox.Enabled = !rpmBox.Enabled;
             volBox.Enabled = !volBox.Enabled;
-            sendData.Enabled = !sendData.Enabled;
-            sendGif.Enabled = !sendGif.Enabled;
+            btnSendGif.Enabled = !btnSendGif.Enabled;
             asusButton.Enabled = true;
             asusButton.Checked = false;
             baButton.Enabled = true;
@@ -371,7 +382,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
 
             Bitmap pimage = new System.Drawing.Bitmap(file);
-            Bitmap source = null;
+            Bitmap source;
 
             // If original bitmap is not already in 32 BPP, ARGB format, then convert
             if (pimage.PixelFormat != PixelFormat.Format32bppArgb)
@@ -408,12 +419,6 @@ namespace Aida64_Esp8266_DisplayControler
             // Create destination buffer
             imageSize = destinationData.Stride * destinationData.Height;
             byte[] destinationBuffer = new byte[imageSize];
-
-            int sourceIndex = 0;
-            int destinationIndex = 0;
-            int pixelTotal = 0;
-            byte destinationValue = 0;
-            int pixelValue = 128;
             int height = source.Height;
             int width = source.Width;
             int threshold = 500;
@@ -421,16 +426,16 @@ namespace Aida64_Esp8266_DisplayControler
             // Iterate lines
             for (int y = 0; y < height; y++)
             {
-                sourceIndex = y * sourceData.Stride;
-                destinationIndex = y * destinationData.Stride;
-                destinationValue = 0;
-                pixelValue = 128;
+                int sourceIndex = y * sourceData.Stride;
+                int destinationIndex = y * destinationData.Stride;
+                byte destinationValue = 0;
+                int pixelValue = 128;
 
                 // Iterate pixels
                 for (int x = 0; x < width; x++)
                 {
                     // Compute pixel brightness (i.e. total of Red, Green, and Blue values)
-                    pixelTotal = sourceBuffer[sourceIndex + 1] + sourceBuffer[sourceIndex + 2] + sourceBuffer[sourceIndex + 3];
+                    int pixelTotal = sourceBuffer[sourceIndex + 1] + sourceBuffer[sourceIndex + 2] + sourceBuffer[sourceIndex + 3];
                     if (pixelTotal > threshold)
                     {
                         destinationValue += (byte)pixelValue;
@@ -471,97 +476,7 @@ namespace Aida64_Esp8266_DisplayControler
             return ms.ToArray();
 
         }
-
-
-
-
-        private void convertXBM(ref byte[] bmp, int height, int linebyte)
-        {
-
-            //垂直
-            byte[] hb = new byte[bmp.Length];
-
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < linebyte; j++)
-                {
-                    byte bt = bmp[linebyte * i + j];
-                    hb[linebyte * (height - 1 - i) + j] = bt;
-                }
-
-            }
-
-            //水平
-
-
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < linebyte; j++)
-                {
-
-                    byte bt = hb[linebyte * i + j];
-                    bmp[linebyte * i + (linebyte - 1 - j)] = bt;
-
-                }
-            }
-
-        }
-
-
-        //文件流转byte[]
-        protected byte[] AuthGetFileData(string fileUrl)
-        {
-            using (FileStream fs = new FileStream(fileUrl, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                byte[] buffur = new byte[fs.Length];
-                using (BinaryWriter bw = new BinaryWriter(fs))
-                {
-                    bw.Write(buffur);
-                    bw.Close();
-                }
-                return buffur;
-            }
-        }
-
-
-        private void SendGif_Tick(object sender, EventArgs e)
-        {
-   
-        }
-
-        private void BaButton_CheckedChanged(object sender, EventArgs e)
-        {
-            asusButton.Enabled = !asusButton.Enabled;
-            biliButton.Enabled = !biliButton.Enabled;
-            customButton.Enabled = !customButton.Enabled;
-        }
-
-        private void BiliButton_CheckedChanged(object sender, EventArgs e)
-        {
-            asusButton.Enabled = !asusButton.Enabled;
-            baButton.Enabled = !baButton.Enabled;
-            customButton.Enabled = !customButton.Enabled;
-        }
-
-        private void AsusButton_CheckedChanged(object sender, EventArgs e)
-        {
-            baButton.Enabled = !baButton.Enabled;
-            biliButton.Enabled = !biliButton.Enabled;
-            customButton.Enabled = !customButton.Enabled;
-        }
-
-        private void CustomButton_CheckedChanged(object sender, EventArgs e)
-        {
-            asusButton.Enabled = !asusButton.Enabled;
-            baButton.Enabled = !baButton.Enabled;
-            biliButton.Enabled = !biliButton.Enabled;
-        }
-
-        private void SendData_Tick(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void BtnLed_Click(object sender, EventArgs e)
         {
             if (clientcbx.Text.IndexOf(":") < 0)
@@ -584,15 +499,13 @@ namespace Aida64_Esp8266_DisplayControler
                 return;
             string[] s = clientcbx.Text.Split(':');
             byte[] ba = BuildPacket(PACKET_REBOOT);
-            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
 
         private void timerInterval_ValueChanged(object sender, EventArgs e)
         {
             getAidaData.Interval = (int) timerInterval.Value;
-            sendData.Interval = (int) timerInterval.Value;
-            sendGif.Interval = (int) timerInterval.Value;
         }
 
         private void btnSendGif_Click(object sender, EventArgs e)
@@ -605,9 +518,7 @@ namespace Aida64_Esp8266_DisplayControler
 
             Directory.CreateDirectory(path);
 
-            
-
-            Task sendtask = new Task(() =>
+            sendtask = new Task(() =>
             {
                 var addrstr = clientList[0];
 
@@ -631,7 +542,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep(100);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
 
@@ -649,7 +560,7 @@ namespace Aida64_Esp8266_DisplayControler
                         
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep(100);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
 
@@ -670,13 +581,10 @@ namespace Aida64_Esp8266_DisplayControler
                         fs.Write(ib, 0, offset);
                         fs.Write(data, 0, data.Length);
                         fs.Close();
-                        
-
-
 
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep(50);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
 
@@ -695,15 +603,58 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep(100);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
-
-                
             });
-
-
             sendtask.Start();
+        }
+
+        //废弃代码
+        private void convertXBM(ref byte[] bmp, int height, int linebyte)
+        {
+
+            //垂直
+            byte[] hb = new byte[bmp.Length];
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < linebyte; j++)
+                {
+                    byte bt = bmp[linebyte * i + j];
+                    hb[linebyte * (height - 1 - i) + j] = bt;
+                }
+
+            }
+
+            //水平
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < linebyte; j++)
+                {
+
+                    byte bt = hb[linebyte * i + j];
+                    bmp[linebyte * i + (linebyte - 1 - j)] = bt;
+
+                }
+            }
+
+        }
+
+        //文件流转byte[]
+        protected byte[] AuthGetFileData(string fileUrl)
+        {
+            using (FileStream fs = new FileStream(fileUrl, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                byte[] buffur = new byte[fs.Length];
+                using (BinaryWriter bw = new BinaryWriter(fs))
+                {
+                    bw.Write(buffur);
+                    bw.Close();
+                }
+                return buffur;
+            }
         }
     }
 }

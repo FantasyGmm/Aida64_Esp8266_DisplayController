@@ -63,8 +63,6 @@
             this.asusButton = new System.Windows.Forms.RadioButton();
             this.baButton = new System.Windows.Forms.RadioButton();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.sendData = new System.Windows.Forms.Timer(this.components);
-            this.sendGif = new System.Windows.Forms.Timer(this.components);
             this.clientcbx = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -72,6 +70,7 @@
             this.btnReboot = new System.Windows.Forms.Button();
             this.btnDisplay = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
+            this.btnSendGif = new System.Windows.Forms.Button();
             this.rpmBox = new System.Windows.Forms.GroupBox();
             this.gpuRpm = new System.Windows.Forms.CheckBox();
             this.cpuRpm = new System.Windows.Forms.CheckBox();
@@ -79,7 +78,6 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
-            this.btnSendGif = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -181,9 +179,9 @@
             // 
             this.runServer.Location = new System.Drawing.Point(524, 53);
             this.runServer.Name = "runServer";
-            this.runServer.Size = new System.Drawing.Size(75, 23);
+            this.runServer.Size = new System.Drawing.Size(85, 23);
             this.runServer.TabIndex = 4;
-            this.runServer.Text = "启动服务器";
+            this.runServer.Text = "启动UDP链接";
             this.runServer.UseVisualStyleBackColor = true;
             this.runServer.Click += new System.EventHandler(this.Runserver_Click);
             // 
@@ -386,7 +384,6 @@
             this.customButton.TabStop = true;
             this.customButton.Text = "自定义";
             this.customButton.UseVisualStyleBackColor = true;
-            this.customButton.CheckedChanged += new System.EventHandler(this.CustomButton_CheckedChanged);
             // 
             // biliButton
             // 
@@ -399,7 +396,6 @@
             this.biliButton.TabStop = true;
             this.biliButton.Text = "BiliBili";
             this.biliButton.UseVisualStyleBackColor = true;
-            this.biliButton.CheckedChanged += new System.EventHandler(this.BiliButton_CheckedChanged);
             // 
             // asusButton
             // 
@@ -412,7 +408,6 @@
             this.asusButton.TabStop = true;
             this.asusButton.Text = "Asus";
             this.asusButton.UseVisualStyleBackColor = true;
-            this.asusButton.CheckedChanged += new System.EventHandler(this.AsusButton_CheckedChanged);
             // 
             // baButton
             // 
@@ -425,7 +420,6 @@
             this.baButton.TabStop = true;
             this.baButton.Text = "BadApple";
             this.baButton.UseVisualStyleBackColor = true;
-            this.baButton.CheckedChanged += new System.EventHandler(this.BaButton_CheckedChanged);
             // 
             // pictureBox
             // 
@@ -434,15 +428,6 @@
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
-            // 
-            // sendData
-            // 
-            this.sendData.Tick += new System.EventHandler(this.SendData_Tick);
-            // 
-            // sendGif
-            // 
-            this.sendGif.Interval = 41;
-            this.sendGif.Tick += new System.EventHandler(this.SendGif_Tick);
             // 
             // clientcbx
             // 
@@ -465,7 +450,6 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.btnSendGif);
             this.panel1.Controls.Add(this.cbxSendAll);
             this.panel1.Controls.Add(this.btnReboot);
             this.panel1.Controls.Add(this.btnDisplay);
@@ -514,6 +498,17 @@
             this.btnLed.Text = "开灯";
             this.btnLed.UseVisualStyleBackColor = true;
             this.btnLed.Click += new System.EventHandler(this.BtnLed_Click);
+            // 
+            // btnSendGif
+            // 
+            this.btnSendGif.Enabled = false;
+            this.btnSendGif.Location = new System.Drawing.Point(615, 52);
+            this.btnSendGif.Name = "btnSendGif";
+            this.btnSendGif.Size = new System.Drawing.Size(64, 24);
+            this.btnSendGif.TabIndex = 20;
+            this.btnSendGif.Text = "发送动画";
+            this.btnSendGif.UseVisualStyleBackColor = true;
+            this.btnSendGif.Click += new System.EventHandler(this.btnSendGif_Click);
             // 
             // rpmBox
             // 
@@ -590,21 +585,12 @@
             0});
             this.timerInterval.ValueChanged += new System.EventHandler(this.timerInterval_ValueChanged);
             // 
-            // btnSendGif
-            // 
-            this.btnSendGif.Location = new System.Drawing.Point(223, 59);
-            this.btnSendGif.Name = "btnSendGif";
-            this.btnSendGif.Size = new System.Drawing.Size(64, 32);
-            this.btnSendGif.TabIndex = 20;
-            this.btnSendGif.Text = "发图";
-            this.btnSendGif.UseVisualStyleBackColor = true;
-            this.btnSendGif.Click += new System.EventHandler(this.btnSendGif_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 558);
+            this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
             this.Controls.Add(this.volBox);
             this.Controls.Add(this.rpmBox);
@@ -685,8 +671,6 @@
         private System.Windows.Forms.TextBox customPath;
         private System.Windows.Forms.Button selButton;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Timer sendData;
-        private System.Windows.Forms.Timer sendGif;
         private System.Windows.Forms.ComboBox clientcbx;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
