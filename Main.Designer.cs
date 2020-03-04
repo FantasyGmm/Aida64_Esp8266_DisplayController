@@ -183,7 +183,7 @@
             this.btnSendData.TabIndex = 4;
             this.btnSendData.Text = "发送监测数据";
             this.btnSendData.UseVisualStyleBackColor = true;
-            this.btnSendData.Click += new System.EventHandler(this.btnSendData_Click);
+            this.btnSendData.Click += new System.EventHandler(this.BtnSendData_Click);
             // 
             // utiBox
             // 

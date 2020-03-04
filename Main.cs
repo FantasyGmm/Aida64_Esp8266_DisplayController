@@ -19,8 +19,7 @@ using System.Runtime.InteropServices;
 namespace Aida64_Esp8266_DisplayControler
 {
     /*
-     * TODO:
-     * 加入动画自选下拉框，自适应识别是打包好的dat文件或者文件夹
+     * TODO:加入动画自选下拉框，自适应识别是打包好的dat文件或者文件夹
      */
     public partial class Main : Form
     {
@@ -596,7 +595,7 @@ namespace Aida64_Esp8266_DisplayControler
             btnSendGif.Text = "停止发送动画";
         }
 
-        private void btnSendData_Click(object sender, EventArgs e)
+        private void BtnSendData_Click(object sender, EventArgs e)
         {
             if (btnSendData.Text == "停止发送数据")
             {

@@ -145,7 +145,7 @@ namespace Aida64_Esp8266_DisplayControler
             stride = (stride % 4) == 0 ? stride : ((stride / 4) + 1) * 4;
             int k = srcBitmap.Height * stride;
             byte[] buf = new byte[k];
-            int x = 0, ab = 0;
+            int x , ab;
             for (int j = 0; j < srcBitmap.Height; j++)
             {
                 k = j * stride;//因图像宽度不同、有的可能有填充字节需要跳越
@@ -160,7 +160,7 @@ namespace Aida64_Esp8266_DisplayControler
                     }
                     else
                     {
-                        ab = ab * 2;
+                        ab *= 2;
                     }
                     x++;
                     if (x == 8)
@@ -173,7 +173,7 @@ namespace Aida64_Esp8266_DisplayControler
                 if (x > 0)
                 {
                     //循环实现：剩余有效数据不满1字节的情况下须把它们移往字节的高位部分
-                    for (int t = x; t < 8; t++) ab = ab * 2;
+                    for (int t = x; t < 8; t++) ab *= 2;
                     buf[k++] = (byte)ab;
                 }
             }
