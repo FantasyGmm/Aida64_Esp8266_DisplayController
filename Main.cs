@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Data;
 using System.Drawing;
 using Newtonsoft.Json;
 using System.Xml.Linq;
@@ -11,7 +12,6 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
-using System.Data;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 
@@ -26,11 +26,11 @@ namespace Aida64_Esp8266_DisplayControler
     {
         public struct Packet
         {
-           public byte cmd;
-           public byte ver;
-           public short len;
-           public byte[] data;
-           
+            public byte cmd;
+            public byte ver;
+            public short len;
+            public byte[] data;
+
             public Packet(byte c, byte[] d = null, short l = 0)
             {
                 cmd = c;
@@ -38,12 +38,13 @@ namespace Aida64_Esp8266_DisplayControler
                 len = l;
                 data = d;
             }
-
         };
+
         public Main()
         {
             InitializeComponent();
         }
+
         private CancellationTokenSource cts = new CancellationTokenSource();
         private CancellationToken token;
 
@@ -78,8 +79,9 @@ namespace Aida64_Esp8266_DisplayControler
                 tmp = tmp ?? "";
                 for (int i = 0; i < accessor.Capacity; i++)
                 {
-                    tmp += ((char)accessor.ReadByte(i)).ToString();
+                    tmp += ((char) accessor.ReadByte(i)).ToString();
                 }
+
                 tmp = tmp.Replace("\0", "");
                 tmp = tmp ?? "";
                 accessor.Dispose();
@@ -102,6 +104,7 @@ namespace Aida64_Esp8266_DisplayControler
                 MessageBox.Show("请开启AIDA64内存共享功能,并保持AIDA64后台运行");
             }
         }
+
         public void InsertInfo(IEnumerable<XElement> xel)
         {
             foreach (var element in xel)
@@ -164,14 +167,14 @@ namespace Aida64_Esp8266_DisplayControler
                         id.Add(element.Element("id").Value);
                         value.Add(element.Element("value").Value);
                         break;
-                        /*  备用代码   */
+                    /*  备用代码   */
 
-                        /*
-                        case "":
-                            id.Add(element.Element("id").Value);
-                            value.Add(element.Element("value").Value);
-                            break;
-                         */
+                    /*
+                    case "":
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
+                     */
                 }
             }
         }
@@ -179,32 +182,32 @@ namespace Aida64_Esp8266_DisplayControler
         public void QuerySelested()
         {
             if (cpuTmp.Checked)
-                selested.Add("TCPU");       //CPU温度
+                selested.Add("TCPU"); //CPU温度
             if (gpuTmp.Checked)
-                selested.Add("TGPU1DIO");   //GPU温度
+                selested.Add("TGPU1DIO"); //GPU温度
             /*
             if(hddTmp.Checked)
                 selested.Add();
                 */
             if (mbTmp.Checked)
-                selested.Add("TMOBO");      //主板温度
+                selested.Add("TMOBO"); //主板温度
             if (gpuClk.Checked)
-                selested.Add("SGPU1CLK");   //GPU频率
+                selested.Add("SGPU1CLK"); //GPU频率
             if (cpuClk.Checked)
-                selested.Add("SCPUCLK");    //CPU频率
+                selested.Add("SCPUCLK"); //CPU频率
             if (cpuUTI.Checked)
-                selested.Add("SCPUUTI");    //CPU使用率
+                selested.Add("SCPUUTI"); //CPU使用率
             if (gpuUTI.Checked)
-                selested.Add("SGPU1UTI");   //GPU使用率
-            if(ramUTI.Checked)
-                selested.Add("SMEMUTI");    //RAM使用率
-            if(vramUTI.Checked)
+                selested.Add("SGPU1UTI"); //GPU使用率
+            if (ramUTI.Checked)
+                selested.Add("SMEMUTI"); //RAM使用率
+            if (vramUTI.Checked)
                 selested.Add("SVMEMUSAGE"); //显存使用率
-            if(cpuRpm.Checked)
-                selested.Add("FCPU");       //CPU风扇转速
-            if(gpuRpm.Checked)
-                selested.Add("FGPU1");      //GPU风扇转速
-            if(gpuVol.Checked)
+            if (cpuRpm.Checked)
+                selested.Add("FCPU"); //CPU风扇转速
+            if (gpuRpm.Checked)
+                selested.Add("FGPU1"); //GPU风扇转速
+            if (gpuVol.Checked)
                 selested.Add("VGPU1");
             if (cpuVol.Checked)
             {
@@ -256,7 +259,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         public byte[] BuildPacket(byte cmd, byte[] data = null)
         {
-            
             int len = data == null ? 0 : data.Length;
 
             if (len > 65535)
@@ -265,7 +267,7 @@ namespace Aida64_Esp8266_DisplayControler
             MemoryStream mem = new MemoryStream();
             mem.WriteByte(cmd);
             mem.WriteByte(0x1);
-            mem.Write(BitConverter.GetBytes((short)len), 0, 2);
+            mem.Write(BitConverter.GetBytes((short) len), 0, 2);
             if (data != null)
                 mem.Write(data, 0, len);
             return mem.ToArray();
@@ -317,7 +319,6 @@ namespace Aida64_Esp8266_DisplayControler
                                 var i = 0;
                                 break;
                         }
-
                     }
                 }
             });
@@ -341,7 +342,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void SelButton_Click(object sender, EventArgs e)
         {
-
         }
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
@@ -367,7 +367,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         public static byte[] GetSingleBitmap(string file)
         {
-
             Bitmap pimage = new Bitmap(file);
             Bitmap source;
 
@@ -387,7 +386,8 @@ namespace Aida64_Esp8266_DisplayControler
             }
 
             // Lock source bitmap in memory
-            BitmapData sourceData = source.LockBits(new Rectangle(0, 0, source.Width, source.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData sourceData = source.LockBits(new Rectangle(0, 0, source.Width, source.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             // Copy image data to binary array
             int imageSize = sourceData.Stride * sourceData.Height;
@@ -398,10 +398,13 @@ namespace Aida64_Esp8266_DisplayControler
             source.UnlockBits(sourceData);
 
             // Create destination bitmap
-            System.Drawing.Bitmap destination = new System.Drawing.Bitmap(source.Width, source.Height, PixelFormat.Format1bppIndexed);
+            System.Drawing.Bitmap destination =
+                new System.Drawing.Bitmap(source.Width, source.Height, PixelFormat.Format1bppIndexed);
 
             // Lock destination bitmap in memory
-            BitmapData destinationData = destination.LockBits(new Rectangle(0, 0, destination.Width, destination.Height), ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
+            BitmapData destinationData =
+                destination.LockBits(new Rectangle(0, 0, destination.Width, destination.Height),
+                    ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
 
             // Create destination buffer
             imageSize = destinationData.Stride * destinationData.Height;
@@ -422,11 +425,13 @@ namespace Aida64_Esp8266_DisplayControler
                 for (int x = 0; x < width; x++)
                 {
                     // Compute pixel brightness (i.e. total of Red, Green, and Blue values)
-                    int pixelTotal = sourceBuffer[sourceIndex + 1] + sourceBuffer[sourceIndex + 2] + sourceBuffer[sourceIndex + 3];
+                    int pixelTotal = sourceBuffer[sourceIndex + 1] + sourceBuffer[sourceIndex + 2] +
+                                     sourceBuffer[sourceIndex + 3];
                     if (pixelTotal > threshold)
                     {
-                        destinationValue += (byte)pixelValue;
+                        destinationValue += (byte) pixelValue;
                     }
+
                     if (pixelValue == 1)
                     {
                         destinationBuffer[destinationIndex] = destinationValue;
@@ -438,8 +443,10 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         pixelValue >>= 1;
                     }
+
                     sourceIndex += 4;
                 }
+
                 if (pixelValue != 128)
                 {
                     destinationBuffer[destinationIndex] = destinationValue;
@@ -461,9 +468,8 @@ namespace Aida64_Esp8266_DisplayControler
             MemoryStream ms = new MemoryStream();
             destination.Save(ms, ImageFormat.Bmp);
             return ms.ToArray();
-
         }
-        
+
         private void BtnLed_Click(object sender, EventArgs e)
         {
             if (clientcbx.Text.IndexOf(":") < 0)
@@ -498,16 +504,14 @@ namespace Aida64_Esp8266_DisplayControler
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             token = cts.Token;
-            cts.Token.Register(() =>
-            {
-                SetLogbox("已停止发送动画");
-            });
+            cts.Token.Register(() => { SetLogbox("已停止发送动画"); });
             if (btnSendGif.Text == "停止发送动画")
             {
                 cts.Cancel();
                 btnSendGif.Text = "发送动画";
                 return;
             }
+
             sendtask = new Task(() =>
             {
                 var addrstr = clientList[0];
@@ -531,7 +535,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
+                        Thread.Sleep((int) timerInterval.Value);
                     }
                 }
 
@@ -548,7 +552,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
+                        Thread.Sleep((int) timerInterval.Value);
                     }
                 }
 
@@ -565,7 +569,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
+                        Thread.Sleep((int) timerInterval.Value);
                     }
                 }
 
@@ -584,13 +588,14 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
+                        Thread.Sleep((int) timerInterval.Value);
                     }
                 }
-            },token);
+            }, token);
             sendtask.Start();
             btnSendGif.Text = "停止发送动画";
         }
+
         private void btnSendData_Click(object sender, EventArgs e)
         {
             if (btnSendData.Text == "停止发送数据")
@@ -599,11 +604,9 @@ namespace Aida64_Esp8266_DisplayControler
                 SetLogbox("已停止监测发送数据");
                 btnSendData.Text = "发送监测数据";
             }
+
             token = cts.Token;
-            cts.Token.Register(() =>
-            {
-                SetLogbox("已停止发送AIDA64监测数据");
-            });
+            cts.Token.Register(() => { SetLogbox("已停止发送AIDA64监测数据"); });
             sendtask = new Task(() =>
             {
                 var addrstr = clientList[0];
@@ -623,14 +626,16 @@ namespace Aida64_Esp8266_DisplayControler
                         dr["v"] = value[i];
                     }
                 }
+
                 SetLogbox(JsonConvert.SerializeObject(dt).Length);
                 byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
                     System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
-                Udp.Send(pack,pack.Length,addr);
+                Udp.Send(pack, pack.Length, addr);
             }, token);
             sendtask.Start();
             btnSendData.Text = "停止发送数据";
         }
+
         //废弃代码
         /*
         private void ConvertXBM(ref byte[] bmp, int height, int linebyte)
