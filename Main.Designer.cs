@@ -38,7 +38,7 @@
             this.mbTmp = new System.Windows.Forms.CheckBox();
             this.gpuTmp = new System.Windows.Forms.CheckBox();
             this.cpuTmp = new System.Windows.Forms.CheckBox();
-            this.runServer = new System.Windows.Forms.Button();
+            this.btnSendData = new System.Windows.Forms.Button();
             this.utiBox = new System.Windows.Forms.GroupBox();
             this.vramUTI = new System.Windows.Forms.CheckBox();
             this.ramUTI = new System.Windows.Forms.CheckBox();
@@ -175,15 +175,15 @@
             this.cpuTmp.Text = "CPU";
             this.cpuTmp.UseVisualStyleBackColor = true;
             // 
-            // runServer
+            // btnSendData
             // 
-            this.runServer.Location = new System.Drawing.Point(524, 53);
-            this.runServer.Name = "runServer";
-            this.runServer.Size = new System.Drawing.Size(85, 23);
-            this.runServer.TabIndex = 4;
-            this.runServer.Text = "启动UDP链接";
-            this.runServer.UseVisualStyleBackColor = true;
-            this.runServer.Click += new System.EventHandler(this.Runserver_Click);
+            this.btnSendData.Location = new System.Drawing.Point(524, 53);
+            this.btnSendData.Name = "btnSendData";
+            this.btnSendData.Size = new System.Drawing.Size(85, 23);
+            this.btnSendData.TabIndex = 4;
+            this.btnSendData.Text = "发送监测数据";
+            this.btnSendData.UseVisualStyleBackColor = true;
+            this.btnSendData.Click += new System.EventHandler(this.btnSendData_Click);
             // 
             // utiBox
             // 
@@ -504,11 +504,11 @@
             this.btnSendGif.Enabled = false;
             this.btnSendGif.Location = new System.Drawing.Point(615, 52);
             this.btnSendGif.Name = "btnSendGif";
-            this.btnSendGif.Size = new System.Drawing.Size(64, 24);
+            this.btnSendGif.Size = new System.Drawing.Size(84, 24);
             this.btnSendGif.TabIndex = 20;
             this.btnSendGif.Text = "发送动画";
             this.btnSendGif.UseVisualStyleBackColor = true;
-            this.btnSendGif.Click += new System.EventHandler(this.btnSendGif_Click);
+            this.btnSendGif.Click += new System.EventHandler(this.BtnSendGif_Click);
             // 
             // rpmBox
             // 
@@ -583,7 +583,7 @@
             0,
             0,
             0});
-            this.timerInterval.ValueChanged += new System.EventHandler(this.timerInterval_ValueChanged);
+            this.timerInterval.ValueChanged += new System.EventHandler(this.TimerInterval_ValueChanged);
             // 
             // Main
             // 
@@ -601,7 +601,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.unSelectAll);
             this.Controls.Add(this.selectAll);
-            this.Controls.Add(this.runServer);
+            this.Controls.Add(this.btnSendData);
             this.Controls.Add(this.clkBox);
             this.Controls.Add(this.utiBox);
             this.Controls.Add(this.tmpBox);
@@ -643,7 +643,7 @@
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
         private System.Windows.Forms.GroupBox tmpBox;
-        private System.Windows.Forms.Button runServer;
+        private System.Windows.Forms.Button btnSendData;
         private System.Windows.Forms.CheckBox gpuTmp;
         private System.Windows.Forms.CheckBox cpuTmp;
         private System.Windows.Forms.GroupBox utiBox;

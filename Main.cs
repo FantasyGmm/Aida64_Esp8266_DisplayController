@@ -1,17 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.IO.MemoryMappedFiles;
 using System.Net;
+using System.Drawing;
+using Newtonsoft.Json;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Net.Sockets;
 using System.Threading;
 using System.Reflection;
+using System.Net.Sockets;
+using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Drawing.Imaging;
+using System.Collections.Generic;
+using System.Data;
+using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
+
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -41,7 +44,8 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
-        
+        private CancellationTokenSource cts = new CancellationTokenSource();
+        private CancellationToken token;
 
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
@@ -325,21 +329,6 @@ namespace Aida64_Esp8266_DisplayControler
             recivesTask.Start();
         }
 
-        private void Runserver_Click(object sender, EventArgs e)
-        {
-            getAidaData.Enabled = !getAidaData.Enabled;
-            if (getAidaData.Enabled)
-            {
-                runServer.Text = "关闭UDP链接";
-                sendtask.Dispose();
-            }
-            else
-            {
-                runServer.Text = "启动UDP链接";
-
-            }
-        }
-
         private void GetAidaData_Tick(object sender, EventArgs e)
         {
             id.Clear();
@@ -347,6 +336,7 @@ namespace Aida64_Esp8266_DisplayControler
             selested.Clear();
             GetAidaInfo();
             QuerySelested();
+            SetLogbox(id.Count);
         }
 
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -367,6 +357,7 @@ namespace Aida64_Esp8266_DisplayControler
             rpmBox.Enabled = !rpmBox.Enabled;
             volBox.Enabled = !volBox.Enabled;
             btnSendGif.Enabled = !btnSendGif.Enabled;
+            btnSendData.Enabled = !btnSendData.Enabled;
             asusButton.Enabled = true;
             asusButton.Checked = false;
             baButton.Enabled = true;
@@ -379,7 +370,7 @@ namespace Aida64_Esp8266_DisplayControler
             selButton.Enabled = true;
         }
 
-        public static byte[] getSingleBitmap(string file)
+        public static byte[] GetSingleBitmap(string file)
         {
 
             Bitmap pimage = new System.Drawing.Bitmap(file);
@@ -504,21 +495,24 @@ namespace Aida64_Esp8266_DisplayControler
             Udp.Send(ba, ba.Length, addr);
         }
 
-        private void timerInterval_ValueChanged(object sender, EventArgs e)
+        private void TimerInterval_ValueChanged(object sender, EventArgs e)
         {
             getAidaData.Interval = (int) timerInterval.Value;
         }
 
-        private void btnSendGif_Click(object sender, EventArgs e)
+        private void BtnSendGif_Click(object sender, EventArgs e)
         {
-
-            var path = Directory.GetCurrentDirectory() + "/test";
-
-            if (Directory.Exists(path))
-                Directory.Delete(path, true);
-
-            Directory.CreateDirectory(path);
-
+            token = cts.Token;
+            cts.Token.Register(() =>
+            {
+                SetLogbox("已停止发送动画");
+            });
+            if (btnSendGif.Text == "停止发送动画")
+            {
+                cts.Cancel();
+                btnSendGif.Text = "发送动画";
+                return;
+            }
             sendtask = new Task(() =>
             {
                 var addrstr = clientList[0];
@@ -533,7 +527,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
                     {
-                        byte[] ib = getSingleBitmap(file);
+                        byte[] ib = GetSingleBitmap(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
@@ -550,14 +544,13 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
                     {
-                        byte[] ib = getSingleBitmap(file);
+                        byte[] ib = GetSingleBitmap(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
                         var offset = BitConverter.ToInt32(ib, 10);
                         byte[] data = new byte[ib.Length - offset];
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
                         Thread.Sleep((int)timerInterval.Value);
@@ -575,13 +568,6 @@ namespace Aida64_Esp8266_DisplayControler
                         var offset = BitConverter.ToInt32(ib, 10);
                         byte[] data = new byte[ib.Length - offset];
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        //convertXBM(ref data, 64, 11);
-
-                        FileStream fs = new FileStream(path + "/" + Path.GetFileName(file), FileMode.OpenOrCreate);
-                        fs.Write(ib, 0, offset);
-                        fs.Write(data, 0, data.Length);
-                        fs.Close();
-
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
                         Thread.Sleep((int)timerInterval.Value);
@@ -594,7 +580,7 @@ namespace Aida64_Esp8266_DisplayControler
                         return;
                     foreach (var file in Directory.GetFiles(customPath.Text))
                     {
-                        byte[] ib = getSingleBitmap(file);
+                        byte[] ib = GetSingleBitmap(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
@@ -606,12 +592,53 @@ namespace Aida64_Esp8266_DisplayControler
                         Thread.Sleep((int)timerInterval.Value);
                     }
                 }
-            });
+            },token);
             sendtask.Start();
+            btnSendGif.Text = "停止发送动画";
         }
-
+        private void btnSendData_Click(object sender, EventArgs e)
+        {
+            if (btnSendData.Text == "停止发送数据")
+            {
+                cts.Cancel();
+                SetLogbox("已停止监测发送数据");
+                btnSendData.Text = "发送监测数据";
+            }
+            token = cts.Token;
+            cts.Token.Register(() =>
+            {
+                SetLogbox("已停止发送AIDA64监测数据");
+            });
+            sendtask = new Task(() =>
+            {
+                var addrstr = clientList[0];
+                if (addrstr.IndexOf(":") < 0)
+                    return;
+                string[] s = addrstr.Split(':');
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                DataTable dt = new DataTable();
+                dt.Columns.Add("i", Type.GetType("System.String"));
+                dt.Columns.Add("v", Type.GetType("System.String"));
+                for (int i = 0; i < id.Count; i++)
+                {
+                    if (id[i] == selested[i])
+                    {
+                        DataRow dr = dt.NewRow();
+                        dr["i"] = id[i];
+                        dr["v"] = value[i];
+                    }
+                }
+                SetLogbox(JsonConvert.SerializeObject(dt).Length);
+                byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
+                    System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
+                Udp.Send(pack,pack.Length,addr);
+            }, token);
+            sendtask.Start();
+            btnSendData.Text = "停止发送数据";
+        }
         //废弃代码
-        private void convertXBM(ref byte[] bmp, int height, int linebyte)
+        /*
+        private void ConvertXBM(ref byte[] bmp, int height, int linebyte)
         {
 
             //垂直
@@ -656,5 +683,6 @@ namespace Aida64_Esp8266_DisplayControler
                 return buffur;
             }
         }
+        */
     }
 }
