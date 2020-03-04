@@ -327,9 +327,9 @@
             this.groupBox1.Controls.Add(this.asusButton);
             this.groupBox1.Controls.Add(this.baButton);
             this.groupBox1.Controls.Add(this.pictureBox);
-            this.groupBox1.Location = new System.Drawing.Point(524, 113);
+            this.groupBox1.Location = new System.Drawing.Point(524, 104);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(196, 208);
+            this.groupBox1.Size = new System.Drawing.Size(196, 217);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "动画";
@@ -454,7 +454,7 @@
             this.panel1.Controls.Add(this.btnReboot);
             this.panel1.Controls.Add(this.btnDisplay);
             this.panel1.Controls.Add(this.btnLed);
-            this.panel1.Location = new System.Drawing.Point(14, 94);
+            this.panel1.Location = new System.Drawing.Point(14, 104);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(312, 206);
             this.panel1.TabIndex = 16;

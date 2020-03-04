@@ -336,6 +336,7 @@ namespace Aida64_Esp8266_DisplayControler
             else
             {
                 runServer.Text = "启动UDP链接";
+
             }
         }
 
@@ -526,8 +527,7 @@ namespace Aida64_Esp8266_DisplayControler
                     return;
 
                 string[] s = addrstr.Split(':');
-                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
-
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
 
                 if (biliButton.Checked)
                 {
