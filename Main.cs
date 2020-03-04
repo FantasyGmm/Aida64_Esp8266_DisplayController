@@ -6,14 +6,12 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Net;
 using System.Xml.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -45,8 +43,7 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
         public UdpClient Udp;
-        public Task recivesTask;
-        public Task sendTask;
+        public Task udpTask;
         public SynchronizationContext Sync = null;
 
         public List<string> clientList = new List<string>();
@@ -334,7 +331,7 @@ namespace Aida64_Esp8266_DisplayControler
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
-            recivesTask = new Task(() =>
+            udpTask = new Task(() =>
             {
                 while (true)
                 {
@@ -363,7 +360,7 @@ namespace Aida64_Esp8266_DisplayControler
                     }
                 }
             });
-            recivesTask.Start();
+            udpTask.Start();
         }
 
         private void Runserver_Click(object sender, EventArgs e)
@@ -515,7 +512,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         }
 
-
         private byte[] Convent2BMP(string file)
         {
             Bitmap bmp = new Bitmap(file);
@@ -619,8 +615,7 @@ namespace Aida64_Esp8266_DisplayControler
                     return;
 
                 string[] s = addrstr.Split(':');
-                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
-
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
 
                 if (biliButton.Checked)
                 {
@@ -710,11 +705,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Thread.Sleep(100);
                     }
                 }
-
-                
             });
-
-
             sendtask.Start();
         }
     }
