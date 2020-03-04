@@ -6,12 +6,14 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Net;
 using System.Xml.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -43,7 +45,8 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
         public UdpClient Udp;
-        public Task udpTask;
+        public Task recivesTask;
+        public Task sendTask;
         public SynchronizationContext Sync = null;
 
         public List<string> clientList = new List<string>();
@@ -202,51 +205,7 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("PCPUPKG");
             }
         }
-        public void UdpCS()
-        {
-            /*
 
-            //Server
-
-            if (sendTask.Status == null)
-                return;
-            if (sendTask.Status == TaskStatus.Running)
-                return;
-
-            IPEndPoint localIp = new IPEndPoint(IPAddress.Any, 8266);
-
-            udpServer = new UdpClient(localIp);
-            string sdata = null;
-            lock (id)
-            {
-                lock (value)
-                {
-                    lock (selested)
-                    {
-                        foreach (var sel in selested)
-                        {
-                            if (sel == selested[selested.Count - 1])
-                            {
-                                sdata += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)];
-                            }
-                            else
-                            {
-                                sdata += id[id.IndexOf(sel)] + "=" + value[value.IndexOf(sel)] + "|";
-                            }
-
-                        }
-
-                    }
-                }
-            }
-            sendTask = new Task(() =>
-            {
-                udpServer.Send(Encoding.UTF8.GetBytes(sdata), Encoding.UTF8.GetBytes(sdata).Length);
-            });
-            sendTask.Start();
-            */
-
-        }
 
         public void SetLogbox(object o)
         {
@@ -331,7 +290,7 @@ namespace Aida64_Esp8266_DisplayControler
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
-            udpTask = new Task(() =>
+            recivesTask = new Task(() =>
             {
                 while (true)
                 {
@@ -360,13 +319,12 @@ namespace Aida64_Esp8266_DisplayControler
                     }
                 }
             });
-            udpTask.Start();
+            recivesTask.Start();
         }
 
         private void Runserver_Click(object sender, EventArgs e)
         {
             getAidaData.Enabled = !getAidaData.Enabled;
-            UdpCS();
         }
 
         private void GetAidaData_Tick(object sender, EventArgs e)
@@ -409,14 +367,16 @@ namespace Aida64_Esp8266_DisplayControler
             selButton.Enabled = true;
         }
 
-        public static byte[] getSingleBitmap(Bitmap pimage)
+        public static byte[] getSingleBitmap(string file)
         {
+
+            Bitmap pimage = new System.Drawing.Bitmap(file);
             Bitmap source = null;
 
             // If original bitmap is not already in 32 BPP, ARGB format, then convert
             if (pimage.PixelFormat != PixelFormat.Format32bppArgb)
             {
-                source = new Bitmap(pimage.Width, pimage.Height, PixelFormat.Format32bppArgb);
+                source = new System.Drawing.Bitmap(pimage.Width, pimage.Height, PixelFormat.Format32bppArgb);
                 source.SetResolution(pimage.HorizontalResolution, pimage.VerticalResolution);
                 using (Graphics g = Graphics.FromImage(source))
                 {
@@ -440,7 +400,7 @@ namespace Aida64_Esp8266_DisplayControler
             source.UnlockBits(sourceData);
 
             // Create destination bitmap
-            Bitmap destination = new Bitmap(source.Width, source.Height, PixelFormat.Format1bppIndexed);
+            System.Drawing.Bitmap destination = new System.Drawing.Bitmap(source.Width, source.Height, PixelFormat.Format1bppIndexed);
 
             // Lock destination bitmap in memory
             BitmapData destinationData = destination.LockBits(new Rectangle(0, 0, destination.Width, destination.Height), ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
@@ -512,12 +472,42 @@ namespace Aida64_Esp8266_DisplayControler
 
         }
 
-        private byte[] Convent2BMP(string file)
+
+
+
+        private void convertXBM(ref byte[] bmp, int height, int linebyte)
         {
-            Bitmap bmp = new Bitmap(file);
-            var data = getSingleBitmap(bmp);
-            return data;
+
+            //垂直
+            byte[] hb = new byte[bmp.Length];
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < linebyte; j++)
+                {
+                    byte bt = bmp[linebyte * i + j];
+                    hb[linebyte * (height - 1 - i) + j] = bt;
+                }
+
+            }
+
+            //水平
+
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < linebyte; j++)
+                {
+
+                    byte bt = hb[linebyte * i + j];
+                    bmp[linebyte * i + (linebyte - 1 - j)] = bt;
+
+                }
+            }
+
         }
+
+
         //文件流转byte[]
         protected byte[] AuthGetFileData(string fileUrl)
         {
@@ -532,6 +522,8 @@ namespace Aida64_Esp8266_DisplayControler
                 return buffur;
             }
         }
+
+
         private void SendGif_Tick(object sender, EventArgs e)
         {
    
@@ -606,7 +598,15 @@ namespace Aida64_Esp8266_DisplayControler
         private void btnSendGif_Click(object sender, EventArgs e)
         {
 
+            var path = Directory.GetCurrentDirectory() + "/test";
+
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+            Directory.CreateDirectory(path);
+
             
+
             Task sendtask = new Task(() =>
             {
                 var addrstr = clientList[0];
@@ -615,13 +615,14 @@ namespace Aida64_Esp8266_DisplayControler
                     return;
 
                 string[] s = addrstr.Split(':');
-                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
+
 
                 if (biliButton.Checked)
                 {
                     foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
                     {
-                        byte[] ib = Convent2BMP(file);
+                        byte[] ib = getSingleBitmap(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
@@ -638,7 +639,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
                     {
-                        byte[] ib = Convent2BMP(file);
+                        byte[] ib = getSingleBitmap(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
@@ -656,34 +657,26 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\aoki"))
                     {
-                        byte[] ib = Convent2BMP(file);
+                        byte[] ib = Bmp.OtsuThreshold(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
                         var offset = BitConverter.ToInt32(ib, 10);
                         byte[] data = new byte[ib.Length - offset];
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        //Array.Reverse(data);
-                        MemoryStream m = new MemoryStream();
+                        //convertXBM(ref data, 64, 11);
 
-                        for (int i = 64; i > 0; i--)
-                        {
-                            for (int j = 16; j > 0; j--)
-                            {
-                                var index = 128 * i / 8 - j;
-                                m.WriteByte(data[index]);
-                                
-                            }
-                        }
-
-                        FileStream fs = File.Open(Directory.GetCurrentDirectory() + "/" + Path.GetFileName(file), FileMode.OpenOrCreate);
-                        fs.Write(ib, 0, 62);
-                        fs.Write(m.ToArray(), 0, (int)m.Length);
+                        FileStream fs = new FileStream(path + "/" + Path.GetFileName(file), FileMode.OpenOrCreate);
+                        fs.Write(ib, 0, offset);
+                        fs.Write(data, 0, data.Length);
                         fs.Close();
-                       
-                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, m.ToArray());
+                        
+
+
+
+                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep(100);
+                        Thread.Sleep(50);
                     }
                 }
 
@@ -693,7 +686,7 @@ namespace Aida64_Esp8266_DisplayControler
                         return;
                     foreach (var file in Directory.GetFiles(customPath.Text))
                     {
-                        byte[] ib = Convent2BMP(file);
+                        byte[] ib = getSingleBitmap(file);
                         MemoryStream ms = new MemoryStream();
                         ms.Write(ib, 0, ib.Length);
                         pictureBox.Image = Image.FromStream(ms);
@@ -705,7 +698,11 @@ namespace Aida64_Esp8266_DisplayControler
                         Thread.Sleep(100);
                     }
                 }
+
+                
             });
+
+
             sendtask.Start();
         }
     }
