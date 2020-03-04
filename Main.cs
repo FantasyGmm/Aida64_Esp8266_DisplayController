@@ -52,8 +52,10 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> selested = new List<string>();
         public UdpClient Udp;
         public Task recivesTask;
-        public Task sendtask;
+        public Task sendBmpTask, sendInfoTask;
+        ManualResetEvent resetBmp, resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
+       
 
         public List<string> clientList = new List<string>();
 
@@ -78,7 +80,7 @@ namespace Aida64_Esp8266_DisplayControler
                 tmp = tmp ?? "";
                 for (int i = 0; i < accessor.Capacity; i++)
                 {
-                    tmp += ((char) accessor.ReadByte(i)).ToString();
+                    tmp += ((char)accessor.ReadByte(i)).ToString();
                 }
 
                 tmp = tmp.Replace("\0", "");
@@ -166,14 +168,14 @@ namespace Aida64_Esp8266_DisplayControler
                         id.Add(element.Element("id").Value);
                         value.Add(element.Element("value").Value);
                         break;
-                    /*  备用代码   */
+                        /*  备用代码   */
 
-                    /*
-                    case "":
-                        id.Add(element.Element("id").Value);
-                        value.Add(element.Element("value").Value);
-                        break;
-                     */
+                        /*
+                        case "":
+                            id.Add(element.Element("id").Value);
+                            value.Add(element.Element("value").Value);
+                            break;
+                         */
                 }
             }
         }
@@ -227,17 +229,28 @@ namespace Aida64_Esp8266_DisplayControler
             var sa = o as string[];
             Type FormType = GetType();
             FieldInfo[] fi = FormType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
             foreach (FieldInfo info in fi)
             {
                 if (info.FieldType == typeof(Button))
                 {
                     Button b = (info.GetValue(this)) as Button;
+
                     if (b.Name == sa[0])
                     {
-                        b.Text = sa[1] == "0" ? "开灯" : "关灯";
+                        if (b.Name == "btnLed")
+                            b.Text = sa[1] == "0" ? "开灯" : "关灯";
+                        else if (b.Name == "btnDisplay")
+                            b.Text = sa[1] == "0" ? "开屏" : "关屏";
                     }
+
+
                 }
             }
+
+
+
+
         }
 
         public void AddClientBox(object o)
@@ -266,7 +279,7 @@ namespace Aida64_Esp8266_DisplayControler
             MemoryStream mem = new MemoryStream();
             mem.WriteByte(cmd);
             mem.WriteByte(0x1);
-            mem.Write(BitConverter.GetBytes((short) len), 0, 2);
+            mem.Write(BitConverter.GetBytes((short)len), 0, 2);
             if (data != null)
                 mem.Write(data, 0, len);
             return mem.ToArray();
@@ -275,7 +288,7 @@ namespace Aida64_Esp8266_DisplayControler
         public Packet ParsePacket(byte[] ba)
         {
             byte cmd = ba[0];
-            short len = BitConverter.ToInt16(ba, 1);
+            short len = BitConverter.ToInt16(ba, 2);
             Packet p = new Packet(cmd);
             if (ba.Length != len + 4)
                 return p;
@@ -312,11 +325,15 @@ namespace Aida64_Esp8266_DisplayControler
                                 AddClient(remoteAddr);
                                 break;
                             case PACKET_GET_INFO:
-                                Sync.Post(SetLogbox, p.data);
+                                Sync.Send(SetLogbox, p.data);
                                 break;
                             case PACKET_TOGGLE_LED:
-                                var i = 0;
+                                Sync.Send(SetButtonText, new string[] { "btnLed", p.data[0].ToString() });
                                 break;
+                            case PACKET_TOGGLE_DISPLAY:
+                                Sync.Send(SetButtonText, new string[] { "btnDisplay", p.data[0].ToString() });
+                                break;
+
                         }
                     }
                 }
@@ -326,12 +343,16 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void GetAidaData_Tick(object sender, EventArgs e)
         {
-            id.Clear();
-            value.Clear();
-            selested.Clear();
-            GetAidaInfo();
-            QuerySelested();
-            SetLogbox(id.Count);
+            lock (id)
+            {
+                id.Clear();
+                value.Clear();
+                selested.Clear();
+                GetAidaInfo();
+                QuerySelested();
+                SetLogbox(id.Count);
+            }
+
         }
 
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -428,7 +449,7 @@ namespace Aida64_Esp8266_DisplayControler
                                      sourceBuffer[sourceIndex + 3];
                     if (pixelTotal > threshold)
                     {
-                        destinationValue += (byte) pixelValue;
+                        destinationValue += (byte)pixelValue;
                     }
 
                     if (pixelValue == 1)
@@ -482,7 +503,12 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnDisplay_Click(object sender, EventArgs e)
         {
-            //
+            if (clientcbx.Text.IndexOf(":") < 0)
+                return;
+            string[] s = clientcbx.Text.Split(':');
+            byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+            Udp.Send(ba, ba.Length, addr);
         }
 
         private void BtnReboot_Click(object sender, EventArgs e)
@@ -497,13 +523,15 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void TimerInterval_ValueChanged(object sender, EventArgs e)
         {
-            getAidaData.Interval = (int) timerInterval.Value;
+            getAidaData.Interval = (int)timerInterval.Value;
         }
 
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             token = cts.Token;
-            cts.Token.Register(() => { SetLogbox("已停止发送动画"); });
+
+            cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送动画"); });
+
             if (btnSendGif.Text == "停止发送动画")
             {
                 cts.Cancel();
@@ -511,8 +539,9 @@ namespace Aida64_Esp8266_DisplayControler
                 return;
             }
 
-            sendtask = new Task(() =>
+            sendBmpTask = new Task(() =>
             {
+                resetBmp.WaitOne();
                 var addrstr = clientList[0];
 
                 if (addrstr.IndexOf(":") < 0)
@@ -534,7 +563,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int) timerInterval.Value);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
 
@@ -551,7 +580,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int) timerInterval.Value);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
 
@@ -568,7 +597,7 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int) timerInterval.Value);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
 
@@ -587,52 +616,95 @@ namespace Aida64_Esp8266_DisplayControler
                         Array.Copy(ib, offset, data, 0, ib.Length - offset);
                         byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                         Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int) timerInterval.Value);
+                        Thread.Sleep((int)timerInterval.Value);
                     }
                 }
             }, token);
-            sendtask.Start();
+            sendBmpTask.Start();
             btnSendGif.Text = "停止发送动画";
         }
 
         private void BtnSendData_Click(object sender, EventArgs e)
         {
+
+            
+
             if (btnSendData.Text == "停止发送数据")
             {
-                cts.Cancel();
-                SetLogbox("已停止监测发送数据");
+                getAidaData.Stop();
+                //cts.Cancel();
+                resetInfo.Reset();
+                Sync.Send(SetLogbox, "已停止监测发送数据");
                 btnSendData.Text = "发送监测数据";
             }
-
-            token = cts.Token;
-            cts.Token.Register(() => { SetLogbox("已停止发送AIDA64监测数据"); });
-            sendtask = new Task(() =>
+            else
             {
-                var addrstr = clientList[0];
-                if (addrstr.IndexOf(":") < 0)
-                    return;
-                string[] s = addrstr.Split(':');
-                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-                DataTable dt = new DataTable();
-                dt.Columns.Add("i", Type.GetType("System.String"));
-                dt.Columns.Add("v", Type.GetType("System.String"));
-                for (int i = 0; i < id.Count; i++)
+                btnSendData.Text = "停止发送数据";
+                getAidaData.Start();
+                // token = cts.Token;
+                //cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送AIDA64监测数据"); });
+                
+          
+
+                if (sendInfoTask == null)
                 {
-                    if (id[i] == selested[i])
+                    sendInfoTask = new Task(() =>
                     {
-                        DataRow dr = dt.NewRow();
-                        dr["i"] = id[i];
-                        dr["v"] = value[i];
-                    }
+                        while (!token.IsCancellationRequested)
+                        {
+
+                            resetInfo.WaitOne();
+
+                            var addrstr = clientList[0];
+                            if (addrstr.IndexOf(":") < 0)
+                                return;
+                            string[] s = addrstr.Split(':');
+                            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                            DataTable dt = new DataTable();
+                            dt.Columns.Add("i", Type.GetType("System.String"));
+                            dt.Columns.Add("v", Type.GetType("System.String"));
+
+
+                            for (int i = 0; i < id.Count; i++)
+                            {
+
+                                if (selested.Count > i && id[i] == selested[i])
+                                {
+                                    DataRow dr = dt.NewRow();
+                                    dr["i"] = id[i];
+                                    dr["v"] = value[i];
+                                    dt.Rows.Add(dr);
+
+                                }
+                            }
+
+
+
+                            Sync.Send(SetLogbox, JsonConvert.SerializeObject(dt));
+
+                            byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
+                            Udp.Send(pack, pack.Length, addr);
+                            Thread.Sleep(1000);
+                        }
+                    }, token);
+
+                    sendInfoTask.Start();
+                }
+                else
+                {
+
+                    resetInfo.Set() ;
                 }
 
-                SetLogbox(JsonConvert.SerializeObject(dt).Length);
-                byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
-                    System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
-                Udp.Send(pack, pack.Length, addr);
-            }, token);
-            sendtask.Start();
-            btnSendData.Text = "停止发送数据";
+                
+
+
+                
+
+            }
+
+
+
         }
 
         //废弃代码
