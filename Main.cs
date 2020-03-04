@@ -286,8 +286,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void Main_Load(object sender, EventArgs e)
         {
-
-
             /*
             return Array.FindAll(assemblyArray, delegate (Type type)
             {
@@ -317,9 +315,6 @@ namespace Aida64_Esp8266_DisplayControler
                                 break;
                             case PACKET_TOGGLE_LED:
                                 var i = 0;
-                                break;
-                            default:
-                                
                                 break;
                         }
 
@@ -373,13 +368,13 @@ namespace Aida64_Esp8266_DisplayControler
         public static byte[] GetSingleBitmap(string file)
         {
 
-            Bitmap pimage = new System.Drawing.Bitmap(file);
+            Bitmap pimage = new Bitmap(file);
             Bitmap source;
 
             // If original bitmap is not already in 32 BPP, ARGB format, then convert
             if (pimage.PixelFormat != PixelFormat.Format32bppArgb)
             {
-                source = new System.Drawing.Bitmap(pimage.Width, pimage.Height, PixelFormat.Format32bppArgb);
+                source = new Bitmap(pimage.Width, pimage.Height, PixelFormat.Format32bppArgb);
                 source.SetResolution(pimage.HorizontalResolution, pimage.VerticalResolution);
                 using (Graphics g = Graphics.FromImage(source))
                 {
