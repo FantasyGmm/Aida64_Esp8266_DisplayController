@@ -50,6 +50,8 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
+        public List<string> hddid = new List<string>();
+        public List<string> hddvalue = new List<string>();
         public UdpClient Udp;
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
@@ -96,7 +98,6 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     tmp += ((char)accessor.ReadByte(i)).ToString();
                 }
-
                 tmp = tmp.Replace("\0", "");
                 tmp = tmp ?? "";
                 accessor.Dispose();
@@ -125,6 +126,14 @@ namespace Aida64_Esp8266_DisplayControler
         {
             foreach (var element in xel)
             {
+                for (int i = 1; i < 11; i++)
+                {
+                    if (element.Element("id").Value == "THDD"+i)
+                    {
+                        hddid.Add(element.Element("id").Value);
+                        hddvalue.Add(element.Element("value").Value);
+                    }
+                }
                 switch (element.Element("id").Value)
                 {
                     case "SCPUCLK": //CPU频率
@@ -201,10 +210,6 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("TCPU"); //CPU温度
             if (gpuTmp.Checked)
                 selested.Add("TGPU1DIO"); //GPU温度
-            /*
-            if(hddTmp.Checked)
-                selested.Add();
-                */
             if (mbTmp.Checked)
                 selested.Add("TMOBO"); //主板温度
             if (gpuClk.Checked)
@@ -343,9 +348,10 @@ namespace Aida64_Esp8266_DisplayControler
             id.Clear();
             value.Clear();
             selested.Clear();
+            hddid.Clear();
+            hddvalue.Clear();
             GetAidaInfo();
             QuerySelested();
-            SetLogbox(id.Count);
         }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -579,7 +585,6 @@ namespace Aida64_Esp8266_DisplayControler
             string[] bmplist = Directory.GetFiles(bmppath);
             if (btnSendGif.Text == "停止发送动画")
             {
-                //cts.Cancel();
                 resetBmp.Reset();
                 btnSendGif.Text = "发送动画";
                 return;
@@ -662,9 +667,15 @@ namespace Aida64_Esp8266_DisplayControler
                             resetInfo.WaitOne();
                             string[] s = clientList[0].Split(':');
                             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                            if (!hddTmp.Checked)
+                            {
+                                hddid.Clear();
+                                hddvalue.Clear();
+                            }
                             JObject jsobj = new JObject
                             {
-                                { "l", selested.Count }
+                                { "l", selested.Count },
+                                { "hl",hddid.Count }
                             };
                             for (int i = 0; i < id.Count; i++)
                             {
@@ -676,7 +687,12 @@ namespace Aida64_Esp8266_DisplayControler
                                     }
                                 }
                             }
+                            for (int i = 0; i < hddid.Count; i++)
+                            {
+                                jsobj.Add(hddid[i],hddvalue[i]);
+                            }
                             json_out = jsobj.ToString();
+                            //Sync.Send(SetLogbox,json_out);
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
                                 System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
