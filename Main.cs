@@ -99,6 +99,7 @@ namespace Aida64_Esp8266_DisplayControler
                 accessor.Dispose();
                 mappedFile.Dispose();
                 tmp += "</AIDA>";
+                SetLogbox(tmp);
                 XDocument xmldoc = XDocument.Parse(tmp);
                 IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
                 InsertInfo(sysEnumerator);
@@ -226,6 +227,7 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("VCPU");
                 selested.Add("PCPUPKG");
             }
+            SetLogbox("已选择" + selested.Count);
         }
 
 
@@ -337,15 +339,12 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void GetAidaData_Tick(object sender, EventArgs e)
         {
-            lock (id)
-            {
-                id.Clear();
-                value.Clear();
-                selested.Clear();
-                GetAidaInfo();
-                QuerySelested();
-                SetLogbox(id.Count);
-            }
+            id.Clear();
+            value.Clear();
+            selested.Clear();
+            GetAidaInfo();
+            QuerySelested();
+            SetLogbox(id.Count);
         }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -561,7 +560,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void OutDebugFile_Click(object sender, EventArgs e)
         {
-            CreatDebugFile("Aidainfo.xml", json_out);    //输出源JSON
+            CreatDebugFile("Aidainfo.json", json_out);    //输出源JSON
         }
 
         private void BtnSendGif_Click(object sender, EventArgs e)
