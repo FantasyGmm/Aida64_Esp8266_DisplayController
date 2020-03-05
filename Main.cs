@@ -565,14 +565,10 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
-            //token = cts.Token;
-            //cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送动画"); });
             if (!cbSendBmp.Checked)
                 return;
-
             string bmppath = bmpPath;
             int bmpindex = 0;
-
             if (!Directory.Exists(bmppath))
             {
                 MessageBox.Show("请选择正确的文件夹！");
