@@ -54,6 +54,7 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
+            this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -62,9 +63,9 @@
             this.asusButton = new System.Windows.Forms.RadioButton();
             this.baButton = new System.Windows.Forms.RadioButton();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lbxClient = new System.Windows.Forms.ListBox();
             this.cbSendAll = new System.Windows.Forms.CheckBox();
             this.btnReboot = new System.Windows.Forms.Button();
             this.btnDisplay = new System.Windows.Forms.Button();
@@ -77,7 +78,6 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
-            this.lbxClient = new System.Windows.Forms.ListBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -332,6 +332,18 @@
             this.bmpPanel.Size = new System.Drawing.Size(196, 217);
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
+            this.bmpPanel.Text = "动画";
+            // 
+            // cbSendBmp
+            // 
+            this.cbSendBmp.AutoSize = true;
+            this.cbSendBmp.Location = new System.Drawing.Point(537, 121);
+            this.cbSendBmp.Name = "cbSendBmp";
+            this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
+            this.cbSendBmp.TabIndex = 8;
+            this.cbSendBmp.Text = "启用动画";
+            this.cbSendBmp.UseVisualStyleBackColor = true;
+            this.cbSendBmp.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // selButton
             // 
@@ -370,7 +382,7 @@
             this.customButton.TabIndex = 4;
             this.customButton.Text = "自定义";
             this.customButton.UseVisualStyleBackColor = true;
-            this.customButton.CheckedChanged += new System.EventHandler(this.customButton_CheckedChanged);
+            this.customButton.CheckedChanged += new System.EventHandler(this.CustomButton_CheckedChanged);
             // 
             // biliButton
             // 
@@ -381,7 +393,7 @@
             this.biliButton.TabIndex = 3;
             this.biliButton.Text = "BiliBili";
             this.biliButton.UseVisualStyleBackColor = true;
-            this.biliButton.CheckedChanged += new System.EventHandler(this.biliButton_CheckedChanged);
+            this.biliButton.CheckedChanged += new System.EventHandler(this.BiliButton_CheckedChanged);
             // 
             // asusButton
             // 
@@ -392,7 +404,7 @@
             this.asusButton.TabIndex = 2;
             this.asusButton.Text = "Asus";
             this.asusButton.UseVisualStyleBackColor = true;
-            this.asusButton.CheckedChanged += new System.EventHandler(this.asusButton_CheckedChanged);
+            this.asusButton.CheckedChanged += new System.EventHandler(this.AsusButton_CheckedChanged);
             // 
             // baButton
             // 
@@ -405,7 +417,7 @@
             this.baButton.TabStop = true;
             this.baButton.Text = "BadApple";
             this.baButton.UseVisualStyleBackColor = true;
-            this.baButton.CheckedChanged += new System.EventHandler(this.baButton_CheckedChanged);
+            this.baButton.CheckedChanged += new System.EventHandler(this.BaButton_CheckedChanged);
             // 
             // pictureBox
             // 
@@ -414,17 +426,6 @@
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
-            // 
-            // cbSendBmp
-            // 
-            this.cbSendBmp.AutoSize = true;
-            this.cbSendBmp.Location = new System.Drawing.Point(524, 95);
-            this.cbSendBmp.Name = "cbSendBmp";
-            this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
-            this.cbSendBmp.TabIndex = 8;
-            this.cbSendBmp.Text = "启用动画";
-            this.cbSendBmp.UseVisualStyleBackColor = true;
-            this.cbSendBmp.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // label3
             // 
@@ -448,6 +449,15 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(312, 443);
             this.panel1.TabIndex = 16;
+            // 
+            // lbxClient
+            // 
+            this.lbxClient.FormattingEnabled = true;
+            this.lbxClient.ItemHeight = 12;
+            this.lbxClient.Location = new System.Drawing.Point(12, 56);
+            this.lbxClient.Name = "lbxClient";
+            this.lbxClient.Size = new System.Drawing.Size(265, 160);
+            this.lbxClient.TabIndex = 4;
             // 
             // cbSendAll
             // 
@@ -573,15 +583,6 @@
             0,
             0});
             this.timerInterval.ValueChanged += new System.EventHandler(this.TimerInterval_ValueChanged);
-            // 
-            // lbxClient
-            // 
-            this.lbxClient.FormattingEnabled = true;
-            this.lbxClient.ItemHeight = 12;
-            this.lbxClient.Location = new System.Drawing.Point(12, 56);
-            this.lbxClient.Name = "lbxClient";
-            this.lbxClient.Size = new System.Drawing.Size(265, 160);
-            this.lbxClient.TabIndex = 4;
             // 
             // Main
             // 
