@@ -671,13 +671,17 @@ namespace Aida64_Esp8266_DisplayControler
                             DataTable dt = new DataTable();
                             dt.Columns.Add("i", Type.GetType("System.String"));
                             dt.Columns.Add("v", Type.GetType("System.String"));
+                            DataRow dr = dt.NewRow();
+                            dr["i"] = "l";
+                            dr["v"] = selested.Count;
+                            dt.Rows.Add(dr);
                             for (int i = 0; i < id.Count; i++)
                             {
                                 foreach (var sel in selested)
                                 {
                                     if (id[i] == sel)
                                     {
-                                        DataRow dr = dt.NewRow();
+                                        dr = dt.NewRow();
                                         dr["i"] = id[i];
                                         dr["v"] = value[i];
                                         dt.Rows.Add(dr);
