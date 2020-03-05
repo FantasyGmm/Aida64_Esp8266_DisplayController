@@ -53,8 +53,7 @@
             this.cpuClk = new System.Windows.Forms.CheckBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.bmpPanel = new System.Windows.Forms.GroupBox();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -63,10 +62,10 @@
             this.asusButton = new System.Windows.Forms.RadioButton();
             this.baButton = new System.Windows.Forms.RadioButton();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.clientcbx = new System.Windows.Forms.ComboBox();
+            this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cbxSendAll = new System.Windows.Forms.CheckBox();
+            this.cbSendAll = new System.Windows.Forms.CheckBox();
             this.btnReboot = new System.Windows.Forms.Button();
             this.btnDisplay = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
@@ -78,11 +77,12 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
+            this.lbxClient = new System.Windows.Forms.ListBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
             this.clkBox.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.bmpPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.rpmBox.SuspendLayout();
@@ -316,34 +316,22 @@
             this.label1.TabIndex = 12;
             this.label1.Text = "刷新间隔";
             // 
-            // groupBox1
+            // bmpPanel
             // 
-            this.groupBox1.Controls.Add(this.checkBox1);
-            this.groupBox1.Controls.Add(this.selButton);
-            this.groupBox1.Controls.Add(this.customPath);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.customButton);
-            this.groupBox1.Controls.Add(this.biliButton);
-            this.groupBox1.Controls.Add(this.asusButton);
-            this.groupBox1.Controls.Add(this.baButton);
-            this.groupBox1.Controls.Add(this.pictureBox);
-            this.groupBox1.Location = new System.Drawing.Point(524, 104);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(196, 217);
-            this.groupBox1.TabIndex = 13;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "动画";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(13, 19);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(72, 16);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "启用动画";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
+            this.bmpPanel.Controls.Add(this.selButton);
+            this.bmpPanel.Controls.Add(this.customPath);
+            this.bmpPanel.Controls.Add(this.label2);
+            this.bmpPanel.Controls.Add(this.customButton);
+            this.bmpPanel.Controls.Add(this.biliButton);
+            this.bmpPanel.Controls.Add(this.asusButton);
+            this.bmpPanel.Controls.Add(this.baButton);
+            this.bmpPanel.Controls.Add(this.pictureBox);
+            this.bmpPanel.Enabled = false;
+            this.bmpPanel.Location = new System.Drawing.Point(524, 104);
+            this.bmpPanel.Name = "bmpPanel";
+            this.bmpPanel.Size = new System.Drawing.Size(196, 217);
+            this.bmpPanel.TabIndex = 13;
+            this.bmpPanel.TabStop = false;
             // 
             // selButton
             // 
@@ -376,43 +364,40 @@
             // customButton
             // 
             this.customButton.AutoSize = true;
-            this.customButton.Enabled = false;
             this.customButton.Location = new System.Drawing.Point(104, 63);
             this.customButton.Name = "customButton";
             this.customButton.Size = new System.Drawing.Size(59, 16);
             this.customButton.TabIndex = 4;
-            this.customButton.TabStop = true;
             this.customButton.Text = "自定义";
             this.customButton.UseVisualStyleBackColor = true;
+            this.customButton.CheckedChanged += new System.EventHandler(this.customButton_CheckedChanged);
             // 
             // biliButton
             // 
             this.biliButton.AutoSize = true;
-            this.biliButton.Enabled = false;
             this.biliButton.Location = new System.Drawing.Point(104, 41);
             this.biliButton.Name = "biliButton";
             this.biliButton.Size = new System.Drawing.Size(71, 16);
             this.biliButton.TabIndex = 3;
-            this.biliButton.TabStop = true;
             this.biliButton.Text = "BiliBili";
             this.biliButton.UseVisualStyleBackColor = true;
+            this.biliButton.CheckedChanged += new System.EventHandler(this.biliButton_CheckedChanged);
             // 
             // asusButton
             // 
             this.asusButton.AutoSize = true;
-            this.asusButton.Enabled = false;
             this.asusButton.Location = new System.Drawing.Point(13, 63);
             this.asusButton.Name = "asusButton";
             this.asusButton.Size = new System.Drawing.Size(47, 16);
             this.asusButton.TabIndex = 2;
-            this.asusButton.TabStop = true;
             this.asusButton.Text = "Asus";
             this.asusButton.UseVisualStyleBackColor = true;
+            this.asusButton.CheckedChanged += new System.EventHandler(this.asusButton_CheckedChanged);
             // 
             // baButton
             // 
             this.baButton.AutoSize = true;
-            this.baButton.Enabled = false;
+            this.baButton.Checked = true;
             this.baButton.Location = new System.Drawing.Point(13, 41);
             this.baButton.Name = "baButton";
             this.baButton.Size = new System.Drawing.Size(71, 16);
@@ -420,6 +405,7 @@
             this.baButton.TabStop = true;
             this.baButton.Text = "BadApple";
             this.baButton.UseVisualStyleBackColor = true;
+            this.baButton.CheckedChanged += new System.EventHandler(this.baButton_CheckedChanged);
             // 
             // pictureBox
             // 
@@ -429,19 +415,21 @@
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             // 
-            // clientcbx
+            // cbSendBmp
             // 
-            this.clientcbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.clientcbx.FormattingEnabled = true;
-            this.clientcbx.Location = new System.Drawing.Point(14, 52);
-            this.clientcbx.Name = "clientcbx";
-            this.clientcbx.Size = new System.Drawing.Size(157, 20);
-            this.clientcbx.TabIndex = 14;
+            this.cbSendBmp.AutoSize = true;
+            this.cbSendBmp.Location = new System.Drawing.Point(524, 95);
+            this.cbSendBmp.Name = "cbSendBmp";
+            this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
+            this.cbSendBmp.TabIndex = 8;
+            this.cbSendBmp.Text = "启用动画";
+            this.cbSendBmp.UseVisualStyleBackColor = true;
+            this.cbSendBmp.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 37);
+            this.label3.Location = new System.Drawing.Point(10, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 15;
@@ -450,28 +438,30 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.cbxSendAll);
+            this.panel1.Controls.Add(this.lbxClient);
+            this.panel1.Controls.Add(this.cbSendAll);
             this.panel1.Controls.Add(this.btnReboot);
             this.panel1.Controls.Add(this.btnDisplay);
             this.panel1.Controls.Add(this.btnLed);
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Location = new System.Drawing.Point(14, 104);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(312, 206);
+            this.panel1.Size = new System.Drawing.Size(312, 443);
             this.panel1.TabIndex = 16;
             // 
-            // cbxSendAll
+            // cbSendAll
             // 
-            this.cbxSendAll.AutoSize = true;
-            this.cbxSendAll.Location = new System.Drawing.Point(22, 9);
-            this.cbxSendAll.Name = "cbxSendAll";
-            this.cbxSendAll.Size = new System.Drawing.Size(120, 16);
-            this.cbxSendAll.TabIndex = 3;
-            this.cbxSendAll.Text = "发送至所有客户端";
-            this.cbxSendAll.UseVisualStyleBackColor = true;
+            this.cbSendAll.AutoSize = true;
+            this.cbSendAll.Location = new System.Drawing.Point(12, 20);
+            this.cbSendAll.Name = "cbSendAll";
+            this.cbSendAll.Size = new System.Drawing.Size(120, 16);
+            this.cbSendAll.TabIndex = 3;
+            this.cbSendAll.Text = "发送至所有客户端";
+            this.cbSendAll.UseVisualStyleBackColor = true;
             // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(153, 59);
+            this.btnReboot.Location = new System.Drawing.Point(178, 243);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -481,7 +471,7 @@
             // 
             // btnDisplay
             // 
-            this.btnDisplay.Location = new System.Drawing.Point(83, 59);
+            this.btnDisplay.Location = new System.Drawing.Point(108, 243);
             this.btnDisplay.Name = "btnDisplay";
             this.btnDisplay.Size = new System.Drawing.Size(64, 32);
             this.btnDisplay.TabIndex = 1;
@@ -491,7 +481,7 @@
             // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(13, 59);
+            this.btnLed.Location = new System.Drawing.Point(38, 243);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -501,7 +491,6 @@
             // 
             // btnSendGif
             // 
-            this.btnSendGif.Enabled = false;
             this.btnSendGif.Location = new System.Drawing.Point(615, 52);
             this.btnSendGif.Name = "btnSendGif";
             this.btnSendGif.Size = new System.Drawing.Size(84, 24);
@@ -585,19 +574,27 @@
             0});
             this.timerInterval.ValueChanged += new System.EventHandler(this.TimerInterval_ValueChanged);
             // 
+            // lbxClient
+            // 
+            this.lbxClient.FormattingEnabled = true;
+            this.lbxClient.ItemHeight = 12;
+            this.lbxClient.Location = new System.Drawing.Point(12, 56);
+            this.lbxClient.Name = "lbxClient";
+            this.lbxClient.Size = new System.Drawing.Size(265, 160);
+            this.lbxClient.TabIndex = 4;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 558);
+            this.Controls.Add(this.cbSendBmp);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
             this.Controls.Add(this.volBox);
             this.Controls.Add(this.rpmBox);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.clientcbx);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.bmpPanel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.unSelectAll);
             this.Controls.Add(this.selectAll);
@@ -621,8 +618,8 @@
             this.utiBox.PerformLayout();
             this.clkBox.ResumeLayout(false);
             this.clkBox.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.bmpPanel.ResumeLayout(false);
+            this.bmpPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -661,7 +658,7 @@
         private System.Windows.Forms.CheckBox cpuClk;
         public System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox bmpPanel;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.RadioButton customButton;
         private System.Windows.Forms.RadioButton biliButton;
@@ -670,14 +667,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox customPath;
         private System.Windows.Forms.Button selButton;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.ComboBox clientcbx;
+        private System.Windows.Forms.CheckBox cbSendBmp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnDisplay;
         private System.Windows.Forms.Button btnLed;
         private System.Windows.Forms.Button btnReboot;
-        private System.Windows.Forms.CheckBox cbxSendAll;
+        private System.Windows.Forms.CheckBox cbSendAll;
         private System.Windows.Forms.CheckBox mbTmp;
         private System.Windows.Forms.GroupBox rpmBox;
         private System.Windows.Forms.CheckBox cpuRpm;
@@ -687,6 +683,7 @@
         private System.Windows.Forms.CheckBox cpuVol;
         private System.Windows.Forms.NumericUpDown timerInterval;
         private System.Windows.Forms.Button btnSendGif;
+        private System.Windows.Forms.ListBox lbxClient;
     }
 }
 

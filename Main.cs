@@ -53,7 +53,10 @@ namespace Aida64_Esp8266_DisplayControler
         public UdpClient Udp;
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
-        ManualResetEvent resetBmp, resetInfo = new ManualResetEvent(true);
+        public string bmpPath = "";
+        public int bmpDealy = 100;
+
+        ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
        
 
@@ -255,7 +258,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void AddClientBox(object o)
         {
-            clientcbx.Items.Add(o as string);
+            lbxClient.Items.Add(o as string);
             clientList.Add(o as string);
         }
 
@@ -263,7 +266,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             string s = addr.ToString();
 
-            if (clientcbx.Items.IndexOf(s) < 0)
+            if (lbxClient.Items.IndexOf(s) < 0)
             {
                 Sync.Send(AddClientBox, s);
             }
@@ -360,12 +363,13 @@ namespace Aida64_Esp8266_DisplayControler
             logBox.ResetText();
         }
 
-        private void SelButton_Click(object sender, EventArgs e)
-        {
-        }
+  
 
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
+            bmpPanel.Enabled = cbSendBmp.Checked;
+
+            /*
             tmpBox.Enabled = !tmpBox.Enabled;
             utiBox.Enabled = !utiBox.Enabled;
             clkBox.Enabled = !clkBox.Enabled;
@@ -383,6 +387,7 @@ namespace Aida64_Esp8266_DisplayControler
             customButton.Checked = false;
             customPath.Enabled = true;
             selButton.Enabled = true;
+            */
         }
 
         public static byte[] GetSingleBitmap(string file)
@@ -492,9 +497,10 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnLed_Click(object sender, EventArgs e)
         {
-            if (clientcbx.Text.IndexOf(":") < 0)
+            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                 return;
-            string[] s = clientcbx.Text.Split(':');
+
+            string[] s = clientList[0].Split(':');
             byte[] ba = BuildPacket(PACKET_TOGGLE_LED);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
@@ -503,9 +509,10 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnDisplay_Click(object sender, EventArgs e)
         {
-            if (clientcbx.Text.IndexOf(":") < 0)
+            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                 return;
-            string[] s = clientcbx.Text.Split(':');
+
+            string[] s = clientList[0].Split(':');
             byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
@@ -513,9 +520,9 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnReboot_Click(object sender, EventArgs e)
         {
-            if (clientcbx.Text.IndexOf(":") < 0)
+            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                 return;
-            string[] s = clientcbx.Text.Split(':');
+            string[] s = clientList[0].Split(':');
             byte[] ba = BuildPacket(PACKET_REBOOT);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
@@ -524,110 +531,155 @@ namespace Aida64_Esp8266_DisplayControler
         private void TimerInterval_ValueChanged(object sender, EventArgs e)
         {
             getAidaData.Interval = (int)timerInterval.Value;
+            bmpDealy = (int)timerInterval.Value;
         }
+
+        private void baButton_CheckedChanged(object sender, EventArgs e)
+        {
+            bmpPath = Directory.GetCurrentDirectory() + @"\bad apple\";
+        }
+
+        private void biliButton_CheckedChanged(object sender, EventArgs e)
+        {
+            bmpPath = Directory.GetCurrentDirectory() + @"\bilibili\";
+        }
+
+        private void asusButton_CheckedChanged(object sender, EventArgs e)
+        {
+            bmpPath = Directory.GetCurrentDirectory() + @"\asus\";
+        }
+
+        private void customButton_CheckedChanged(object sender, EventArgs e)
+        {
+            customPath.Enabled = (sender as RadioButton).Checked;
+            selButton.Enabled = (sender as RadioButton).Checked;
+        }
+
+        private void SelButton_Click(object sender, EventArgs e)
+        {
+            var op = new FolderBrowserDialog();
+            op.Description = "请选择存放图片的文件夹";
+
+            if (op.ShowDialog() == DialogResult.OK)
+            {
+                bmpPath = op.SelectedPath;
+                customPath.Text = op.SelectedPath;
+            }
+
+        }
+
+
 
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
-            token = cts.Token;
+            //token = cts.Token;
+            //cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送动画"); });
 
-            cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送动画"); });
 
-            if (btnSendGif.Text == "停止发送动画")
+            if (!cbSendBmp.Checked)
+                return;
+
+            string bmppath = bmpPath;
+            int bmpindex = 0;
+
+            if (!Directory.Exists(bmppath))
             {
-                cts.Cancel();
-                btnSendGif.Text = "发送动画";
+                MessageBox.Show("请选择正确的文件夹！");
                 return;
             }
 
-            sendBmpTask = new Task(() =>
+           string[] bmplist = Directory.GetFiles(bmppath);
+
+
+            if (btnSendGif.Text == "停止发送动画")
             {
-                resetBmp.WaitOne();
-                var addrstr = clientList[0];
+                //cts.Cancel();
+                resetBmp.Reset();
+                btnSendGif.Text = "发送动画";
+                return;
+            }
+            else
+            {
+                btnSendGif.Text = "停止发送动画";
 
-                if (addrstr.IndexOf(":") < 0)
-                    return;
 
-                string[] s = addrstr.Split(':');
-                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-
-                if (biliButton.Checked)
+                if (sendBmpTask == null)
                 {
-                    foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bilibili"))
+                    sendBmpTask = new Task(() =>
                     {
-                        byte[] ib = GetSingleBitmap(file);
-                        MemoryStream ms = new MemoryStream();
-                        ms.Write(ib, 0, ib.Length);
-                        pictureBox.Image = Image.FromStream(ms);
-                        var offset = BitConverter.ToInt32(ib, 10);
-                        byte[] data = new byte[ib.Length - offset];
-                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
-                        Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
-                    }
+
+                        while (!token.IsCancellationRequested)
+                        {
+                            resetBmp.WaitOne();
+
+                            //检测按钮变动
+                            if (bmppath != bmpPath)
+                            {
+
+                                if (!Directory.Exists(bmppath))
+                                    continue;
+
+
+                                bmppath = bmpPath;
+                                bmpindex = 0;
+                                bmplist = Directory.GetFiles(bmppath);
+                            }
+
+                            //重置动画播放
+                            if (bmpindex > bmplist.Length)
+                                bmpindex = 0;
+
+
+                            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                                continue;
+
+                            string[] s = clientList[0].Split(':');
+
+                            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+
+                            //未选择文件不作任何操作
+                            if (bmplist.Length == 0)
+                                continue;
+
+                            byte[] ib = Bmp.OtsuThreshold(bmplist[bmpindex]);
+                            MemoryStream ms = new MemoryStream();
+                            ms.Write(ib, 0, ib.Length);
+                            pictureBox.Image = Image.FromStream(ms);
+                            var offset = BitConverter.ToInt32(ib, 10);
+                            byte[] data = new byte[ib.Length - offset];
+                            Array.Copy(ib, offset, data, 0, ib.Length - offset);
+                            byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+                            Udp.Send(packet, packet.Length, addr);
+                            bmpindex++;
+                            Thread.Sleep(bmpDealy);
+                        }
+
+
+       
+                    }, token);
+                    sendBmpTask.Start();
+
+                }
+                else
+                {
+                    resetBmp.Set();
                 }
 
-                if (baButton.Checked)
-                {
-                    foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\bad apple"))
-                    {
-                        byte[] ib = GetSingleBitmap(file);
-                        MemoryStream ms = new MemoryStream();
-                        ms.Write(ib, 0, ib.Length);
-                        pictureBox.Image = Image.FromStream(ms);
-                        var offset = BitConverter.ToInt32(ib, 10);
-                        byte[] data = new byte[ib.Length - offset];
-                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
-                        Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
-                    }
-                }
 
-                if (asusButton.Checked)
-                {
-                    foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + @"\aoki"))
-                    {
-                        byte[] ib = Bmp.OtsuThreshold(file);
-                        MemoryStream ms = new MemoryStream();
-                        ms.Write(ib, 0, ib.Length);
-                        pictureBox.Image = Image.FromStream(ms);
-                        var offset = BitConverter.ToInt32(ib, 10);
-                        byte[] data = new byte[ib.Length - offset];
-                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
-                        Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
-                    }
-                }
 
-                if (customButton.Checked)
-                {
-                    if (customPath.Text == string.Empty)
-                        return;
-                    foreach (var file in Directory.GetFiles(customPath.Text))
-                    {
-                        byte[] ib = GetSingleBitmap(file);
-                        MemoryStream ms = new MemoryStream();
-                        ms.Write(ib, 0, ib.Length);
-                        pictureBox.Image = Image.FromStream(ms);
-                        var offset = BitConverter.ToInt32(ib, 10);
-                        byte[] data = new byte[ib.Length - offset];
-                        Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                        byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
-                        Udp.Send(packet, packet.Length, addr);
-                        Thread.Sleep((int)timerInterval.Value);
-                    }
-                }
-            }, token);
-            sendBmpTask.Start();
-            btnSendGif.Text = "停止发送动画";
+
+            }
+
+
+
+
+
+
         }
 
         private void BtnSendData_Click(object sender, EventArgs e)
         {
 
-            
 
             if (btnSendData.Text == "停止发送数据")
             {
@@ -643,8 +695,6 @@ namespace Aida64_Esp8266_DisplayControler
                 getAidaData.Start();
                 // token = cts.Token;
                 //cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送AIDA64监测数据"); });
-                
-          
 
                 if (sendInfoTask == null)
                 {
@@ -653,12 +703,11 @@ namespace Aida64_Esp8266_DisplayControler
                         while (!token.IsCancellationRequested)
                         {
 
-                            resetInfo.WaitOne();
+                            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                                continue;
 
-                            var addrstr = clientList[0];
-                            if (addrstr.IndexOf(":") < 0)
-                                return;
-                            string[] s = addrstr.Split(':');
+                            resetInfo.WaitOne();
+                            string[] s = clientList[0].Split(':');
                             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
                             DataTable dt = new DataTable();
                             dt.Columns.Add("i", Type.GetType("System.String"));
@@ -681,10 +730,10 @@ namespace Aida64_Esp8266_DisplayControler
 
 
                             Sync.Send(SetLogbox, JsonConvert.SerializeObject(dt));
-
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
                             Udp.Send(pack, pack.Length, addr);
-                            Thread.Sleep(1000);
+                            Thread.Sleep(bmpDealy);
+                            
                         }
                     }, token);
 
@@ -692,7 +741,6 @@ namespace Aida64_Esp8266_DisplayControler
                 }
                 else
                 {
-
                     resetInfo.Set() ;
                 }
 
