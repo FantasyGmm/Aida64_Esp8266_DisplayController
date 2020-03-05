@@ -14,6 +14,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json.Linq;
 
 
 namespace Aida64_Esp8266_DisplayControler
@@ -23,6 +24,7 @@ namespace Aida64_Esp8266_DisplayControler
      */
     public partial class Main : Form
     {
+
         public struct Packet
         {
             public byte cmd;
@@ -99,7 +101,6 @@ namespace Aida64_Esp8266_DisplayControler
                 accessor.Dispose();
                 mappedFile.Dispose();
                 tmp += "</AIDA>";
-                SetLogbox(tmp);
                 XDocument xmldoc = XDocument.Parse(tmp);
                 IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
                 InsertInfo(sysEnumerator);
@@ -227,7 +228,6 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("VCPU");
                 selested.Add("PCPUPKG");
             }
-            SetLogbox("已选择" + selested.Count);
         }
 
 
