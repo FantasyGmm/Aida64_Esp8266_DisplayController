@@ -79,9 +79,9 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void CreatDebugFile(string file, string data)
         {
-            if (File.Exists(file)) 
+            if (File.Exists(file))
                 File.Delete(file);
-            FileStream fs = new FileStream(file,FileMode.Create);
+            FileStream fs = new FileStream(file, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
             sw.Write(data);
             sw.Dispose();
@@ -130,7 +130,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 for (int i = 1; i < 11; i++)
                 {
-                    if (element.Element("id").Value == "THDD"+i)
+                    if (element.Element("id").Value == "THDD" + i)
                     {
                         hddid.Add(element.Element("id").Value);
                         hddvalue.Add(element.Element("value").Value);
@@ -242,7 +242,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void SetLogbox(object o)
         {
-           logBox.AppendText(o as string + Environment.NewLine);
+            logBox.AppendText(o as string + Environment.NewLine);
         }
         public void SetButtonText(object o)
         {
@@ -616,9 +616,12 @@ namespace Aida64_Esp8266_DisplayControler
                             byte[] ib = GetSingleBitmap(bmplist[bmpindex]);
                             MagickImage img = new MagickImage(ib);
                             img.Format = MagickFormat.Xbm;
-                            byte[] tb = img.ToByteArray();
 
-   
+                            var width = Convert.ToInt32(nbxWidth.Value);
+                            var height = Convert.ToInt32(nbxHeight.Value);
+                            img.Resize(new MagickGeometry($"{width}x{height }!"));
+                            byte[] tb = img.ToByteArray();
+                           
                             using (MemoryStream memStream = new MemoryStream())
                             {
                                 img.Format = MagickFormat.Jpg;
@@ -626,8 +629,14 @@ namespace Aida64_Esp8266_DisplayControler
                                 pictureBox.Image = Image.FromStream(memStream);
                             }
 
+
                             var data = ConvertXBM(System.Text.Encoding.Default.GetString(tb));
-                            byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
+
+                            MemoryStream ms = new MemoryStream();
+                            ms.Write(new byte[] { Convert.ToByte(width) , Convert.ToByte(height) }, 0, 2);
+                            ms.Write(data, 0, data.Length);
+                            
+                            byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, ms.ToArray());
                             Udp.Send(packet, packet.Length, addr);
                             bmpindex++;
                             Thread.Sleep(bmpDealy);
@@ -683,13 +692,13 @@ namespace Aida64_Esp8266_DisplayControler
                                 {
                                     if (id[i] == sel)
                                     {
-                                        jsobj.Add(id[i],value[i]);
+                                        jsobj.Add(id[i], value[i]);
                                     }
                                 }
                             }
                             for (int i = 0; i < hddid.Count; i++)
                             {
-                                jsobj.Add(hddid[i],hddvalue[i]);
+                                jsobj.Add(hddid[i], hddvalue[i]);
                             }
                             json_out = jsobj.ToString();
                             //Sync.Send(SetLogbox,json_out);
@@ -704,7 +713,7 @@ namespace Aida64_Esp8266_DisplayControler
                 }
                 else
                 {
-                    resetInfo.Set() ;
+                    resetInfo.Set();
                 }
             }
         }

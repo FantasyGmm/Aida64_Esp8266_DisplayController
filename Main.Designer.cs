@@ -79,6 +79,10 @@
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.OutDebugFile = new System.Windows.Forms.Button();
+            this.nbxWidth = new System.Windows.Forms.NumericUpDown();
+            this.nbxHeight = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -89,6 +93,8 @@
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -311,7 +317,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(535, 347);
+            this.label1.Location = new System.Drawing.Point(535, 402);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -319,6 +325,10 @@
             // 
             // bmpPanel
             // 
+            this.bmpPanel.Controls.Add(this.label5);
+            this.bmpPanel.Controls.Add(this.label4);
+            this.bmpPanel.Controls.Add(this.nbxHeight);
+            this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.selButton);
             this.bmpPanel.Controls.Add(this.customPath);
             this.bmpPanel.Controls.Add(this.label2);
@@ -330,7 +340,7 @@
             this.bmpPanel.Enabled = false;
             this.bmpPanel.Location = new System.Drawing.Point(524, 104);
             this.bmpPanel.Name = "bmpPanel";
-            this.bmpPanel.Size = new System.Drawing.Size(196, 217);
+            this.bmpPanel.Size = new System.Drawing.Size(196, 271);
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
@@ -574,7 +584,7 @@
             // 
             // timerInterval
             // 
-            this.timerInterval.Location = new System.Drawing.Point(594, 343);
+            this.timerInterval.Location = new System.Drawing.Point(594, 398);
             this.timerInterval.Name = "timerInterval";
             this.timerInterval.Size = new System.Drawing.Size(93, 21);
             this.timerInterval.TabIndex = 19;
@@ -594,6 +604,58 @@
             this.OutDebugFile.Text = "输出文件";
             this.OutDebugFile.UseVisualStyleBackColor = true;
             this.OutDebugFile.Click += new System.EventHandler(this.OutDebugFile_Click);
+            // 
+            // nbxWidth
+            // 
+            this.nbxWidth.Location = new System.Drawing.Point(13, 223);
+            this.nbxWidth.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nbxWidth.Name = "nbxWidth";
+            this.nbxWidth.Size = new System.Drawing.Size(63, 21);
+            this.nbxWidth.TabIndex = 22;
+            this.nbxWidth.Value = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
+            // 
+            // nbxHeight
+            // 
+            this.nbxHeight.Location = new System.Drawing.Point(78, 223);
+            this.nbxHeight.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nbxHeight.Name = "nbxHeight";
+            this.nbxHeight.Size = new System.Drawing.Size(63, 21);
+            this.nbxHeight.TabIndex = 23;
+            this.nbxHeight.Value = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 208);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 12);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "宽度";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(76, 208);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 12);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "高度";
             // 
             // Main
             // 
@@ -641,6 +703,8 @@
             this.volBox.ResumeLayout(false);
             this.volBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -698,6 +762,10 @@
         private System.Windows.Forms.Button btnSendGif;
         private System.Windows.Forms.ListBox lbxClient;
         private System.Windows.Forms.Button OutDebugFile;
+        private System.Windows.Forms.NumericUpDown nbxHeight;
+        private System.Windows.Forms.NumericUpDown nbxWidth;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
     }
 }
 
