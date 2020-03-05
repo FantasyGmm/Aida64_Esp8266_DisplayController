@@ -54,7 +54,6 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
-            this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -63,6 +62,7 @@
             this.asusButton = new System.Windows.Forms.RadioButton();
             this.baButton = new System.Windows.Forms.RadioButton();
             this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbxClient = new System.Windows.Forms.ListBox();
@@ -78,6 +78,7 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -334,17 +335,6 @@
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
             // 
-            // cbSendBmp
-            // 
-            this.cbSendBmp.AutoSize = true;
-            this.cbSendBmp.Location = new System.Drawing.Point(537, 121);
-            this.cbSendBmp.Name = "cbSendBmp";
-            this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
-            this.cbSendBmp.TabIndex = 8;
-            this.cbSendBmp.Text = "启用动画";
-            this.cbSendBmp.UseVisualStyleBackColor = true;
-            this.cbSendBmp.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
-            // 
             // selButton
             // 
             this.selButton.Enabled = false;
@@ -426,6 +416,17 @@
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
+            // 
+            // cbSendBmp
+            // 
+            this.cbSendBmp.AutoSize = true;
+            this.cbSendBmp.Location = new System.Drawing.Point(537, 121);
+            this.cbSendBmp.Name = "cbSendBmp";
+            this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
+            this.cbSendBmp.TabIndex = 8;
+            this.cbSendBmp.Text = "启用动画";
+            this.cbSendBmp.UseVisualStyleBackColor = true;
+            this.cbSendBmp.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // label3
             // 
@@ -584,11 +585,22 @@
             0});
             this.timerInterval.ValueChanged += new System.EventHandler(this.TimerInterval_ValueChanged);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(13, 52);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "输出文件";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 558);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.cbSendBmp);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
@@ -685,6 +697,7 @@
         private System.Windows.Forms.NumericUpDown timerInterval;
         private System.Windows.Forms.Button btnSendGif;
         private System.Windows.Forms.ListBox lbxClient;
+        private System.Windows.Forms.Button button1;
     }
 }
 

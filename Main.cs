@@ -53,10 +53,9 @@ namespace Aida64_Esp8266_DisplayControler
         public Task sendBmpTask, sendInfoTask;
         public string bmpPath = "";
         public int bmpDealy = 100;
-
+        public string json_out;
         ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
-       
 
         public List<string> clientList = new List<string>();
 
@@ -70,6 +69,17 @@ namespace Aida64_Esp8266_DisplayControler
         const byte PACKET_TOGGLE_LED = 0X12;
         const byte PACKET_TOGGLE_DISPLAY = 0X13;
         const byte PACKET_REBOOT = 0X14;
+
+        public void CreatDebugFile(string file, string data)
+        {
+            if (File.Exists(file)) 
+                File.Delete(file);
+            FileStream fs = new FileStream(file,FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.Write(data);
+            sw.Dispose();
+            fs.Dispose();
+        }
 
         public void GetAidaInfo()
         {
@@ -549,6 +559,11 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CreatDebugFile("Aidainfo.xml", json_out);    //输出源JSON
+        }
+
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             //token = cts.Token;
@@ -671,6 +686,7 @@ namespace Aida64_Esp8266_DisplayControler
                                 }
                             }
                             Sync.Send(SetLogbox, JsonConvert.SerializeObject(dt));
+                            json_out = JsonConvert.SerializeObject(dt);
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
                             Udp.Send(pack, pack.Length, addr);
                             Thread.Sleep(bmpDealy);
