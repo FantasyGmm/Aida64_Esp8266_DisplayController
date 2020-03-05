@@ -345,25 +345,6 @@ namespace Aida64_Esp8266_DisplayControler
         private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             bmpPanel.Enabled = cbSendBmp.Checked;
-            /*
-            tmpBox.Enabled = !tmpBox.Enabled;
-            utiBox.Enabled = !utiBox.Enabled;
-            clkBox.Enabled = !clkBox.Enabled;
-            rpmBox.Enabled = !rpmBox.Enabled;
-            volBox.Enabled = !volBox.Enabled;
-            btnSendGif.Enabled = !btnSendGif.Enabled;
-            btnSendData.Enabled = !btnSendData.Enabled;
-            asusButton.Enabled = true;
-            asusButton.Checked = false;
-            baButton.Enabled = true;
-            baButton.Checked = false;
-            biliButton.Enabled = true;
-            biliButton.Checked = false;
-            customButton.Enabled = true;
-            customButton.Checked = false;
-            customPath.Enabled = true;
-            selButton.Enabled = true;
-            */
         }
 
         public static byte[] GetSingleBitmap(string file)
