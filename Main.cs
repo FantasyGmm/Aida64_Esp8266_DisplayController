@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
+using ImageMagick;
 
 
 namespace Aida64_Esp8266_DisplayControler
@@ -468,29 +470,20 @@ namespace Aida64_Esp8266_DisplayControler
             return ms.ToArray();
         }
 
-        private void ConvertXBM(ref byte[] bmp, int width, int height)
-        {
-            var blen = (width + 31) / 32 * 4;
-            //垂直
-            byte[] hb = new byte[bmp.Length];
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < blen; j++)
-                {
-                    byte bt = bmp[blen * i + j];
-                    hb[blen * (height - 1 - i) + j] = bt;
-                }
 
-            }
-            //水平
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < blen; j++)
-                {
-                    byte bt = hb[blen * i + j];
-                    bmp[blen * i + (blen - 1 - j)] = bt;
-                }
-            }
+
+        private byte[] ConvertXBM(string input)
+        {
+            string bytes = System.Text.RegularExpressions.Regex.Match(input, @"\{(.*)\}", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
+            string[] StringArray = bytes.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            byte[] pixels = new byte[StringArray.Length - 1];
+            for (int k = 0; k < StringArray.Length - 1; k++)
+                if (byte.TryParse(StringArray[k].TrimStart().Substring(2, 2), NumberStyles.HexNumber, CultureInfo.CurrentCulture, out byte result))
+                    pixels[k] = result;
+                else
+                    throw new Exception();
+
+            return pixels;
         }
 
         private void BtnLed_Click(object sender, EventArgs e)
@@ -619,14 +612,21 @@ namespace Aida64_Esp8266_DisplayControler
                             //未选择文件不作任何操作
                             if (bmplist.Length == 0)
                                 continue;
-                            byte[] ib = Bmp.OtsuThreshold(bmplist[bmpindex]);
-                            MemoryStream ms = new MemoryStream();
-                            ms.Write(ib, 0, ib.Length);
-                            pictureBox.Image = Image.FromStream(ms);
-                            var offset = BitConverter.ToInt32(ib, 10);
-                            byte[] data = new byte[ib.Length - offset];
-                            Array.Copy(ib, offset, data, 0, ib.Length - offset);
-                            ConvertXBM(ref data, 128, 64);
+
+                            byte[] ib = GetSingleBitmap(bmplist[bmpindex]);
+                            MagickImage img = new MagickImage(ib);
+                            img.Format = MagickFormat.Xbm;
+                            byte[] tb = img.ToByteArray();
+
+   
+                            using (MemoryStream memStream = new MemoryStream())
+                            {
+                                img.Format = MagickFormat.Jpg;
+                                img.Write(memStream);
+                                pictureBox.Image = Image.FromStream(memStream);
+                            }
+
+                            var data = ConvertXBM(System.Text.Encoding.Default.GetString(tb));
                             byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                             Udp.Send(packet, packet.Length, addr);
                             bmpindex++;
