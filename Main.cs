@@ -495,6 +495,38 @@ namespace Aida64_Esp8266_DisplayControler
             return ms.ToArray();
         }
 
+
+        private void ConvertXBM(ref byte[] bmp, int width, int height)
+        {
+            var blen = (width + 31) / 32 * 4;
+            //垂直
+            byte[] hb = new byte[bmp.Length];
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < blen; j++)
+                {
+                    byte bt = bmp[blen * i + j];
+                    hb[blen * (height - 1 - i) + j] = bt;
+                }
+
+            }
+
+            //水平
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < blen; j++)
+                {
+
+                    byte bt = hb[blen * i + j];
+                    bmp[blen * i + (blen - 1 - j)] = bt;
+
+                }
+            }
+
+        }
+
         private void BtnLed_Click(object sender, EventArgs e)
         {
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -648,6 +680,7 @@ namespace Aida64_Esp8266_DisplayControler
                             var offset = BitConverter.ToInt32(ib, 10);
                             byte[] data = new byte[ib.Length - offset];
                             Array.Copy(ib, offset, data, 0, ib.Length - offset);
+                            ConvertXBM(ref data, 128, 64);
                             byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, data);
                             Udp.Send(packet, packet.Length, addr);
                             bmpindex++;
@@ -755,39 +788,10 @@ namespace Aida64_Esp8266_DisplayControler
 
         }
 
+  
+
         //废弃代码
         /*
-        private void ConvertXBM(ref byte[] bmp, int height, int linebyte)
-        {
-
-            //垂直
-            byte[] hb = new byte[bmp.Length];
-
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < linebyte; j++)
-                {
-                    byte bt = bmp[linebyte * i + j];
-                    hb[linebyte * (height - 1 - i) + j] = bt;
-                }
-
-            }
-
-            //水平
-
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < linebyte; j++)
-                {
-
-                    byte bt = hb[linebyte * i + j];
-                    bmp[linebyte * i + (linebyte - 1 - j)] = bt;
-
-                }
-            }
-
-        }
-
         //文件流转byte[]
         protected byte[] AuthGetFileData(string fileUrl)
         {
