@@ -559,7 +559,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OutDebugFile_Click(object sender, EventArgs e)
         {
             CreatDebugFile("Aidainfo.xml", json_out);    //输出源JSON
         }

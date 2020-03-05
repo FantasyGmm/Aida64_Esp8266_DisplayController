@@ -78,7 +78,7 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
+            this.OutDebugFile = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -585,22 +585,22 @@
             0});
             this.timerInterval.ValueChanged += new System.EventHandler(this.TimerInterval_ValueChanged);
             // 
-            // button1
+            // OutDebugFile
             // 
-            this.button1.Location = new System.Drawing.Point(13, 52);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "输出文件";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.OutDebugFile.Location = new System.Drawing.Point(13, 52);
+            this.OutDebugFile.Name = "OutDebugFile";
+            this.OutDebugFile.Size = new System.Drawing.Size(75, 23);
+            this.OutDebugFile.TabIndex = 21;
+            this.OutDebugFile.Text = "输出文件";
+            this.OutDebugFile.UseVisualStyleBackColor = true;
+            this.OutDebugFile.Click += new System.EventHandler(this.OutDebugFile_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 558);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.OutDebugFile);
             this.Controls.Add(this.cbSendBmp);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
@@ -697,7 +697,7 @@
         private System.Windows.Forms.NumericUpDown timerInterval;
         private System.Windows.Forms.Button btnSendGif;
         private System.Windows.Forms.ListBox lbxClient;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button OutDebugFile;
     }
 }
 
