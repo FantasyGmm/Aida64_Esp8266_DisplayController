@@ -56,6 +56,7 @@ namespace Aida64_Esp8266_DisplayControler
         public string bmpPath = "";
         public int bmpDealy = 100;
         public string json_out;
+        public string xml_out;
         ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
 
@@ -101,6 +102,7 @@ namespace Aida64_Esp8266_DisplayControler
                 accessor.Dispose();
                 mappedFile.Dispose();
                 tmp += "</AIDA>";
+                xml_out = tmp;
                 XDocument xmldoc = XDocument.Parse(tmp);
                 IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
                 InsertInfo(sysEnumerator);
@@ -314,7 +316,6 @@ namespace Aida64_Esp8266_DisplayControler
 
                     if (pack.Length > 2)
                     {
-                        Sync.Send(SetLogbox, pack[0].ToString());
                         var p = ParsePacket(pack);
                         switch (p.cmd)
                         {
@@ -561,6 +562,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void OutDebugFile_Click(object sender, EventArgs e)
         {
             CreatDebugFile("Aidainfo.json", json_out);    //输出源JSON
+            CreatDebugFile("Aidainfo.xml", xml_out);    //输出源XML
         }
 
         private void BtnSendGif_Click(object sender, EventArgs e)
@@ -640,7 +642,6 @@ namespace Aida64_Esp8266_DisplayControler
             if (btnSendData.Text == "停止发送数据")
             {
                 getAidaData.Stop();
-                //cts.Cancel();
                 resetInfo.Reset();
                 Sync.Send(SetLogbox, "已停止监测发送数据");
                 btnSendData.Text = "发送监测数据";
@@ -649,9 +650,6 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 btnSendData.Text = "停止发送数据";
                 getAidaData.Start();
-                // token = cts.Token;
-                //cts.Token.Register(() => { Sync.Send(SetLogbox, "已停止发送AIDA64监测数据"); });
-
                 if (sendInfoTask == null)
                 {
                     sendInfoTask = new Task(() =>
@@ -664,29 +662,23 @@ namespace Aida64_Esp8266_DisplayControler
                             resetInfo.WaitOne();
                             string[] s = clientList[0].Split(':');
                             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-                            DataTable dt = new DataTable();
-                            dt.Columns.Add("i", Type.GetType("System.String"));
-                            dt.Columns.Add("v", Type.GetType("System.String"));
-                            DataRow dr = dt.NewRow();
-                            dr["i"] = "l";
-                            dr["v"] = selested.Count;
-                            dt.Rows.Add(dr);
+                            JObject jsobj = new JObject
+                            {
+                                { "l", selested.Count }
+                            };
                             for (int i = 0; i < id.Count; i++)
                             {
                                 foreach (var sel in selested)
                                 {
                                     if (id[i] == sel)
                                     {
-                                        dr = dt.NewRow();
-                                        dr["i"] = id[i];
-                                        dr["v"] = value[i];
-                                        dt.Rows.Add(dr);
+                                        jsobj.Add(id[i],value[i]);
                                     }
                                 }
                             }
-                            Sync.Send(SetLogbox, JsonConvert.SerializeObject(dt));
-                            json_out = JsonConvert.SerializeObject(dt);
-                            byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(dt)));
+                            json_out = jsobj.ToString();
+                            byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
+                                System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
                             Thread.Sleep(bmpDealy);
                         }
