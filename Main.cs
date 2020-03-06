@@ -68,7 +68,7 @@ namespace Aida64_Esp8266_DisplayControler
 
 
 
-        public UInt32 selectedUI;
+        public uint selectedUI;
 
 
 
@@ -93,32 +93,19 @@ namespace Aida64_Esp8266_DisplayControler
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
-
             try
             {
-
-
-
                 MemoryStream ms = new MemoryStream();
-
                 for (int i = 0; i < Accessor.Capacity; i++)
                 {
                     byte c = Accessor.ReadByte(i);
-
                     if (c == '\0')
                         break;
-
                     ms.WriteByte(c);
-
                 }
-
-
                 tmp.Append("<AIDA>");
-                tmp.Append(System.Text.Encoding.Default.GetString(ms.ToArray()));
+                tmp.Append(Encoding.Default.GetString(ms.ToArray()));
                 tmp.Append("</AIDA>");
-
-
-
                 XDocument xmldoc = XDocument.Parse(tmp.ToString());
                 IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
                 InsertInfo(sysEnumerator);
