@@ -47,7 +47,8 @@ namespace Aida64_Esp8266_DisplayControler
             InitializeComponent();
         }
 
-
+        MemoryMappedFile mapFile;
+        MemoryMappedViewAccessor Accessor;
 
         private CancellationToken token;
 
@@ -93,17 +94,9 @@ namespace Aida64_Esp8266_DisplayControler
             string tmp = string.Empty + "<AIDA>";
             try
             {
-                MemoryMappedFile mapFile;
-                MemoryMappedViewAccessor Accessor;
-                mapFile = MemoryMappedFile.OpenExisting("AIDA64_SensorValues");
 
-                if (mapFile == null)
-                    return;
+            
 
-                Accessor = mapFile.CreateViewAccessor();
-
-                if (Accessor == null)
-                    return;
 
                 
 
@@ -115,8 +108,10 @@ namespace Aida64_Esp8266_DisplayControler
                 
                tmp = tmp.Replace("\0", "");
                tmp = tmp ?? "";
-               Accessor.Dispose();
-               mapFile.Dispose();
+
+               //Accessor.Dispose();
+               //mapFile.Dispose();
+
                tmp += "</AIDA>";
                xml_out = tmp;
 
@@ -337,6 +332,17 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void Main_Load(object sender, EventArgs e)
         {
+            try
+            {
+                mapFile = MemoryMappedFile.OpenExisting("AIDA64_SensorValues");
+                Accessor = mapFile.CreateViewAccessor();
+            }
+            catch
+            {
+                MessageBox.Show("请启动AIDA64后再运行本软件！");
+                this.Close();
+            }
+
 
 
             Sync = SynchronizationContext.Current;
