@@ -801,8 +801,10 @@ namespace Aida64_Esp8266_DisplayControler
                                 continue;
 
                             byte[] ib = GetSingleBitmap(bmplist[bmpindex]);
-                            MagickImage img = new MagickImage(ib);
-                            img.Format = MagickFormat.Xbm;
+                            MagickImage img = new MagickImage(ib)
+                            {
+                                Format = MagickFormat.Xbm
+                            };
 
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
