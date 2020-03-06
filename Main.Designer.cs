@@ -45,7 +45,6 @@
             this.gpuUTI = new System.Windows.Forms.CheckBox();
             this.cpuUTI = new System.Windows.Forms.CheckBox();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.getAidaData = new System.Windows.Forms.Timer(this.components);
             this.selectAll = new System.Windows.Forms.Button();
             this.unSelectAll = new System.Windows.Forms.Button();
             this.clkBox = new System.Windows.Forms.GroupBox();
@@ -262,11 +261,6 @@
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.logBox.Size = new System.Drawing.Size(359, 111);
             this.logBox.TabIndex = 6;
-            // 
-            // getAidaData
-            // 
-            this.getAidaData.Interval = 50;
-            this.getAidaData.Tick += new System.EventHandler(this.GetAidaData_Tick);
             // 
             // selectAll
             // 
@@ -739,7 +733,6 @@
         private System.Windows.Forms.GroupBox utiBox;
         private System.Windows.Forms.CheckBox hddTmp;
         public System.Windows.Forms.TextBox logBox;
-        private System.Windows.Forms.Timer getAidaData;
         private System.Windows.Forms.Button selectAll;
         private System.Windows.Forms.Button unSelectAll;
         private System.Windows.Forms.CheckBox ramUTI;

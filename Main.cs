@@ -370,10 +370,7 @@ namespace Aida64_Esp8266_DisplayControler
             recivesTask.Start();
         }
 
-        private void GetAidaData_Tick(object sender, EventArgs e)
-        {
 
-        }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             logBox.ResetText();
@@ -539,7 +536,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void TimerInterval_ValueChanged(object sender, EventArgs e)
         {
-            getAidaData.Interval = (int)timerInterval.Value;
             bmpDealy = (int)timerInterval.Value;
         }
 
@@ -770,7 +766,7 @@ namespace Aida64_Esp8266_DisplayControler
                                 bmplist = Directory.GetFiles(bmppath);
                             }
                             //重置动画播放
-                            if (bmpindex > bmplist.Length)
+                            if (bmpindex >= bmplist.Length)
                                 bmpindex = 0;
 
                             string[] s;
@@ -788,11 +784,13 @@ namespace Aida64_Esp8266_DisplayControler
                                 continue;
 
                             byte[] ib = GetSingleBitmap(bmplist[bmpindex]);
+           
                             MagickImage img = new MagickImage(ib)
                             {
                                 Format = MagickFormat.Xbm
                             };
 
+        
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
                             img.Resize(new MagickGeometry($"{width}x{height }!"));
@@ -806,7 +804,7 @@ namespace Aida64_Esp8266_DisplayControler
                             }
 
 
-                            var data = ConvertXBM(System.Text.Encoding.Default.GetString(tb));
+                            var data = ConvertXBM(Encoding.Default.GetString(tb));
 
                             MemoryStream ms = new MemoryStream();
                             ms.Write(new byte[] { Convert.ToByte(width), Convert.ToByte(height) }, 0, 2);
@@ -831,7 +829,6 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (btnSendData.Text == "停止发送数据")
             {
-                getAidaData.Stop();
                 resetInfo.Reset();
                 Sync.Send(SetLogbox, "已停止监测发送数据");
                 btnSendData.Text = "发送监测数据";
@@ -839,7 +836,7 @@ namespace Aida64_Esp8266_DisplayControler
             else
             {
                 btnSendData.Text = "停止发送数据";
-                getAidaData.Start();
+
                 if (sendInfoTask == null)
                 {
                     sendInfoTask = new Task(() =>
@@ -886,8 +883,8 @@ namespace Aida64_Esp8266_DisplayControler
 
                             JObject jsobj = new JObject
                           {
-                              { "l", selested.Count },
-                              { "hl",hddid.Count }
+                              { "l", selested.Count.ToString() },
+                              { "hl",hddid.Count.ToString() }
                           };
 
                             for (int i = 0; i < id.Count; i++)
@@ -901,10 +898,12 @@ namespace Aida64_Esp8266_DisplayControler
                                 }
                             }
 
+
                             for (int i = 0; i < hddid.Count; i++)
                             {
                                 jsobj.Add(hddid[i], hddvalue[i]);
                             }
+
 
                             json_out = jsobj.ToString();
                             Sync.Send(SetLogbox,json_out);
