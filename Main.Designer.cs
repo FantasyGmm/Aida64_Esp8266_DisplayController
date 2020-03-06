@@ -54,6 +54,10 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.nbxHeight = new System.Windows.Forms.NumericUpDown();
+            this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -79,22 +83,18 @@
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.OutDebugFile = new System.Windows.Forms.Button();
-            this.nbxWidth = new System.Windows.Forms.NumericUpDown();
-            this.nbxHeight = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
             this.clkBox.SuspendLayout();
             this.bmpPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -151,6 +151,7 @@
             this.hddTmp.TabIndex = 3;
             this.hddTmp.Text = "HDD";
             this.hddTmp.UseVisualStyleBackColor = true;
+            this.hddTmp.CheckedChanged += new System.EventHandler(this.hddTmp_CheckedChanged);
             // 
             // mbTmp
             // 
@@ -161,6 +162,7 @@
             this.mbTmp.TabIndex = 2;
             this.mbTmp.Text = "主板";
             this.mbTmp.UseVisualStyleBackColor = true;
+            this.mbTmp.CheckedChanged += new System.EventHandler(this.mbTmp_CheckedChanged);
             // 
             // gpuTmp
             // 
@@ -171,6 +173,7 @@
             this.gpuTmp.TabIndex = 1;
             this.gpuTmp.Text = "GPU";
             this.gpuTmp.UseVisualStyleBackColor = true;
+            this.gpuTmp.CheckedChanged += new System.EventHandler(this.gpuTmp_CheckedChanged);
             // 
             // cpuTmp
             // 
@@ -181,6 +184,7 @@
             this.cpuTmp.TabIndex = 0;
             this.cpuTmp.Text = "CPU";
             this.cpuTmp.UseVisualStyleBackColor = true;
+            this.cpuTmp.CheckedChanged += new System.EventHandler(this.cpuTmp_CheckedChanged);
             // 
             // btnSendData
             // 
@@ -214,6 +218,7 @@
             this.vramUTI.TabIndex = 7;
             this.vramUTI.Text = "VRAM";
             this.vramUTI.UseVisualStyleBackColor = true;
+            this.vramUTI.CheckedChanged += new System.EventHandler(this.vramUTI_CheckedChanged);
             // 
             // ramUTI
             // 
@@ -224,6 +229,7 @@
             this.ramUTI.TabIndex = 6;
             this.ramUTI.Text = "RAM";
             this.ramUTI.UseVisualStyleBackColor = true;
+            this.ramUTI.CheckedChanged += new System.EventHandler(this.ramUTI_CheckedChanged);
             // 
             // gpuUTI
             // 
@@ -234,6 +240,7 @@
             this.gpuUTI.TabIndex = 5;
             this.gpuUTI.Text = "GPU";
             this.gpuUTI.UseVisualStyleBackColor = true;
+            this.gpuUTI.CheckedChanged += new System.EventHandler(this.gpuUTI_CheckedChanged);
             // 
             // cpuUTI
             // 
@@ -244,6 +251,7 @@
             this.cpuUTI.TabIndex = 4;
             this.cpuUTI.Text = "CPU";
             this.cpuUTI.UseVisualStyleBackColor = true;
+            this.cpuUTI.CheckedChanged += new System.EventHandler(this.cpuUTI_CheckedChanged);
             // 
             // logBox
             // 
@@ -300,6 +308,7 @@
             this.gpuClk.TabIndex = 3;
             this.gpuClk.Text = "GPU";
             this.gpuClk.UseVisualStyleBackColor = true;
+            this.gpuClk.CheckedChanged += new System.EventHandler(this.gpuClk_CheckedChanged);
             // 
             // cpuClk
             // 
@@ -310,6 +319,7 @@
             this.cpuClk.TabIndex = 2;
             this.cpuClk.Text = "CPU";
             this.cpuClk.UseVisualStyleBackColor = true;
+            this.cpuClk.CheckedChanged += new System.EventHandler(this.cpuClk_CheckedChanged);
             // 
             // notifyIcon1
             // 
@@ -346,6 +356,58 @@
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(76, 208);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 12);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "高度";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 208);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 12);
+            this.label4.TabIndex = 24;
+            this.label4.Text = "宽度";
+            // 
+            // nbxHeight
+            // 
+            this.nbxHeight.Location = new System.Drawing.Point(78, 223);
+            this.nbxHeight.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nbxHeight.Name = "nbxHeight";
+            this.nbxHeight.Size = new System.Drawing.Size(63, 21);
+            this.nbxHeight.TabIndex = 23;
+            this.nbxHeight.Value = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
+            // 
+            // nbxWidth
+            // 
+            this.nbxWidth.Location = new System.Drawing.Point(13, 223);
+            this.nbxWidth.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.nbxWidth.Name = "nbxWidth";
+            this.nbxWidth.Size = new System.Drawing.Size(63, 21);
+            this.nbxWidth.TabIndex = 22;
+            this.nbxWidth.Value = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
             // 
             // selButton
             // 
@@ -542,6 +604,7 @@
             this.gpuRpm.TabIndex = 1;
             this.gpuRpm.Text = "GPU";
             this.gpuRpm.UseVisualStyleBackColor = true;
+            this.gpuRpm.CheckedChanged += new System.EventHandler(this.gpuRpm_CheckedChanged);
             // 
             // cpuRpm
             // 
@@ -552,6 +615,7 @@
             this.cpuRpm.TabIndex = 0;
             this.cpuRpm.Text = "CPU";
             this.cpuRpm.UseVisualStyleBackColor = true;
+            this.cpuRpm.CheckedChanged += new System.EventHandler(this.cpuRpm_CheckedChanged);
             // 
             // volBox
             // 
@@ -573,6 +637,7 @@
             this.gpuVol.TabIndex = 1;
             this.gpuVol.Text = "GPU";
             this.gpuVol.UseVisualStyleBackColor = true;
+            this.gpuVol.CheckedChanged += new System.EventHandler(this.gpuVol_CheckedChanged);
             // 
             // cpuVol
             // 
@@ -583,6 +648,7 @@
             this.cpuVol.TabIndex = 0;
             this.cpuVol.Text = "CPU";
             this.cpuVol.UseVisualStyleBackColor = true;
+            this.cpuVol.CheckedChanged += new System.EventHandler(this.cpuVol_CheckedChanged);
             // 
             // timerInterval
             // 
@@ -606,58 +672,6 @@
             this.OutDebugFile.Text = "输出文件";
             this.OutDebugFile.UseVisualStyleBackColor = true;
             this.OutDebugFile.Click += new System.EventHandler(this.OutDebugFile_Click);
-            // 
-            // nbxWidth
-            // 
-            this.nbxWidth.Location = new System.Drawing.Point(13, 223);
-            this.nbxWidth.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.nbxWidth.Name = "nbxWidth";
-            this.nbxWidth.Size = new System.Drawing.Size(63, 21);
-            this.nbxWidth.TabIndex = 22;
-            this.nbxWidth.Value = new decimal(new int[] {
-            128,
-            0,
-            0,
-            0});
-            // 
-            // nbxHeight
-            // 
-            this.nbxHeight.Location = new System.Drawing.Point(78, 223);
-            this.nbxHeight.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.nbxHeight.Name = "nbxHeight";
-            this.nbxHeight.Size = new System.Drawing.Size(63, 21);
-            this.nbxHeight.TabIndex = 23;
-            this.nbxHeight.Value = new decimal(new int[] {
-            64,
-            0,
-            0,
-            0});
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 208);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 12);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "宽度";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(76, 208);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(29, 12);
-            this.label5.TabIndex = 25;
-            this.label5.Text = "高度";
             // 
             // Main
             // 
@@ -697,6 +711,8 @@
             this.clkBox.PerformLayout();
             this.bmpPanel.ResumeLayout(false);
             this.bmpPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -705,8 +721,6 @@
             this.volBox.ResumeLayout(false);
             this.volBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
