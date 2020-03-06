@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.Threading;
 using System.Reflection;
 using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
@@ -91,42 +92,45 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void GetAidaInfo()
         {
-            string tmp = string.Empty + "<AIDA>";
+            StringBuilder tmp = new StringBuilder();
+
             try
             {
 
-            
 
 
-                
+                MemoryStream ms = new MemoryStream();
 
-                tmp = tmp ?? "";
                 for (int i = 0; i < Accessor.Capacity; i++)
                 {
-                    tmp += ((char)Accessor.ReadByte(i)).ToString();
+                    byte c = Accessor.ReadByte(i);
+
+                    if (c == '\0')
+                        break;
+
+                    ms.WriteByte(c);
+
                 }
-                
-               tmp = tmp.Replace("\0", "");
-               tmp = tmp ?? "";
 
-               //Accessor.Dispose();
-               //mapFile.Dispose();
 
-               tmp += "</AIDA>";
-               xml_out = tmp;
+                tmp.Append("<AIDA>");
+                tmp.Append(System.Text.Encoding.Default.GetString(ms.ToArray()));
+                tmp.Append("</AIDA>");
 
-               XDocument xmldoc = XDocument.Parse(tmp);
-               IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
-               InsertInfo(sysEnumerator);
-               IEnumerable<XElement> tempEnumerator = xmldoc.Element("AIDA").Elements("temp");
-               InsertInfo(tempEnumerator);
-               IEnumerable<XElement> fanEnumerator = xmldoc.Element("AIDA").Elements("fan");
-               InsertInfo(fanEnumerator);
-               IEnumerable<XElement> voltEnumerator = xmldoc.Element("AIDA").Elements("volt");
-               InsertInfo(voltEnumerator);
-               IEnumerable<XElement> pwrEnumerator = xmldoc.Element("AIDA").Elements("pwr");
-               InsertInfo(pwrEnumerator);
-               
+
+
+                XDocument xmldoc = XDocument.Parse(tmp.ToString());
+                IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
+                InsertInfo(sysEnumerator);
+                IEnumerable<XElement> tempEnumerator = xmldoc.Element("AIDA").Elements("temp");
+                InsertInfo(tempEnumerator);
+                IEnumerable<XElement> fanEnumerator = xmldoc.Element("AIDA").Elements("fan");
+                InsertInfo(fanEnumerator);
+                IEnumerable<XElement> voltEnumerator = xmldoc.Element("AIDA").Elements("volt");
+                InsertInfo(voltEnumerator);
+                IEnumerable<XElement> pwrEnumerator = xmldoc.Element("AIDA").Elements("pwr");
+                InsertInfo(pwrEnumerator);
+
             }
             catch (Exception ex)
             {
@@ -914,10 +918,10 @@ namespace Aida64_Esp8266_DisplayControler
                             }
 
                             json_out = jsobj.ToString();
+                            Sync.Send(SetLogbox,json_out);
 
-                            //Sync.Send(SetLogbox,json_out);
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
-                                System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
+                            System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
 
                             Thread.Sleep(bmpDealy);
