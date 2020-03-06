@@ -571,6 +571,41 @@ namespace Aida64_Esp8266_DisplayControler
             CreatDebugFile("Aidainfo.xml", xml_out);    //输出源XML
         }
 
+        private void selectAll_Click(object sender, EventArgs e)
+        {
+            cpuClk.Checked = true;
+            cpuRpm.Checked = true;
+            cpuTmp.Checked = true;
+            cpuUTI.Checked = true;
+            cpuVol.Checked = true;
+            gpuClk.Checked = true;
+            gpuRpm.Checked = true;
+            gpuTmp.Checked = true;
+            gpuUTI.Checked = true;
+            gpuVol.Checked = true;
+            ramUTI.Checked = true;
+            hddTmp.Checked = true;
+            mbTmp.Checked = true;
+
+        }
+
+        private void unSelectAll_Click(object sender, EventArgs e)
+        {
+            cpuClk.Checked = false;
+            cpuRpm.Checked = false;
+            cpuTmp.Checked = false;
+            cpuUTI.Checked = false;
+            cpuVol.Checked = false;
+            gpuClk.Checked = false;
+            gpuRpm.Checked = false;
+            gpuTmp.Checked = false;
+            gpuUTI.Checked = false;
+            gpuVol.Checked = false;
+            ramUTI.Checked = false;
+            hddTmp.Checked = false;
+            mbTmp.Checked = true;
+        }
+
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             if (!cbSendBmp.Checked)

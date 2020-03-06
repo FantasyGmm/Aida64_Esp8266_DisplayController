@@ -262,6 +262,7 @@
             this.selectAll.TabIndex = 8;
             this.selectAll.Text = "全选";
             this.selectAll.UseVisualStyleBackColor = true;
+            this.selectAll.Click += new System.EventHandler(this.selectAll_Click);
             // 
             // unSelectAll
             // 
@@ -271,6 +272,7 @@
             this.unSelectAll.TabIndex = 9;
             this.unSelectAll.Text = "全不选";
             this.unSelectAll.UseVisualStyleBackColor = true;
+            this.unSelectAll.Click += new System.EventHandler(this.unSelectAll_Click);
             // 
             // clkBox
             // 
