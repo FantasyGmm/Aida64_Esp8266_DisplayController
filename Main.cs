@@ -667,6 +667,8 @@ namespace Aida64_Esp8266_DisplayControler
                             resetInfo.WaitOne();
                             string[] s = clientList[0].Split(':');
                             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                            if(selested.Count == 0)
+                                return;
                             if (!hddTmp.Checked)
                             {
                                 hddid.Clear();
@@ -696,7 +698,7 @@ namespace Aida64_Esp8266_DisplayControler
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
                                 System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
-                            Thread.Sleep(bmpDealy);
+                            Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
 

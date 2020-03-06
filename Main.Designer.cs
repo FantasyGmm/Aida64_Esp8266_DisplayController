@@ -251,7 +251,7 @@
             // 
             // getAidaData
             // 
-            this.getAidaData.Interval = 3000;
+            this.getAidaData.Interval = 50;
             this.getAidaData.Tick += new System.EventHandler(this.GetAidaData_Tick);
             // 
             // selectAll
