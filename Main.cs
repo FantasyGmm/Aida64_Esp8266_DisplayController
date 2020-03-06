@@ -383,10 +383,7 @@ namespace Aida64_Esp8266_DisplayControler
             recivesTask.Start();
         }
 
-        private void GetAidaData_Tick(object sender, EventArgs e)
-        {
 
-        }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             logBox.ResetText();
@@ -552,7 +549,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void TimerInterval_ValueChanged(object sender, EventArgs e)
         {
-            getAidaData.Interval = (int)timerInterval.Value;
             bmpDealy = (int)timerInterval.Value;
         }
 
@@ -844,7 +840,6 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (btnSendData.Text == "停止发送数据")
             {
-                getAidaData.Stop();
                 resetInfo.Reset();
                 Sync.Send(SetLogbox, "已停止监测发送数据");
                 btnSendData.Text = "发送监测数据";
@@ -852,7 +847,7 @@ namespace Aida64_Esp8266_DisplayControler
             else
             {
                 btnSendData.Text = "停止发送数据";
-                getAidaData.Start();
+
                 if (sendInfoTask == null)
                 {
                     sendInfoTask = new Task(() =>
