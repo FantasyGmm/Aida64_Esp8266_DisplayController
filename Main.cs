@@ -779,7 +779,7 @@ namespace Aida64_Esp8266_DisplayControler
                                 bmplist = Directory.GetFiles(bmppath);
                             }
                             //重置动画播放
-                            if (bmpindex > bmplist.Length)
+                            if (bmpindex >= bmplist.Length)
                                 bmpindex = 0;
 
                             string[] s;
