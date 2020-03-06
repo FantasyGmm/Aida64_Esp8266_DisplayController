@@ -82,6 +82,7 @@
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.OutDebugFile = new System.Windows.Forms.Button();
+            this.displayTime = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -337,6 +338,7 @@
             this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.selButton);
             this.bmpPanel.Controls.Add(this.customPath);
+            this.bmpPanel.Controls.Add(this.displayTime);
             this.bmpPanel.Controls.Add(this.label2);
             this.bmpPanel.Controls.Add(this.customButton);
             this.bmpPanel.Controls.Add(this.biliButton);
@@ -659,13 +661,23 @@
             // 
             // OutDebugFile
             // 
-            this.OutDebugFile.Location = new System.Drawing.Point(13, 52);
+            this.OutDebugFile.Location = new System.Drawing.Point(14, 52);
             this.OutDebugFile.Name = "OutDebugFile";
             this.OutDebugFile.Size = new System.Drawing.Size(75, 23);
             this.OutDebugFile.TabIndex = 21;
             this.OutDebugFile.Text = "输出文件";
             this.OutDebugFile.UseVisualStyleBackColor = true;
             this.OutDebugFile.Click += new System.EventHandler(this.OutDebugFile_Click);
+            // 
+            // displayTime
+            // 
+            this.displayTime.AutoSize = true;
+            this.displayTime.Location = new System.Drawing.Point(104, 15);
+            this.displayTime.Name = "displayTime";
+            this.displayTime.Size = new System.Drawing.Size(72, 16);
+            this.displayTime.TabIndex = 26;
+            this.displayTime.Text = "显示时间";
+            this.displayTime.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -690,6 +702,7 @@
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.logBox);
             this.MainMenuStrip = this.menuStrip;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -775,6 +788,7 @@
         private System.Windows.Forms.NumericUpDown nbxWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox displayTime;
     }
 }
 
