@@ -59,7 +59,6 @@ namespace Aida64_Esp8266_DisplayControler
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
         public string bmpPath = "";
-        public int bmpDealy = 100;
         //DEBUG
         public string json_out;
         public string xml_out;
@@ -234,7 +233,6 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("VCPU");
                 selested.Add("PCPUPKG");
             }
-
             if ((selectedUI & UI_POWER_GPU) > 0)
                 selested.Add("VGPU1");
         }
@@ -511,13 +509,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnDisplay_Click(object sender, EventArgs e)
         {
-            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
-                return;
 
-            string[] s = clientList[0].Split(':');
-            byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
-            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-            Udp.Send(ba, ba.Length, addr);
         }
 
         private void BtnReboot_Click(object sender, EventArgs e)
@@ -529,12 +521,6 @@ namespace Aida64_Esp8266_DisplayControler
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
-
-        private void TimerInterval_ValueChanged(object sender, EventArgs e)
-        {
-            bmpDealy = (int) timerInterval.Value;
-        }
-
         private void BaButton_CheckedChanged(object sender, EventArgs e)
         {
             bmpPath = Directory.GetCurrentDirectory() + @"\bad apple\";
@@ -577,6 +563,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void selectAll_Click(object sender, EventArgs e)
         {
+            vramUTI.Checked = true;
             cpuClk.Checked = true;
             cpuRpm.Checked = true;
             cpuTmp.Checked = true;
@@ -594,6 +581,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void unSelectAll_Click(object sender, EventArgs e)
         {
+            vramUTI.Checked = false;
             cpuClk.Checked = false;
             cpuRpm.Checked = false;
             cpuTmp.Checked = false;
@@ -808,7 +796,7 @@ namespace Aida64_Esp8266_DisplayControler
                             byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, ms.ToArray());
                             Udp.Send(packet, packet.Length, addr);
                             bmpindex++;
-                            Thread.Sleep(bmpDealy);
+                            Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
                     sendBmpTask.Start();
@@ -830,6 +818,13 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
+                string[] s;
+                if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                    return;
+                s = clientList[0].Split(':');
+                byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                Udp.Send(ba, ba.Length, addr);
                 btnSendData.Text = "停止发送数据";
                 if (sendInfoTask == null)
                 {
@@ -845,16 +840,6 @@ namespace Aida64_Esp8266_DisplayControler
                             hddvalue.Clear();
                             GetAidaInfo();
                             QuerySelested();
-                            string[] s;
-                            lock (clientList)
-                            {
-                                if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
-                                    continue;
-
-                                s = clientList[0].Split(':');
-                            }
-                            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-
                             lock (selested)
                             {
                                 if (selested.Count == 0)
@@ -878,14 +863,10 @@ namespace Aida64_Esp8266_DisplayControler
                                     }
                                 }
                             }
-
-
                             for (int i = 0; i < hddid.Count; i++)
                             {
                                 jsobj.Add(hddid[i], hddvalue[i]);
                             }
-
-
                             json_out = jsobj.ToString();
                             Sync.Send(SetLogbox, json_out);
 
@@ -893,10 +874,9 @@ namespace Aida64_Esp8266_DisplayControler
                                 System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
 
-                            Thread.Sleep(bmpDealy);
+                            Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
-
                     sendInfoTask.Start();
                 }
                 else
