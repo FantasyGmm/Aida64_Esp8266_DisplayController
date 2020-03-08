@@ -647,6 +647,11 @@
             // timerInterval
             // 
             this.timerInterval.Location = new System.Drawing.Point(594, 398);
+            this.timerInterval.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
             this.timerInterval.Name = "timerInterval";
             this.timerInterval.Size = new System.Drawing.Size(93, 21);
             this.timerInterval.TabIndex = 19;

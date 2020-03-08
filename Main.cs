@@ -208,6 +208,10 @@ namespace Aida64_Esp8266_DisplayControler
                         id.Add(element.Element("id").Value);
                         value.Add(element.Element("value").Value);
                         break;
+                    case "PGPU1TDPP": //GPU TDP
+                        id.Add(element.Element("id").Value);
+                        value.Add(element.Element("value").Value);
+                        break;
                         /*  备用代码   */
 
                         /*
@@ -255,6 +259,8 @@ namespace Aida64_Esp8266_DisplayControler
 
             if ((selectedUI & UI_POWER_GPU) > 0)
                 selested.Add("VGPU1");
+
+            selested.Add("PGPU1TDPP");
 
         }
 
@@ -336,6 +342,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void Main_Load(object sender, EventArgs e)
         {
+   
             try
             {
                 mapFile = MemoryMappedFile.OpenExisting("AIDA64_SensorValues");
@@ -605,6 +612,7 @@ namespace Aida64_Esp8266_DisplayControler
             gpuUTI.Checked = true;
             gpuVol.Checked = true;
             ramUTI.Checked = true;
+            vramUTI.Checked = true;
             hddTmp.Checked = true;
             mbTmp.Checked = true;
 
@@ -623,8 +631,9 @@ namespace Aida64_Esp8266_DisplayControler
             gpuUTI.Checked = false;
             gpuVol.Checked = false;
             ramUTI.Checked = false;
+            vramUTI.Checked = false;
             hddTmp.Checked = false;
-            mbTmp.Checked = true;
+            mbTmp.Checked = false;
         }
 
         private void cpuTmp_CheckedChanged(object sender, EventArgs e)
@@ -919,10 +928,10 @@ namespace Aida64_Esp8266_DisplayControler
 
 
                             json_out = jsobj.ToString();
-                            Sync.Send(SetLogbox,json_out);
+                            //Sync.Send(SetLogbox,json_out);
 
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
-                            System.Text.Encoding.UTF8.GetBytes(jsobj.ToString()));
+                            Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
 
                             Thread.Sleep(bmpDealy);
