@@ -1,23 +1,21 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
+using ImageMagick;
 using System.Drawing;
-using Newtonsoft.Json;
 using System.Xml.Linq;
 using System.Threading;
 using System.Reflection;
 using System.Net.Sockets;
-using System.Text;
+using Newtonsoft.Json.Linq;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json.Linq;
-using System.Globalization;
-using ImageMagick;
-
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -26,7 +24,6 @@ namespace Aida64_Esp8266_DisplayControler
      */
     public partial class Main : Form
     {
-
         public struct Packet
         {
             public byte cmd;
@@ -62,21 +59,17 @@ namespace Aida64_Esp8266_DisplayControler
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
         public string bmpPath = "";
-        public int bmpDealy = 100;
+        //DEBUG
         public string json_out;
         public string xml_out;
 
 
-
-        public UInt32 selectedUI;
-
-
+        public uint selectedUI;
 
 
         ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
         public List<string> clientList = new List<string>();
-
 
 
         public void CreatDebugFile(string file, string data)
@@ -93,32 +86,20 @@ namespace Aida64_Esp8266_DisplayControler
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
-
             try
             {
-
-
-
                 MemoryStream ms = new MemoryStream();
-
                 for (int i = 0; i < Accessor.Capacity; i++)
                 {
                     byte c = Accessor.ReadByte(i);
-
                     if (c == '\0')
                         break;
-
                     ms.WriteByte(c);
-
                 }
 
-
                 tmp.Append("<AIDA>");
-                tmp.Append(System.Text.Encoding.Default.GetString(ms.ToArray()));
+                tmp.Append(Encoding.Default.GetString(ms.ToArray()));
                 tmp.Append("</AIDA>");
-
-
-
                 XDocument xmldoc = XDocument.Parse(tmp.ToString());
                 IEnumerable<XElement> sysEnumerator = xmldoc.Element("AIDA").Elements("sys");
                 InsertInfo(sysEnumerator);
@@ -130,7 +111,6 @@ namespace Aida64_Esp8266_DisplayControler
                 InsertInfo(voltEnumerator);
                 IEnumerable<XElement> pwrEnumerator = xmldoc.Element("AIDA").Elements("pwr");
                 InsertInfo(pwrEnumerator);
-
             }
             catch (Exception ex)
             {
@@ -150,6 +130,7 @@ namespace Aida64_Esp8266_DisplayControler
                         hddvalue.Add(element.Element("value").Value);
                     }
                 }
+
                 switch (element.Element("id").Value)
                 {
                     case "SCPUCLK": //CPU频率
@@ -256,7 +237,6 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("VCPU");
                 selested.Add("PCPUPKG");
             }
-
             if ((selectedUI & UI_POWER_GPU) > 0)
                 selested.Add("VGPU1");
 
@@ -269,6 +249,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             logBox.AppendText(o as string + Environment.NewLine);
         }
+
         public void SetButtonText(object o)
         {
             var sa = o as string[];
@@ -300,7 +281,6 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 clientList.Add(o as string);
             }
-
         }
 
         public void AddClient(IPEndPoint addr)
@@ -323,11 +303,12 @@ namespace Aida64_Esp8266_DisplayControler
             MemoryStream mem = new MemoryStream();
             mem.WriteByte(cmd);
             mem.WriteByte(0x1);
-            mem.Write(BitConverter.GetBytes((short)len), 0, 2);
+            mem.Write(BitConverter.GetBytes((short) len), 0, 2);
             if (data != null)
                 mem.Write(data, 0, len);
             return mem.ToArray();
         }
+
         public Packet ParsePacket(byte[] ba)
         {
             byte cmd = ba[0];
@@ -340,6 +321,7 @@ namespace Aida64_Esp8266_DisplayControler
             p.data = data;
             return p;
         }
+
         private void Main_Load(object sender, EventArgs e)
         {
    
@@ -353,7 +335,6 @@ namespace Aida64_Esp8266_DisplayControler
                 MessageBox.Show("请启动AIDA64后再运行本软件！");
                 this.Close();
             }
-
 
 
             Sync = SynchronizationContext.Current;
@@ -378,10 +359,10 @@ namespace Aida64_Esp8266_DisplayControler
                                 Sync.Send(SetLogbox, p.data);
                                 break;
                             case PACKET_TOGGLE_LED:
-                                Sync.Send(SetButtonText, new string[] { "btnLed", p.data[0].ToString() });
+                                Sync.Send(SetButtonText, new string[] {"btnLed", p.data[0].ToString()});
                                 break;
                             case PACKET_TOGGLE_DISPLAY:
-                                Sync.Send(SetButtonText, new string[] { "btnDisplay", p.data[0].ToString() });
+                                Sync.Send(SetButtonText, new string[] {"btnDisplay", p.data[0].ToString()});
                                 break;
                         }
                     }
@@ -465,7 +446,7 @@ namespace Aida64_Esp8266_DisplayControler
                                      sourceBuffer[sourceIndex + 3];
                     if (pixelTotal > threshold)
                     {
-                        destinationValue += (byte)pixelValue;
+                        destinationValue += (byte) pixelValue;
                     }
 
                     if (pixelValue == 1)
@@ -507,14 +488,15 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-
         private byte[] ConvertXBM(string input)
         {
-            string bytes = System.Text.RegularExpressions.Regex.Match(input, @"\{(.*)\}", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
-            string[] StringArray = bytes.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            string bytes = System.Text.RegularExpressions.Regex
+                .Match(input, @"\{(.*)\}", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
+            string[] StringArray = bytes.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
             byte[] pixels = new byte[StringArray.Length - 1];
             for (int k = 0; k < StringArray.Length - 1; k++)
-                if (byte.TryParse(StringArray[k].TrimStart().Substring(2, 2), NumberStyles.HexNumber, CultureInfo.CurrentCulture, out byte result))
+                if (byte.TryParse(StringArray[k].TrimStart().Substring(2, 2), NumberStyles.HexNumber,
+                    CultureInfo.CurrentCulture, out byte result))
                     pixels[k] = result;
                 else
                     throw new Exception();
@@ -535,13 +517,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnDisplay_Click(object sender, EventArgs e)
         {
-            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
-                return;
 
-            string[] s = clientList[0].Split(':');
-            byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
-            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-            Udp.Send(ba, ba.Length, addr);
         }
 
         private void BtnReboot_Click(object sender, EventArgs e)
@@ -553,12 +529,6 @@ namespace Aida64_Esp8266_DisplayControler
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
-
-        private void TimerInterval_ValueChanged(object sender, EventArgs e)
-        {
-            bmpDealy = (int)timerInterval.Value;
-        }
-
         private void BaButton_CheckedChanged(object sender, EventArgs e)
         {
             bmpPath = Directory.GetCurrentDirectory() + @"\bad apple\";
@@ -595,12 +565,13 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void OutDebugFile_Click(object sender, EventArgs e)
         {
-            CreatDebugFile("Aidainfo.json", json_out);    //输出源JSON
-            CreatDebugFile("Aidainfo.xml", xml_out);    //输出源XML
+            CreatDebugFile("Aidainfo.json", json_out); //输出源JSON
+            CreatDebugFile("Aidainfo.xml", xml_out); //输出源XML
         }
 
         private void selectAll_Click(object sender, EventArgs e)
         {
+            vramUTI.Checked = true;
             cpuClk.Checked = true;
             cpuRpm.Checked = true;
             cpuTmp.Checked = true;
@@ -615,11 +586,11 @@ namespace Aida64_Esp8266_DisplayControler
             vramUTI.Checked = true;
             hddTmp.Checked = true;
             mbTmp.Checked = true;
-
         }
 
         private void unSelectAll_Click(object sender, EventArgs e)
         {
+            vramUTI.Checked = false;
             cpuClk.Checked = false;
             cpuRpm.Checked = false;
             cpuTmp.Checked = false;
@@ -714,7 +685,6 @@ namespace Aida64_Esp8266_DisplayControler
                 selectedUI |= UI_RATE_GPU;
             else
                 selectedUI ^= UI_RATE_GPU;
-
         }
 
         private void cpuRpm_CheckedChanged(object sender, EventArgs e)
@@ -760,6 +730,7 @@ namespace Aida64_Esp8266_DisplayControler
                 MessageBox.Show("请选择正确的文件夹！");
                 return;
             }
+
             string[] bmplist = Directory.GetFiles(bmppath);
             if (btnSendGif.Text == "停止发送动画")
             {
@@ -774,7 +745,6 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     sendBmpTask = new Task(() =>
                     {
-
                         while (!token.IsCancellationRequested)
                         {
                             resetBmp.WaitOne();
@@ -787,6 +757,7 @@ namespace Aida64_Esp8266_DisplayControler
                                 bmpindex = 0;
                                 bmplist = Directory.GetFiles(bmppath);
                             }
+
                             //重置动画播放
                             if (bmpindex >= bmplist.Length)
                                 bmpindex = 0;
@@ -806,16 +777,16 @@ namespace Aida64_Esp8266_DisplayControler
                                 continue;
 
                             byte[] ib = GetSingleBitmap(bmplist[bmpindex]);
-           
+
                             MagickImage img = new MagickImage(ib)
                             {
                                 Format = MagickFormat.Xbm
                             };
 
-        
+
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
-                            img.Resize(new MagickGeometry($"{width}x{height }!"));
+                            img.Resize(new MagickGeometry($"{width}x{height}!"));
                             byte[] tb = img.ToByteArray();
 
                             using (MemoryStream memStream = new MemoryStream())
@@ -829,13 +800,13 @@ namespace Aida64_Esp8266_DisplayControler
                             var data = ConvertXBM(Encoding.Default.GetString(tb));
 
                             MemoryStream ms = new MemoryStream();
-                            ms.Write(new byte[] { Convert.ToByte(width), Convert.ToByte(height) }, 0, 2);
+                            ms.Write(new byte[] {Convert.ToByte(width), Convert.ToByte(height)}, 0, 2);
                             ms.Write(data, 0, data.Length);
 
                             byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, ms.ToArray());
                             Udp.Send(packet, packet.Length, addr);
                             bmpindex++;
-                            Thread.Sleep(bmpDealy);
+                            Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
                     sendBmpTask.Start();
@@ -857,8 +828,14 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
+                string[] s;
+                if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                    return;
+                s = clientList[0].Split(':');
+                byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                Udp.Send(ba, ba.Length, addr);
                 btnSendData.Text = "停止发送数据";
-
                 if (sendInfoTask == null)
                 {
                     sendInfoTask = new Task(() =>
@@ -866,8 +843,6 @@ namespace Aida64_Esp8266_DisplayControler
                         while (!token.IsCancellationRequested)
                         {
                             resetInfo.WaitOne();
-
-
                             id.Clear();
                             value.Clear();
                             selested.Clear();
@@ -875,39 +850,18 @@ namespace Aida64_Esp8266_DisplayControler
                             hddvalue.Clear();
                             GetAidaInfo();
                             QuerySelested();
-
-
-                            string[] s;
-
-                            lock (clientList)
-                            {
-                                if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
-                                    continue;
-
-                                s = clientList[0].Split(':');
-                            }
-
-
-
-                            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-
                             lock (selested)
                             {
                                 if (selested.Count == 0)
                                     continue;
                             }
-
-
                             Sync.Send(SetLogbox, selectedUI.ToString());
-
-
-
-
                             JObject jsobj = new JObject
-                          {
-                              { "l", selested.Count.ToString() },
-                              { "hl",hddid.Count.ToString() }
-                          };
+                            {
+                                {"l", selested.Count.ToString()},
+                                {"hl", hddid.Count.ToString()},
+                                {"t",displayTime.Checked.ToString()}
+                            };
 
                             for (int i = 0; i < id.Count; i++)
                             {
@@ -919,14 +873,10 @@ namespace Aida64_Esp8266_DisplayControler
                                     }
                                 }
                             }
-
-
                             for (int i = 0; i < hddid.Count; i++)
                             {
                                 jsobj.Add(hddid[i], hddvalue[i]);
                             }
-
-
                             json_out = jsobj.ToString();
                             //Sync.Send(SetLogbox,json_out);
 
@@ -934,11 +884,9 @@ namespace Aida64_Esp8266_DisplayControler
                             Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
 
-                            Thread.Sleep(bmpDealy);
+                            Thread.Sleep((int)timerInterval.Value);
                         }
-
                     }, token);
-
                     sendInfoTask.Start();
                 }
                 else
@@ -947,7 +895,9 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
+
         #region 废弃代码
+
         /*
         //文件流转byte[]
         protected byte[] AuthGetFileData(string fileUrl)
@@ -964,7 +914,6 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 */
-
 
         #endregion 废弃代码
     }

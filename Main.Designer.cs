@@ -59,6 +59,7 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
+            this.displayTime = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.customButton = new System.Windows.Forms.RadioButton();
             this.biliButton = new System.Windows.Forms.RadioButton();
@@ -71,7 +72,6 @@
             this.lbxClient = new System.Windows.Forms.ListBox();
             this.cbSendAll = new System.Windows.Forms.CheckBox();
             this.btnReboot = new System.Windows.Forms.Button();
-            this.btnDisplay = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
             this.btnSendGif = new System.Windows.Forms.Button();
             this.rpmBox = new System.Windows.Forms.GroupBox();
@@ -134,7 +134,7 @@
             this.tmpBox.Controls.Add(this.mbTmp);
             this.tmpBox.Controls.Add(this.gpuTmp);
             this.tmpBox.Controls.Add(this.cpuTmp);
-            this.tmpBox.Location = new System.Drawing.Point(360, 104);
+            this.tmpBox.Location = new System.Drawing.Point(360, 68);
             this.tmpBox.Name = "tmpBox";
             this.tmpBox.Size = new System.Drawing.Size(157, 71);
             this.tmpBox.TabIndex = 1;
@@ -187,7 +187,7 @@
             // 
             // btnSendData
             // 
-            this.btnSendData.Location = new System.Drawing.Point(524, 53);
+            this.btnSendData.Location = new System.Drawing.Point(524, 29);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(85, 23);
             this.btnSendData.TabIndex = 4;
@@ -201,7 +201,7 @@
             this.utiBox.Controls.Add(this.ramUTI);
             this.utiBox.Controls.Add(this.gpuUTI);
             this.utiBox.Controls.Add(this.cpuUTI);
-            this.utiBox.Location = new System.Drawing.Point(360, 181);
+            this.utiBox.Location = new System.Drawing.Point(360, 145);
             this.utiBox.Name = "utiBox";
             this.utiBox.Size = new System.Drawing.Size(157, 77);
             this.utiBox.TabIndex = 5;
@@ -254,7 +254,7 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(360, 436);
+            this.logBox.Location = new System.Drawing.Point(360, 400);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
@@ -264,7 +264,7 @@
             // 
             // selectAll
             // 
-            this.selectAll.Location = new System.Drawing.Point(361, 52);
+            this.selectAll.Location = new System.Drawing.Point(361, 28);
             this.selectAll.Name = "selectAll";
             this.selectAll.Size = new System.Drawing.Size(75, 23);
             this.selectAll.TabIndex = 8;
@@ -274,7 +274,7 @@
             // 
             // unSelectAll
             // 
-            this.unSelectAll.Location = new System.Drawing.Point(443, 52);
+            this.unSelectAll.Location = new System.Drawing.Point(443, 28);
             this.unSelectAll.Name = "unSelectAll";
             this.unSelectAll.Size = new System.Drawing.Size(75, 23);
             this.unSelectAll.TabIndex = 9;
@@ -286,7 +286,7 @@
             // 
             this.clkBox.Controls.Add(this.gpuClk);
             this.clkBox.Controls.Add(this.cpuClk);
-            this.clkBox.Location = new System.Drawing.Point(360, 264);
+            this.clkBox.Location = new System.Drawing.Point(360, 228);
             this.clkBox.Name = "clkBox";
             this.clkBox.Size = new System.Drawing.Size(157, 57);
             this.clkBox.TabIndex = 10;
@@ -323,7 +323,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(535, 402);
+            this.label1.Location = new System.Drawing.Point(535, 366);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -337,6 +337,7 @@
             this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.selButton);
             this.bmpPanel.Controls.Add(this.customPath);
+            this.bmpPanel.Controls.Add(this.displayTime);
             this.bmpPanel.Controls.Add(this.label2);
             this.bmpPanel.Controls.Add(this.customButton);
             this.bmpPanel.Controls.Add(this.biliButton);
@@ -344,7 +345,7 @@
             this.bmpPanel.Controls.Add(this.baButton);
             this.bmpPanel.Controls.Add(this.pictureBox);
             this.bmpPanel.Enabled = false;
-            this.bmpPanel.Location = new System.Drawing.Point(524, 104);
+            this.bmpPanel.Location = new System.Drawing.Point(524, 68);
             this.bmpPanel.Name = "bmpPanel";
             this.bmpPanel.Size = new System.Drawing.Size(196, 271);
             this.bmpPanel.TabIndex = 13;
@@ -422,6 +423,16 @@
             this.customPath.Size = new System.Drawing.Size(128, 21);
             this.customPath.TabIndex = 6;
             // 
+            // displayTime
+            // 
+            this.displayTime.AutoSize = true;
+            this.displayTime.Location = new System.Drawing.Point(104, 15);
+            this.displayTime.Name = "displayTime";
+            this.displayTime.Size = new System.Drawing.Size(72, 16);
+            this.displayTime.TabIndex = 26;
+            this.displayTime.Text = "显示时间";
+            this.displayTime.UseVisualStyleBackColor = true;
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -488,7 +499,7 @@
             // cbSendBmp
             // 
             this.cbSendBmp.AutoSize = true;
-            this.cbSendBmp.Location = new System.Drawing.Point(537, 121);
+            this.cbSendBmp.Location = new System.Drawing.Point(537, 85);
             this.cbSendBmp.Name = "cbSendBmp";
             this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
             this.cbSendBmp.TabIndex = 8;
@@ -511,12 +522,11 @@
             this.panel1.Controls.Add(this.lbxClient);
             this.panel1.Controls.Add(this.cbSendAll);
             this.panel1.Controls.Add(this.btnReboot);
-            this.panel1.Controls.Add(this.btnDisplay);
             this.panel1.Controls.Add(this.btnLed);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(14, 104);
+            this.panel1.Location = new System.Drawing.Point(14, 68);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(312, 443);
+            this.panel1.Size = new System.Drawing.Size(312, 271);
             this.panel1.TabIndex = 16;
             // 
             // lbxClient
@@ -525,7 +535,7 @@
             this.lbxClient.ItemHeight = 12;
             this.lbxClient.Location = new System.Drawing.Point(12, 56);
             this.lbxClient.Name = "lbxClient";
-            this.lbxClient.Size = new System.Drawing.Size(265, 160);
+            this.lbxClient.Size = new System.Drawing.Size(265, 148);
             this.lbxClient.TabIndex = 4;
             // 
             // cbSendAll
@@ -540,7 +550,7 @@
             // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(178, 243);
+            this.btnReboot.Location = new System.Drawing.Point(213, 222);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -548,19 +558,9 @@
             this.btnReboot.UseVisualStyleBackColor = true;
             this.btnReboot.Click += new System.EventHandler(this.BtnReboot_Click);
             // 
-            // btnDisplay
-            // 
-            this.btnDisplay.Location = new System.Drawing.Point(108, 243);
-            this.btnDisplay.Name = "btnDisplay";
-            this.btnDisplay.Size = new System.Drawing.Size(64, 32);
-            this.btnDisplay.TabIndex = 1;
-            this.btnDisplay.Text = "开屏";
-            this.btnDisplay.UseVisualStyleBackColor = true;
-            this.btnDisplay.Click += new System.EventHandler(this.BtnDisplay_Click);
-            // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(38, 243);
+            this.btnLed.Location = new System.Drawing.Point(12, 222);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -570,7 +570,7 @@
             // 
             // btnSendGif
             // 
-            this.btnSendGif.Location = new System.Drawing.Point(615, 52);
+            this.btnSendGif.Location = new System.Drawing.Point(615, 28);
             this.btnSendGif.Name = "btnSendGif";
             this.btnSendGif.Size = new System.Drawing.Size(84, 24);
             this.btnSendGif.TabIndex = 20;
@@ -582,7 +582,7 @@
             // 
             this.rpmBox.Controls.Add(this.gpuRpm);
             this.rpmBox.Controls.Add(this.cpuRpm);
-            this.rpmBox.Location = new System.Drawing.Point(361, 327);
+            this.rpmBox.Location = new System.Drawing.Point(361, 291);
             this.rpmBox.Name = "rpmBox";
             this.rpmBox.Size = new System.Drawing.Size(156, 48);
             this.rpmBox.TabIndex = 17;
@@ -615,7 +615,7 @@
             // 
             this.volBox.Controls.Add(this.gpuVol);
             this.volBox.Controls.Add(this.cpuVol);
-            this.volBox.Location = new System.Drawing.Point(361, 383);
+            this.volBox.Location = new System.Drawing.Point(361, 347);
             this.volBox.Name = "volBox";
             this.volBox.Size = new System.Drawing.Size(156, 47);
             this.volBox.TabIndex = 18;
@@ -660,11 +660,10 @@
             0,
             0,
             0});
-            this.timerInterval.ValueChanged += new System.EventHandler(this.TimerInterval_ValueChanged);
             // 
             // OutDebugFile
             // 
-            this.OutDebugFile.Location = new System.Drawing.Point(13, 52);
+            this.OutDebugFile.Location = new System.Drawing.Point(14, 28);
             this.OutDebugFile.Name = "OutDebugFile";
             this.OutDebugFile.Size = new System.Drawing.Size(75, 23);
             this.OutDebugFile.TabIndex = 21;
@@ -676,7 +675,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(731, 558);
+            this.ClientSize = new System.Drawing.Size(731, 518);
             this.Controls.Add(this.OutDebugFile);
             this.Controls.Add(this.cbSendBmp);
             this.Controls.Add(this.btnSendGif);
@@ -695,6 +694,7 @@
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.logBox);
             this.MainMenuStrip = this.menuStrip;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -761,7 +761,6 @@
         private System.Windows.Forms.CheckBox cbSendBmp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnDisplay;
         private System.Windows.Forms.Button btnLed;
         private System.Windows.Forms.Button btnReboot;
         private System.Windows.Forms.CheckBox cbSendAll;
@@ -780,6 +779,7 @@
         private System.Windows.Forms.NumericUpDown nbxWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox displayTime;
     }
 }
 
