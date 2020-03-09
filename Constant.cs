@@ -13,6 +13,7 @@ namespace Aida64_Esp8266_DisplayControler
         const byte PACKET_ALIVE = 0X0;
         const byte PACKET_OK = 0X1;
         const byte PACKET_FAIL = 0X2;
+        const byte PACKET_DEBUG = 0X4;
         const byte PACKET_DISPLAY_IMG = 0XF;
         const byte PACKET_DISPLAY_INFO = 0X10;
         const byte PACKET_GET_INFO = 0X11;

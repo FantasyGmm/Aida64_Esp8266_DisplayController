@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
+using System.IO.Ports;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -50,6 +51,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private CancellationToken token;
 
+        public Serial serial;
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
@@ -303,7 +305,7 @@ namespace Aida64_Esp8266_DisplayControler
             MemoryStream mem = new MemoryStream();
             mem.WriteByte(cmd);
             mem.WriteByte(0x1);
-            mem.Write(BitConverter.GetBytes((short) len), 0, 2);
+            mem.Write(BitConverter.GetBytes((short)len), 0, 2);
             if (data != null)
                 mem.Write(data, 0, len);
             return mem.ToArray();
@@ -324,7 +326,15 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void Main_Load(object sender, EventArgs e)
         {
-   
+            string[] sa = Serial.getSerialPort();
+            cbxSerial.Items.AddRange(sa);
+
+            if (cbxSerial.Items.Count > 0)
+                cbxSerial.SelectedIndex = 0;
+
+
+
+
             try
             {
                 mapFile = MemoryMappedFile.OpenExisting("AIDA64_SensorValues");
@@ -359,10 +369,10 @@ namespace Aida64_Esp8266_DisplayControler
                                 Sync.Send(SetLogbox, p.data);
                                 break;
                             case PACKET_TOGGLE_LED:
-                                Sync.Send(SetButtonText, new string[] {"btnLed", p.data[0].ToString()});
+                                Sync.Send(SetButtonText, new string[] { "btnLed", p.data[0].ToString() });
                                 break;
                             case PACKET_TOGGLE_DISPLAY:
-                                Sync.Send(SetButtonText, new string[] {"btnDisplay", p.data[0].ToString()});
+                                Sync.Send(SetButtonText, new string[] { "btnDisplay", p.data[0].ToString() });
                                 break;
                         }
                     }
@@ -446,7 +456,7 @@ namespace Aida64_Esp8266_DisplayControler
                                      sourceBuffer[sourceIndex + 3];
                     if (pixelTotal > threshold)
                     {
-                        destinationValue += (byte) pixelValue;
+                        destinationValue += (byte)pixelValue;
                     }
 
                     if (pixelValue == 1)
@@ -492,7 +502,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             string bytes = System.Text.RegularExpressions.Regex
                 .Match(input, @"\{(.*)\}", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
-            string[] StringArray = bytes.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
+            string[] StringArray = bytes.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             byte[] pixels = new byte[StringArray.Length - 1];
             for (int k = 0; k < StringArray.Length - 1; k++)
                 if (byte.TryParse(StringArray[k].TrimStart().Substring(2, 2), NumberStyles.HexNumber,
@@ -503,6 +513,50 @@ namespace Aida64_Esp8266_DisplayControler
 
             return pixels;
         }
+
+
+        private void udpSendXBM(byte[] data, int width, int height)
+        {
+            using(MemoryStream ms = new MemoryStream())
+            {
+                string[] s;
+
+                lock (clientList)
+                {
+                    if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                        return;
+                    s = clientList[0].Split(':');
+                }
+
+                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                ms.Write(new byte[] { Convert.ToByte(width), Convert.ToByte(height) }, 0, 2);
+                ms.Write(data, 0, data.Length);
+                byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, ms.ToArray());
+                Udp.Send(packet, packet.Length, addr);
+            }
+        }
+
+
+        private void serialSendXBM(byte[] data)
+        {
+
+            if (serial == null || !serial.IsOpen)
+                return;
+
+            MemoryStream ms = new MemoryStream();
+            ms.Write(new byte[] { 0XAA, 0X55}, 0, 2);
+            ms.Write(data, 0, data.Length);
+            ms.Write(new byte[] { 0XAA, 0X22 }, 0, 2);
+            var ba = ms.ToArray();
+            ms.Dispose();
+            serial.Write(ba, 0, ba.Length);
+       
+            
+            
+         
+        }
+
+
 
         private void BtnLed_Click(object sender, EventArgs e)
         {
@@ -561,12 +615,6 @@ namespace Aida64_Esp8266_DisplayControler
                 bmpPath = op.SelectedPath;
                 customPath.Text = op.SelectedPath;
             }
-        }
-
-        private void OutDebugFile_Click(object sender, EventArgs e)
-        {
-            CreatDebugFile("Aidainfo.json", json_out); //输出源JSON
-            CreatDebugFile("Aidainfo.xml", xml_out); //输出源XML
         }
 
         private void selectAll_Click(object sender, EventArgs e)
@@ -719,10 +767,25 @@ namespace Aida64_Esp8266_DisplayControler
                 selectedUI ^= UI_POWER_GPU;
         }
 
+        private void btnSerial_Click(object sender, EventArgs e)
+        {
+            
+            serial = new Serial(cbxSerial.Text, 1500000);
+
+            if (serial.Open())
+            {
+                btnSerial.Enabled = false;
+                cbxSerial.Enabled = false;
+            }
+            
+
+        }
+
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             if (!cbSendBmp.Checked)
                 return;
+
             string bmppath = bmpPath;
             int bmpindex = 0;
             if (!Directory.Exists(bmppath))
@@ -762,16 +825,9 @@ namespace Aida64_Esp8266_DisplayControler
                             if (bmpindex >= bmplist.Length)
                                 bmpindex = 0;
 
-                            string[] s;
+                            
 
-                            lock (clientList)
-                            {
-                                if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
-                                    continue;
-                                s = clientList[0].Split(':');
-                            }
-
-                            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+ 
                             //未选择文件不作任何操作
                             if (bmplist.Length == 0)
                                 continue;
@@ -799,13 +855,11 @@ namespace Aida64_Esp8266_DisplayControler
 
                             var data = ConvertXBM(Encoding.Default.GetString(tb));
 
-                            MemoryStream ms = new MemoryStream();
-                            ms.Write(new byte[] {Convert.ToByte(width), Convert.ToByte(height)}, 0, 2);
-                            ms.Write(data, 0, data.Length);
+                            //udpSendXBM(data, width, height);
+                            serialSendXBM(data);
 
-                            byte[] packet = BuildPacket(PACKET_DISPLAY_IMG, ms.ToArray());
-                            Udp.Send(packet, packet.Length, addr);
                             bmpindex++;
+
                             Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
@@ -855,7 +909,8 @@ namespace Aida64_Esp8266_DisplayControler
                                 if (selested.Count == 0)
                                     continue;
                             }
-                            Sync.Send(SetLogbox, selectedUI.ToString());
+
+
                             JObject jsobj = new JObject
                             {
                                 {"l", selested.Count.ToString()},
@@ -897,6 +952,9 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
         #region 废弃代码
+
+        //CreatDebugFile("Aidainfo.json", json_out); //输出源JSON
+        //CreatDebugFile("Aidainfo.xml", xml_out); //输出源XML
 
         /*
         //文件流转byte[]
