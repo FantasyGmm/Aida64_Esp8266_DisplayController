@@ -760,7 +760,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
-                BmpSend:
+           
                 if (lbxData.SelectedIndex < 0)
                 {
                     MessageBox.Show("请选择动画文件!");
@@ -785,11 +785,6 @@ namespace Aida64_Esp8266_DisplayControler
                             
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
-                            if (Directory.GetCurrentDirectory() + "/data/" + lbxData.Text != packfile)
-                            {
-                                resetBmp.Reset();
-                                goto BmpSend;
-                            }
                             procPack(packfile, width, height);
                         }
                     }, token);
