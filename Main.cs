@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Ionic.Zlib;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -39,8 +41,13 @@ namespace Aida64_Esp8266_DisplayControler
                 len = l;
                 data = d;
             }
-        };
+        }
 
+        [Serializable]
+        public class PackData
+        {
+            public List<MemoryStream> img;
+        }
         public Main()
         {
             InitializeComponent();
@@ -248,7 +255,15 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void SetLogbox(object o)
         {
-            logBox.AppendText(o as string + Environment.NewLine);
+            try
+            {
+                logBox.AppendText(o as string + Environment.NewLine);
+            }
+            catch
+            {
+                return;
+            }
+            
         }
 
         public void SetButtonText(object o)
@@ -326,7 +341,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void Main_Load(object sender, EventArgs e)
         {
 
-
+  
 
             try
             {
@@ -385,110 +400,7 @@ namespace Aida64_Esp8266_DisplayControler
             bmpPanel.Enabled = cbSendBmp.Checked;
         }
 
-        public static byte[] GetSingleBitmap(string file)
-        {
-            Bitmap pimage = new Bitmap(file);
-            Bitmap source;
 
-            // If original bitmap is not already in 32 BPP, ARGB format, then convert
-            if (pimage.PixelFormat != PixelFormat.Format32bppArgb)
-            {
-                source = new Bitmap(pimage.Width, pimage.Height, PixelFormat.Format32bppArgb);
-                source.SetResolution(pimage.HorizontalResolution, pimage.VerticalResolution);
-                using (Graphics g = Graphics.FromImage(source))
-                {
-                    g.DrawImageUnscaled(pimage, 0, 0);
-                }
-            }
-            else
-            {
-                source = pimage;
-            }
-
-            // Lock source bitmap in memory
-            BitmapData sourceData = source.LockBits(new Rectangle(0, 0, source.Width, source.Height),
-                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-            // Copy image data to binary array
-            int imageSize = sourceData.Stride * sourceData.Height;
-            byte[] sourceBuffer = new byte[imageSize];
-            Marshal.Copy(sourceData.Scan0, sourceBuffer, 0, imageSize);
-
-            // Unlock source bitmap
-            source.UnlockBits(sourceData);
-
-            // Create destination bitmap
-            System.Drawing.Bitmap destination =
-                new System.Drawing.Bitmap(source.Width, source.Height, PixelFormat.Format1bppIndexed);
-
-            // Lock destination bitmap in memory
-            BitmapData destinationData =
-                destination.LockBits(new Rectangle(0, 0, destination.Width, destination.Height),
-                    ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
-
-            // Create destination buffer
-            imageSize = destinationData.Stride * destinationData.Height;
-            byte[] destinationBuffer = new byte[imageSize];
-            int height = source.Height;
-            int width = source.Width;
-            int threshold = 500;
-
-            // Iterate lines
-            for (int y = 0; y < height; y++)
-            {
-                int sourceIndex = y * sourceData.Stride;
-                int destinationIndex = y * destinationData.Stride;
-                byte destinationValue = 0;
-                int pixelValue = 128;
-
-                // Iterate pixels
-                for (int x = 0; x < width; x++)
-                {
-                    // Compute pixel brightness (i.e. total of Red, Green, and Blue values)
-                    int pixelTotal = sourceBuffer[sourceIndex + 1] + sourceBuffer[sourceIndex + 2] +
-                                     sourceBuffer[sourceIndex + 3];
-                    if (pixelTotal > threshold)
-                    {
-                        destinationValue += (byte)pixelValue;
-                    }
-
-                    if (pixelValue == 1)
-                    {
-                        destinationBuffer[destinationIndex] = destinationValue;
-                        destinationIndex++;
-                        destinationValue = 0;
-                        pixelValue = 128;
-                    }
-                    else
-                    {
-                        pixelValue >>= 1;
-                    }
-
-                    sourceIndex += 4;
-                }
-
-                if (pixelValue != 128)
-                {
-                    destinationBuffer[destinationIndex] = destinationValue;
-                }
-            }
-
-            // Copy binary image data to destination bitmap
-            Marshal.Copy(destinationBuffer, 0, destinationData.Scan0, imageSize);
-
-            // Unlock destination bitmap
-            destination.UnlockBits(destinationData);
-
-            // Dispose of source if not originally supplied bitmap
-            if (source != pimage)
-            {
-                source.Dispose();
-            }
-
-            MemoryStream ms = new MemoryStream();
-            destination.Save(ms, ImageFormat.Bmp);
-            return ms.ToArray();
-        }
 
 
         private byte[] ConvertXBM(string input)
@@ -506,6 +418,8 @@ namespace Aida64_Esp8266_DisplayControler
 
             return pixels;
         }
+
+
 
 
         private void udpSendXBM(byte[] data, int width, int height)
@@ -530,6 +444,104 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
+        private void procPack(string file, int width, int height)
+        {
+            using (FileStream fs = new FileStream(file, FileMode.Open))
+            {
+                MemoryStream ms = new MemoryStream();
+                fs.CopyTo(ms);
+                var data = GZipStream.UncompressBuffer(ms.ToArray());
+                ms = new MemoryStream();
+                ms.Write(data, 0, data.Length);
+                ms.Seek(0, SeekOrigin.Begin);
+                var formatter = new BinaryFormatter();
+                PackData pack = (PackData)formatter.Deserialize(ms);
+
+                foreach (var m in pack.img)
+                {
+                    var buf = ConvertXBM(Encoding.Default.GetString(m.ToArray()));
+                    udpSendXBM(buf, width, height);
+                    //ms = new MemoryStream();
+                    //ms.Write(buf, 0, buf.Length);
+                    //Image img = Image.FromStream(ms);
+                    //pictureBox.Image = img;
+                    Thread.Sleep((int)timerInterval.Value);
+                }
+
+            }
+        }
+
+
+        private void procDir()
+        {
+            byte[] buffer = new byte[2048];
+            string bmppath = bmpPath;
+            int bmpindex = 0;
+
+            if (!Directory.Exists(bmppath))
+            {
+                MessageBox.Show("请选择正确的文件夹！");
+                return;
+            }
+
+            string[] bmplist = Directory.GetFiles(bmppath);
+
+            
+           //检测按钮变动
+           if (bmppath != bmpPath)
+           {
+               if (!Directory.Exists(bmppath))
+                   return;
+
+               bmppath = bmpPath;
+               bmpindex = 0;
+               bmplist = Directory.GetFiles(bmppath);
+           }
+
+           //重置动画播放
+           if (bmpindex >= bmplist.Length)
+               bmpindex = 0;
+
+           //未选择文件不作任何操作
+           if (bmplist.Length == 0)
+                return;
+
+           buffer = GetSingleBitmap(bmplist[bmpindex]);
+           MagickImage img = new MagickImage(buffer){Format = MagickFormat.Xbm};
+
+
+           Stopwatch watch = new Stopwatch();
+           watch.Start();
+
+
+           var width = Convert.ToInt32(nbxWidth.Value);
+           var height = Convert.ToInt32(nbxHeight.Value);
+           img.Resize(new MagickGeometry($"{width}x{height}!"));
+           buffer = img.ToByteArray();
+
+           watch.Stop();
+           var mSeconds = watch.ElapsedMilliseconds;
+           Sync.Send(SetLogbox, mSeconds.ToString());
+
+           using (MemoryStream ms = new MemoryStream())
+           {
+               img.Format = MagickFormat.Jpg;
+               img.Write(ms);
+               pictureBox.Image = Image.FromStream(ms);
+               img.Dispose();
+           }
+
+
+           buffer = ConvertXBM(Encoding.Default.GetString(buffer));
+
+
+
+
+           udpSendXBM(buffer, width, height);
+           bmpindex++;
+           
+
+        }
 
 
 
@@ -742,26 +754,21 @@ namespace Aida64_Esp8266_DisplayControler
                 selectedUI ^= UI_POWER_GPU;
         }
 
-        private void btnSerial_Click(object sender, EventArgs e)
+        private void 制作动画包ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-
+            PackForm p = new PackForm();
+            p.ShowDialog(this);
         }
 
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
+           
+
             if (!cbSendBmp.Checked)
                 return;
 
-            string bmppath = bmpPath;
-            int bmpindex = 0;
-            if (!Directory.Exists(bmppath))
-            {
-                MessageBox.Show("请选择正确的文件夹！");
-                return;
-            }
+ 
 
-            string[] bmplist = Directory.GetFiles(bmppath);
             if (btnSendGif.Text == "停止发送动画")
             {
                 resetBmp.Reset();
@@ -777,65 +784,17 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
-                            Stopwatch watch = new Stopwatch();
-                            watch.Start();
 
                             resetBmp.WaitOne();
-                            //检测按钮变动
-                            if (bmppath != bmpPath)
-                            {
-                                if (!Directory.Exists(bmppath))
-                                    continue;
-                                bmppath = bmpPath;
-                                bmpindex = 0;
-                                bmplist = Directory.GetFiles(bmppath);
-                            }
 
-                            //重置动画播放
-                            if (bmpindex >= bmplist.Length)
-                                bmpindex = 0;
+           
+                            procPack(Directory.GetCurrentDirectory() + "/badapple.dat", 128, 64);
+           
+                            
+                            
+                        
 
                             
-
- 
-                            //未选择文件不作任何操作
-                            if (bmplist.Length == 0)
-                                continue;
-
-                            byte[] ib = GetSingleBitmap(bmplist[bmpindex]);
-
-                            MagickImage img = new MagickImage(ib)
-                            {
-                                Format = MagickFormat.Xbm
-                            };
-
-
-                            var width = Convert.ToInt32(nbxWidth.Value);
-                            var height = Convert.ToInt32(nbxHeight.Value);
-                            img.Resize(new MagickGeometry($"{width}x{height}!"));
-                            byte[] tb = img.ToByteArray();
-
-                            using (MemoryStream memStream = new MemoryStream())
-                            {
-                                img.Format = MagickFormat.Jpg;
-                                img.Write(memStream);
-                                pictureBox.Image = Image.FromStream(memStream);
-                            }
-
-
-                            var data = ConvertXBM(Encoding.Default.GetString(tb));
-
-                            udpSendXBM(data, width, height);
-
-                            DateTime ntime = DateTime.Now;
-
-                            watch.Stop();
-                            var mSeconds = watch.ElapsedMilliseconds;
-                            Sync.Send(SetLogbox, mSeconds.ToString());
-
-                            bmpindex++;
-
-                            //Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
                     sendBmpTask.Start();

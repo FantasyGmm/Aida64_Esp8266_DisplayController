@@ -59,12 +59,7 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
-            this.displayTime = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.customButton = new System.Windows.Forms.RadioButton();
-            this.biliButton = new System.Windows.Forms.RadioButton();
-            this.asusButton = new System.Windows.Forms.RadioButton();
-            this.baButton = new System.Windows.Forms.RadioButton();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -81,6 +76,9 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.制作动画包ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayTime = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -98,6 +96,7 @@
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
             this.设置ToolStripMenuItem,
             this.关于ToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
@@ -117,7 +116,7 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
@@ -338,10 +337,6 @@
             this.bmpPanel.Controls.Add(this.customPath);
             this.bmpPanel.Controls.Add(this.displayTime);
             this.bmpPanel.Controls.Add(this.label2);
-            this.bmpPanel.Controls.Add(this.customButton);
-            this.bmpPanel.Controls.Add(this.biliButton);
-            this.bmpPanel.Controls.Add(this.asusButton);
-            this.bmpPanel.Controls.Add(this.baButton);
             this.bmpPanel.Controls.Add(this.pictureBox);
             this.bmpPanel.Enabled = false;
             this.bmpPanel.Location = new System.Drawing.Point(524, 68);
@@ -422,16 +417,6 @@
             this.customPath.Size = new System.Drawing.Size(128, 21);
             this.customPath.TabIndex = 6;
             // 
-            // displayTime
-            // 
-            this.displayTime.AutoSize = true;
-            this.displayTime.Location = new System.Drawing.Point(104, 15);
-            this.displayTime.Name = "displayTime";
-            this.displayTime.Size = new System.Drawing.Size(72, 16);
-            this.displayTime.TabIndex = 26;
-            this.displayTime.Text = "显示时间";
-            this.displayTime.UseVisualStyleBackColor = true;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -439,53 +424,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 5;
-            this.label2.Text = "自定义路径";
-            // 
-            // customButton
-            // 
-            this.customButton.AutoSize = true;
-            this.customButton.Location = new System.Drawing.Point(104, 63);
-            this.customButton.Name = "customButton";
-            this.customButton.Size = new System.Drawing.Size(59, 16);
-            this.customButton.TabIndex = 4;
-            this.customButton.Text = "自定义";
-            this.customButton.UseVisualStyleBackColor = true;
-            this.customButton.CheckedChanged += new System.EventHandler(this.CustomButton_CheckedChanged);
-            // 
-            // biliButton
-            // 
-            this.biliButton.AutoSize = true;
-            this.biliButton.Location = new System.Drawing.Point(104, 41);
-            this.biliButton.Name = "biliButton";
-            this.biliButton.Size = new System.Drawing.Size(71, 16);
-            this.biliButton.TabIndex = 3;
-            this.biliButton.Text = "BiliBili";
-            this.biliButton.UseVisualStyleBackColor = true;
-            this.biliButton.CheckedChanged += new System.EventHandler(this.BiliButton_CheckedChanged);
-            // 
-            // asusButton
-            // 
-            this.asusButton.AutoSize = true;
-            this.asusButton.Location = new System.Drawing.Point(13, 63);
-            this.asusButton.Name = "asusButton";
-            this.asusButton.Size = new System.Drawing.Size(47, 16);
-            this.asusButton.TabIndex = 2;
-            this.asusButton.Text = "Asus";
-            this.asusButton.UseVisualStyleBackColor = true;
-            this.asusButton.CheckedChanged += new System.EventHandler(this.AsusButton_CheckedChanged);
-            // 
-            // baButton
-            // 
-            this.baButton.AutoSize = true;
-            this.baButton.Checked = true;
-            this.baButton.Location = new System.Drawing.Point(13, 41);
-            this.baButton.Name = "baButton";
-            this.baButton.Size = new System.Drawing.Size(71, 16);
-            this.baButton.TabIndex = 1;
-            this.baButton.TabStop = true;
-            this.baButton.Text = "BadApple";
-            this.baButton.UseVisualStyleBackColor = true;
-            this.baButton.CheckedChanged += new System.EventHandler(this.BaButton_CheckedChanged);
+            this.label2.Text = "自定义文件";
             // 
             // pictureBox
             // 
@@ -655,10 +594,35 @@
             this.timerInterval.Size = new System.Drawing.Size(93, 21);
             this.timerInterval.TabIndex = 19;
             this.timerInterval.Value = new decimal(new int[] {
-            100,
+            33,
             0,
             0,
             0});
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.制作动画包ToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 21);
+            this.toolStripMenuItem1.Text = "文件";
+            // 
+            // 制作动画包ToolStripMenuItem
+            // 
+            this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.制作动画包ToolStripMenuItem.Text = "制作动画包";
+            this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
+            // 
+            // displayTime
+            // 
+            this.displayTime.AutoSize = true;
+            this.displayTime.Location = new System.Drawing.Point(104, 15);
+            this.displayTime.Name = "displayTime";
+            this.displayTime.Size = new System.Drawing.Size(72, 16);
+            this.displayTime.TabIndex = 26;
+            this.displayTime.Text = "显示时间";
+            this.displayTime.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -739,10 +703,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox bmpPanel;
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.RadioButton customButton;
-        private System.Windows.Forms.RadioButton biliButton;
-        private System.Windows.Forms.RadioButton asusButton;
-        private System.Windows.Forms.RadioButton baButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox customPath;
         private System.Windows.Forms.Button selButton;
@@ -766,6 +726,8 @@
         private System.Windows.Forms.NumericUpDown nbxWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 制作动画包ToolStripMenuItem;
         private System.Windows.Forms.CheckBox displayTime;
     }
 }
