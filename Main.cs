@@ -752,21 +752,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
-            if (lbxData.SelectedIndex < 0)
-            {
-                MessageBox.Show("请选择动画文件!");
-                return;
-            }
-
-            string packfile = Directory.GetCurrentDirectory() + "/data/" + lbxData.Text;
-
-            if (!File.Exists(packfile))
-            {
-                MessageBox.Show("动画文件不存在!");
-                return;
-            }
-
-
             if (btnSendGif.Text == "停止发送动画")
             {
                 resetBmp.Reset();
@@ -775,6 +760,21 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
+                BmpSend:
+                if (lbxData.SelectedIndex < 0)
+                {
+                    MessageBox.Show("请选择动画文件!");
+                    return;
+                }
+
+                string packfile = Directory.GetCurrentDirectory() + "/data/" + lbxData.Text;
+
+                if (!File.Exists(packfile))
+                {
+                    MessageBox.Show("动画文件不存在!");
+                    return;
+                }
+
                 btnSendGif.Text = "停止发送动画";
                 if (sendBmpTask == null)
                 {
@@ -785,6 +785,11 @@ namespace Aida64_Esp8266_DisplayControler
                             
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
+                            if (Directory.GetCurrentDirectory() + "/data/" + lbxData.Text != packfile)
+                            {
+                                resetBmp.Reset();
+                                goto BmpSend;
+                            }
                             procPack(packfile, width, height);
                         }
                     }, token);
