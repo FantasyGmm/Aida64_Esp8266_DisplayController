@@ -59,14 +59,12 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.selButton = new System.Windows.Forms.Button();
             this.customPath = new System.Windows.Forms.TextBox();
-            this.displayTime = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.customButton = new System.Windows.Forms.RadioButton();
             this.biliButton = new System.Windows.Forms.RadioButton();
             this.asusButton = new System.Windows.Forms.RadioButton();
             this.baButton = new System.Windows.Forms.RadioButton();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.cbSendBmp = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbxClient = new System.Windows.Forms.ListBox();
@@ -149,7 +147,7 @@
             this.hddTmp.TabIndex = 3;
             this.hddTmp.Text = "HDD";
             this.hddTmp.UseVisualStyleBackColor = true;
-            this.hddTmp.CheckedChanged += new System.EventHandler(this.hddTmp_CheckedChanged);
+            this.hddTmp.CheckedChanged += new System.EventHandler(this.HddTmp_CheckedChanged);
             // 
             // mbTmp
             // 
@@ -160,7 +158,7 @@
             this.mbTmp.TabIndex = 2;
             this.mbTmp.Text = "主板";
             this.mbTmp.UseVisualStyleBackColor = true;
-            this.mbTmp.CheckedChanged += new System.EventHandler(this.mbTmp_CheckedChanged);
+            this.mbTmp.CheckedChanged += new System.EventHandler(this.MbTmp_CheckedChanged);
             // 
             // gpuTmp
             // 
@@ -171,7 +169,7 @@
             this.gpuTmp.TabIndex = 1;
             this.gpuTmp.Text = "GPU";
             this.gpuTmp.UseVisualStyleBackColor = true;
-            this.gpuTmp.CheckedChanged += new System.EventHandler(this.gpuTmp_CheckedChanged);
+            this.gpuTmp.CheckedChanged += new System.EventHandler(this.GpuTmp_CheckedChanged);
             // 
             // cpuTmp
             // 
@@ -182,11 +180,11 @@
             this.cpuTmp.TabIndex = 0;
             this.cpuTmp.Text = "CPU";
             this.cpuTmp.UseVisualStyleBackColor = true;
-            this.cpuTmp.CheckedChanged += new System.EventHandler(this.cpuTmp_CheckedChanged);
+            this.cpuTmp.CheckedChanged += new System.EventHandler(this.CpuTmp_CheckedChanged);
             // 
             // btnSendData
             // 
-            this.btnSendData.Location = new System.Drawing.Point(524, 29);
+            this.btnSendData.Location = new System.Drawing.Point(537, 28);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(85, 23);
             this.btnSendData.TabIndex = 4;
@@ -216,7 +214,7 @@
             this.vramUTI.TabIndex = 7;
             this.vramUTI.Text = "VRAM";
             this.vramUTI.UseVisualStyleBackColor = true;
-            this.vramUTI.CheckedChanged += new System.EventHandler(this.vramUTI_CheckedChanged);
+            this.vramUTI.CheckedChanged += new System.EventHandler(this.VramUTI_CheckedChanged);
             // 
             // ramUTI
             // 
@@ -227,7 +225,7 @@
             this.ramUTI.TabIndex = 6;
             this.ramUTI.Text = "RAM";
             this.ramUTI.UseVisualStyleBackColor = true;
-            this.ramUTI.CheckedChanged += new System.EventHandler(this.ramUTI_CheckedChanged);
+            this.ramUTI.CheckedChanged += new System.EventHandler(this.RamUTI_CheckedChanged);
             // 
             // gpuUTI
             // 
@@ -238,7 +236,7 @@
             this.gpuUTI.TabIndex = 5;
             this.gpuUTI.Text = "GPU";
             this.gpuUTI.UseVisualStyleBackColor = true;
-            this.gpuUTI.CheckedChanged += new System.EventHandler(this.gpuUTI_CheckedChanged);
+            this.gpuUTI.CheckedChanged += new System.EventHandler(this.GpuUTI_CheckedChanged);
             // 
             // cpuUTI
             // 
@@ -249,7 +247,7 @@
             this.cpuUTI.TabIndex = 4;
             this.cpuUTI.Text = "CPU";
             this.cpuUTI.UseVisualStyleBackColor = true;
-            this.cpuUTI.CheckedChanged += new System.EventHandler(this.cpuUTI_CheckedChanged);
+            this.cpuUTI.CheckedChanged += new System.EventHandler(this.CpuUTI_CheckedChanged);
             // 
             // logBox
             // 
@@ -301,7 +299,7 @@
             this.gpuClk.TabIndex = 3;
             this.gpuClk.Text = "GPU";
             this.gpuClk.UseVisualStyleBackColor = true;
-            this.gpuClk.CheckedChanged += new System.EventHandler(this.gpuClk_CheckedChanged);
+            this.gpuClk.CheckedChanged += new System.EventHandler(this.GpuClk_CheckedChanged);
             // 
             // cpuClk
             // 
@@ -312,7 +310,7 @@
             this.cpuClk.TabIndex = 2;
             this.cpuClk.Text = "CPU";
             this.cpuClk.UseVisualStyleBackColor = true;
-            this.cpuClk.CheckedChanged += new System.EventHandler(this.cpuClk_CheckedChanged);
+            this.cpuClk.CheckedChanged += new System.EventHandler(this.CpuClk_CheckedChanged);
             // 
             // notifyIcon1
             // 
@@ -322,7 +320,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(535, 366);
+            this.label1.Location = new System.Drawing.Point(535, 369);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -336,14 +334,12 @@
             this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.selButton);
             this.bmpPanel.Controls.Add(this.customPath);
-            this.bmpPanel.Controls.Add(this.displayTime);
             this.bmpPanel.Controls.Add(this.label2);
             this.bmpPanel.Controls.Add(this.customButton);
             this.bmpPanel.Controls.Add(this.biliButton);
             this.bmpPanel.Controls.Add(this.asusButton);
             this.bmpPanel.Controls.Add(this.baButton);
             this.bmpPanel.Controls.Add(this.pictureBox);
-            this.bmpPanel.Enabled = false;
             this.bmpPanel.Location = new System.Drawing.Point(524, 68);
             this.bmpPanel.Name = "bmpPanel";
             this.bmpPanel.Size = new System.Drawing.Size(196, 271);
@@ -354,7 +350,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(76, 208);
+            this.label5.Location = new System.Drawing.Point(109, 223);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 25;
@@ -363,7 +359,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 208);
+            this.label4.Location = new System.Drawing.Point(11, 223);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 24;
@@ -371,7 +367,7 @@
             // 
             // nbxHeight
             // 
-            this.nbxHeight.Location = new System.Drawing.Point(78, 223);
+            this.nbxHeight.Location = new System.Drawing.Point(111, 238);
             this.nbxHeight.Maximum = new decimal(new int[] {
             255,
             0,
@@ -388,7 +384,7 @@
             // 
             // nbxWidth
             // 
-            this.nbxWidth.Location = new System.Drawing.Point(13, 223);
+            this.nbxWidth.Location = new System.Drawing.Point(13, 238);
             this.nbxWidth.Maximum = new decimal(new int[] {
             255,
             0,
@@ -406,7 +402,7 @@
             // selButton
             // 
             this.selButton.Enabled = false;
-            this.selButton.Location = new System.Drawing.Point(147, 104);
+            this.selButton.Location = new System.Drawing.Point(147, 98);
             this.selButton.Name = "selButton";
             this.selButton.Size = new System.Drawing.Size(27, 21);
             this.selButton.TabIndex = 7;
@@ -417,25 +413,15 @@
             // customPath
             // 
             this.customPath.Enabled = false;
-            this.customPath.Location = new System.Drawing.Point(13, 104);
+            this.customPath.Location = new System.Drawing.Point(13, 98);
             this.customPath.Name = "customPath";
             this.customPath.Size = new System.Drawing.Size(128, 21);
             this.customPath.TabIndex = 6;
             // 
-            // displayTime
-            // 
-            this.displayTime.AutoSize = true;
-            this.displayTime.Location = new System.Drawing.Point(104, 15);
-            this.displayTime.Name = "displayTime";
-            this.displayTime.Size = new System.Drawing.Size(72, 16);
-            this.displayTime.TabIndex = 26;
-            this.displayTime.Text = "显示时间";
-            this.displayTime.UseVisualStyleBackColor = true;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 83);
+            this.label2.Location = new System.Drawing.Point(11, 77);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 5;
@@ -444,7 +430,7 @@
             // customButton
             // 
             this.customButton.AutoSize = true;
-            this.customButton.Location = new System.Drawing.Point(104, 63);
+            this.customButton.Location = new System.Drawing.Point(104, 44);
             this.customButton.Name = "customButton";
             this.customButton.Size = new System.Drawing.Size(59, 16);
             this.customButton.TabIndex = 4;
@@ -455,7 +441,7 @@
             // biliButton
             // 
             this.biliButton.AutoSize = true;
-            this.biliButton.Location = new System.Drawing.Point(104, 41);
+            this.biliButton.Location = new System.Drawing.Point(104, 22);
             this.biliButton.Name = "biliButton";
             this.biliButton.Size = new System.Drawing.Size(71, 16);
             this.biliButton.TabIndex = 3;
@@ -466,7 +452,7 @@
             // asusButton
             // 
             this.asusButton.AutoSize = true;
-            this.asusButton.Location = new System.Drawing.Point(13, 63);
+            this.asusButton.Location = new System.Drawing.Point(13, 44);
             this.asusButton.Name = "asusButton";
             this.asusButton.Size = new System.Drawing.Size(47, 16);
             this.asusButton.TabIndex = 2;
@@ -478,7 +464,7 @@
             // 
             this.baButton.AutoSize = true;
             this.baButton.Checked = true;
-            this.baButton.Location = new System.Drawing.Point(13, 41);
+            this.baButton.Location = new System.Drawing.Point(13, 22);
             this.baButton.Name = "baButton";
             this.baButton.Size = new System.Drawing.Size(71, 16);
             this.baButton.TabIndex = 1;
@@ -489,22 +475,11 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(13, 138);
+            this.pictureBox.Location = new System.Drawing.Point(35, 132);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
-            // 
-            // cbSendBmp
-            // 
-            this.cbSendBmp.AutoSize = true;
-            this.cbSendBmp.Location = new System.Drawing.Point(537, 85);
-            this.cbSendBmp.Name = "cbSendBmp";
-            this.cbSendBmp.Size = new System.Drawing.Size(72, 16);
-            this.cbSendBmp.TabIndex = 8;
-            this.cbSendBmp.Text = "启用动画";
-            this.cbSendBmp.UseVisualStyleBackColor = true;
-            this.cbSendBmp.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // label3
             // 
@@ -569,9 +544,9 @@
             // 
             // btnSendGif
             // 
-            this.btnSendGif.Location = new System.Drawing.Point(615, 28);
+            this.btnSendGif.Location = new System.Drawing.Point(628, 28);
             this.btnSendGif.Name = "btnSendGif";
-            this.btnSendGif.Size = new System.Drawing.Size(84, 24);
+            this.btnSendGif.Size = new System.Drawing.Size(92, 24);
             this.btnSendGif.TabIndex = 20;
             this.btnSendGif.Text = "发送动画";
             this.btnSendGif.UseVisualStyleBackColor = true;
@@ -597,7 +572,7 @@
             this.gpuRpm.TabIndex = 1;
             this.gpuRpm.Text = "GPU";
             this.gpuRpm.UseVisualStyleBackColor = true;
-            this.gpuRpm.CheckedChanged += new System.EventHandler(this.gpuRpm_CheckedChanged);
+            this.gpuRpm.CheckedChanged += new System.EventHandler(this.GpuRpm_CheckedChanged);
             // 
             // cpuRpm
             // 
@@ -608,7 +583,7 @@
             this.cpuRpm.TabIndex = 0;
             this.cpuRpm.Text = "CPU";
             this.cpuRpm.UseVisualStyleBackColor = true;
-            this.cpuRpm.CheckedChanged += new System.EventHandler(this.cpuRpm_CheckedChanged);
+            this.cpuRpm.CheckedChanged += new System.EventHandler(this.CpuRpm_CheckedChanged);
             // 
             // volBox
             // 
@@ -630,7 +605,7 @@
             this.gpuVol.TabIndex = 1;
             this.gpuVol.Text = "GPU";
             this.gpuVol.UseVisualStyleBackColor = true;
-            this.gpuVol.CheckedChanged += new System.EventHandler(this.gpuVol_CheckedChanged);
+            this.gpuVol.CheckedChanged += new System.EventHandler(this.GpuVol_CheckedChanged);
             // 
             // cpuVol
             // 
@@ -641,11 +616,11 @@
             this.cpuVol.TabIndex = 0;
             this.cpuVol.Text = "CPU";
             this.cpuVol.UseVisualStyleBackColor = true;
-            this.cpuVol.CheckedChanged += new System.EventHandler(this.cpuVol_CheckedChanged);
+            this.cpuVol.CheckedChanged += new System.EventHandler(this.CpuVol_CheckedChanged);
             // 
             // timerInterval
             // 
-            this.timerInterval.Location = new System.Drawing.Point(594, 362);
+            this.timerInterval.Location = new System.Drawing.Point(594, 365);
             this.timerInterval.Maximum = new decimal(new int[] {
             500,
             0,
@@ -665,7 +640,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 518);
-            this.Controls.Add(this.cbSendBmp);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
             this.Controls.Add(this.volBox);
@@ -746,7 +720,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox customPath;
         private System.Windows.Forms.Button selButton;
-        private System.Windows.Forms.CheckBox cbSendBmp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnLed;
@@ -766,7 +739,6 @@
         private System.Windows.Forms.NumericUpDown nbxWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox displayTime;
     }
 }
 
