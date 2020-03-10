@@ -329,6 +329,9 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void Main_Load(object sender, EventArgs e)
         {
+            if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
+                Directory.CreateDirectory("data");
+
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
@@ -366,11 +369,7 @@ namespace Aida64_Esp8266_DisplayControler
             logBox.ResetText();
         }
 
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            bmpPanel.Enabled = cbSendBmp.Checked;
-        }
-
+  
 
 
 
@@ -709,10 +708,6 @@ namespace Aida64_Esp8266_DisplayControler
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
            
-
-            if (!cbSendBmp.Checked)
-                return;
-
  
 
             if (btnSendGif.Text == "停止发送动画")
