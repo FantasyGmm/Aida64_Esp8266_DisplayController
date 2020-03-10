@@ -827,7 +827,7 @@ namespace Aida64_Esp8266_DisplayControler
 
                             bmpindex++;
 
-                            Thread.Sleep((int)timerInterval.Value);
+                            //Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
                     sendBmpTask.Start();
