@@ -52,6 +52,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
+
         MemoryMappedFile mapFile;
         MemoryMappedViewAccessor Accessor;
         private CancellationToken token;
@@ -68,6 +69,8 @@ namespace Aida64_Esp8266_DisplayControler
         ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
         public List<string> clientList = new List<string>();
+        public int packIndex = -1;
+        public List<string> packList = new List<string>();
 
         public void GetAidaInfo()
         {
@@ -312,21 +315,30 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void dataChange(object source, FileSystemEventArgs e)
         {
-            Sync.Send(flushData, null);
+            Sync.Send(flushPack, null);
         }
 
 
-        public void flushData(object o)
+        public void flushPack(object o)
         {
             var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data", "*.dat");
             lbxData.Items.Clear();
 
-            foreach(var f in files)
+            lock(packList)
             {
-                lbxData.Items.Add(Path.GetFileName(f));
+                packList.Clear();
+
+                foreach (var f in files)
+                {
+                    lbxData.Items.Add(Path.GetFileName(f));
+                    packList.Add(Path.GetFileName(f));
+                }
             }
+           
         }
 
+
+     
         private bool AIDAQuery()
         {
 
@@ -349,7 +361,7 @@ namespace Aida64_Esp8266_DisplayControler
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
 
-            flushData(null);
+            flushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.Path = Directory.GetCurrentDirectory() + "/data";
             watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName |NotifyFilters.DirectoryName;
@@ -441,8 +453,11 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void procPack(string file, int width, int height)
         {
+            Pack_Start:
+
             using (FileStream fs = new FileStream(file, FileMode.Open))
             {
+                
                 MemoryStream ms = new MemoryStream();
                 fs.CopyTo(ms);
                 var data = GZipStream.UncompressBuffer(ms.ToArray());
@@ -454,12 +469,27 @@ namespace Aida64_Esp8266_DisplayControler
 
                 foreach (var m in pack.img)
                 {
+                    resetBmp.WaitOne();
+
+                    lock (packList)
+                    {
+                        if (packList[packIndex] != Path.GetFileName(file))
+                        {
+                            file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
+                            goto Pack_Start;
+                        }
+                            
+                    }
+
                     var buf = ConvertXBM(Encoding.Default.GetString(m.ToArray()));
                     udpSendXBM(buf, width, height);
-                    //ms = new MemoryStream();
-                    //ms.Write(buf, 0, buf.Length);
-                    //Image img = Image.FromStream(ms);
-                    //pictureBox.Image = img;
+                    MagickImage img = new MagickImage(m.ToArray()) { Format = MagickFormat.Xbm };
+                    //img.Resize(new MagickGeometry($"{width}x{height}!"));
+                    img.Format = MagickFormat.Bmp;
+                    buf = img.ToByteArray();
+                    ms = new MemoryStream();
+                    ms.Write(buf, 0, buf.Length);
+                    pictureBox.Image = Image.FromStream(ms);
                     Thread.Sleep((int)timerInterval.Value);
                 }
 
@@ -715,6 +745,11 @@ namespace Aida64_Esp8266_DisplayControler
             p.ShowDialog(this);
         }
 
+        private void lbxData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            packIndex = (sender as ListBox).SelectedIndex;
+        }
+
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             if (lbxData.SelectedIndex < 0)
@@ -747,7 +782,7 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
-                            resetBmp.WaitOne();
+                            
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
                             procPack(packfile, width, height);

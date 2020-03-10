@@ -55,6 +55,7 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
+            this.lbxData = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.nbxHeight = new System.Windows.Forms.NumericUpDown();
@@ -75,7 +76,6 @@
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.displayTime = new System.Windows.Forms.CheckBox();
-            this.lbxData = new System.Windows.Forms.ListBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -354,6 +354,16 @@
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
             // 
+            // lbxData
+            // 
+            this.lbxData.FormattingEnabled = true;
+            this.lbxData.ItemHeight = 12;
+            this.lbxData.Location = new System.Drawing.Point(6, 21);
+            this.lbxData.Name = "lbxData";
+            this.lbxData.Size = new System.Drawing.Size(184, 124);
+            this.lbxData.TabIndex = 26;
+            this.lbxData.SelectedIndexChanged += new System.EventHandler(this.lbxData_SelectedIndexChanged);
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -577,15 +587,6 @@
             this.displayTime.TabIndex = 26;
             this.displayTime.Text = "显示时间";
             this.displayTime.UseVisualStyleBackColor = true;
-            // 
-            // lbxData
-            // 
-            this.lbxData.FormattingEnabled = true;
-            this.lbxData.ItemHeight = 12;
-            this.lbxData.Location = new System.Drawing.Point(6, 21);
-            this.lbxData.Name = "lbxData";
-            this.lbxData.Size = new System.Drawing.Size(184, 124);
-            this.lbxData.TabIndex = 26;
             // 
             // Main
             // 
