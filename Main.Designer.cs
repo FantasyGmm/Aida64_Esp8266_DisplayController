@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.制作动画包ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清空日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,9 +59,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.nbxHeight = new System.Windows.Forms.NumericUpDown();
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
-            this.selButton = new System.Windows.Forms.Button();
-            this.customPath = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -75,9 +74,8 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.制作动画包ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayTime = new System.Windows.Forms.CheckBox();
+            this.lbxData = new System.Windows.Forms.ListBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -104,6 +102,21 @@
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.制作动画包ToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 21);
+            this.toolStripMenuItem1.Text = "文件";
+            // 
+            // 制作动画包ToolStripMenuItem
+            // 
+            this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.制作动画包ToolStripMenuItem.Text = "制作动画包";
+            this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
+            // 
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -115,7 +128,7 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
@@ -328,13 +341,11 @@
             // 
             // bmpPanel
             // 
+            this.bmpPanel.Controls.Add(this.lbxData);
             this.bmpPanel.Controls.Add(this.label5);
             this.bmpPanel.Controls.Add(this.label4);
             this.bmpPanel.Controls.Add(this.nbxHeight);
             this.bmpPanel.Controls.Add(this.nbxWidth);
-            this.bmpPanel.Controls.Add(this.selButton);
-            this.bmpPanel.Controls.Add(this.customPath);
-            this.bmpPanel.Controls.Add(this.label2);
             this.bmpPanel.Controls.Add(this.pictureBox);
             this.bmpPanel.Location = new System.Drawing.Point(524, 68);
             this.bmpPanel.Name = "bmpPanel";
@@ -395,37 +406,9 @@
             0,
             0});
             // 
-            // selButton
-            // 
-            this.selButton.Enabled = false;
-            this.selButton.Location = new System.Drawing.Point(147, 98);
-            this.selButton.Name = "selButton";
-            this.selButton.Size = new System.Drawing.Size(27, 21);
-            this.selButton.TabIndex = 7;
-            this.selButton.Text = "...";
-            this.selButton.UseVisualStyleBackColor = true;
-            this.selButton.Click += new System.EventHandler(this.SelButton_Click);
-            // 
-            // customPath
-            // 
-            this.customPath.Enabled = false;
-            this.customPath.Location = new System.Drawing.Point(13, 98);
-            this.customPath.Name = "customPath";
-            this.customPath.Size = new System.Drawing.Size(128, 21);
-            this.customPath.TabIndex = 6;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 77);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 12);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "自定义文件";
-            // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(35, 132);
+            this.pictureBox.Location = new System.Drawing.Point(35, 154);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
@@ -580,25 +563,10 @@
             this.timerInterval.Size = new System.Drawing.Size(93, 21);
             this.timerInterval.TabIndex = 19;
             this.timerInterval.Value = new decimal(new int[] {
-            33,
+            30,
             0,
             0,
             0});
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.制作动画包ToolStripMenuItem});
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 21);
-            this.toolStripMenuItem1.Text = "文件";
-            // 
-            // 制作动画包ToolStripMenuItem
-            // 
-            this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.制作动画包ToolStripMenuItem.Text = "制作动画包";
-            this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
             // 
             // displayTime
             // 
@@ -609,6 +577,15 @@
             this.displayTime.TabIndex = 26;
             this.displayTime.Text = "显示时间";
             this.displayTime.UseVisualStyleBackColor = true;
+            // 
+            // lbxData
+            // 
+            this.lbxData.FormattingEnabled = true;
+            this.lbxData.ItemHeight = 12;
+            this.lbxData.Location = new System.Drawing.Point(6, 21);
+            this.lbxData.Name = "lbxData";
+            this.lbxData.Size = new System.Drawing.Size(184, 124);
+            this.lbxData.TabIndex = 26;
             // 
             // Main
             // 
@@ -688,9 +665,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox bmpPanel;
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox customPath;
-        private System.Windows.Forms.Button selButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnLed;
@@ -713,6 +687,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 制作动画包ToolStripMenuItem;
         private System.Windows.Forms.CheckBox displayTime;
+        private System.Windows.Forms.ListBox lbxData;
     }
 }
 

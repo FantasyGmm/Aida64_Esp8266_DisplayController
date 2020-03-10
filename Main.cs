@@ -310,6 +310,23 @@ namespace Aida64_Esp8266_DisplayControler
             return p;
         }
 
+        private void dataChange(object source, FileSystemEventArgs e)
+        {
+            Sync.Send(flushData, null);
+        }
+
+
+        public void flushData(object o)
+        {
+            var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data", "*.dat");
+            lbxData.Items.Clear();
+
+            foreach(var f in files)
+            {
+                lbxData.Items.Add(Path.GetFileName(f));
+            }
+        }
+
         private bool AIDAQuery()
         {
 
@@ -331,6 +348,14 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
+
+            flushData(null);
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = Directory.GetCurrentDirectory() + "/data";
+            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName |NotifyFilters.DirectoryName;
+            watcher.Created += dataChange;
+            watcher.Deleted += dataChange;
+            watcher.EnableRaisingEvents = true;
 
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
@@ -546,23 +571,8 @@ namespace Aida64_Esp8266_DisplayControler
         {
             bmpPath = Directory.GetCurrentDirectory() + @"\asus\";
         }
-        private void CustomButton_CheckedChanged(object sender, EventArgs e)
-        {
-            customPath.Enabled = (sender as RadioButton).Checked;
-            selButton.Enabled = (sender as RadioButton).Checked;
-        }
-        private void SelButton_Click(object sender, EventArgs e)
-        {
-            var op = new FolderBrowserDialog
-            {
-                Description = "请选择存放图片的文件夹"
-            };
-            if (op.ShowDialog() == DialogResult.OK)
-            {
-                bmpPath = op.SelectedPath;
-                customPath.Text = op.SelectedPath;
-            }
-        }
+   
+     
         private void selectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = true;
@@ -701,14 +711,26 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void 制作动画包ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PackForm p = new PackForm();
+            PackForm p = new PackForm(this);
             p.ShowDialog(this);
         }
 
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
-           
- 
+            if (lbxData.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择动画文件!");
+                return;
+            }
+
+            string packfile = Directory.GetCurrentDirectory() + "/data/" + lbxData.Text;
+
+            if (!File.Exists(packfile))
+            {
+                MessageBox.Show("动画文件不存在!");
+                return;
+            }
+
 
             if (btnSendGif.Text == "停止发送动画")
             {
@@ -725,17 +747,10 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
-
                             resetBmp.WaitOne();
-
-           
-                            procPack(Directory.GetCurrentDirectory() + "/badapple.dat", 128, 64);
-           
-                            
-                            
-                        
-
-                            
+                            var width = Convert.ToInt32(nbxWidth.Value);
+                            var height = Convert.ToInt32(nbxHeight.Value);
+                            procPack(packfile, width, height);
                         }
                     }, token);
                     sendBmpTask.Start();

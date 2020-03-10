@@ -22,11 +22,13 @@ namespace Aida64_Esp8266_DisplayControler
     {
         private SynchronizationContext Sync = null;
         private Task procTask = null;
+        private Main main;
 
-        public PackForm()
+        public PackForm(Main main)
         {
             InitializeComponent();
             this.Sync = SynchronizationContext.Current;
+            this.main = main;
         }
 
         private void PackForm_Load(object sender, EventArgs e)

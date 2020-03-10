@@ -87,6 +87,11 @@
             this.nbxWidth.Name = "nbxWidth";
             this.nbxWidth.Size = new System.Drawing.Size(87, 21);
             this.nbxWidth.TabIndex = 2;
+            this.nbxWidth.Value = new decimal(new int[] {
+            128,
+            0,
+            0,
+            0});
             // 
             // label1
             // 
@@ -117,6 +122,11 @@
             this.nbxHeight.Name = "nbxHeight";
             this.nbxHeight.Size = new System.Drawing.Size(87, 21);
             this.nbxHeight.TabIndex = 4;
+            this.nbxHeight.Value = new decimal(new int[] {
+            64,
+            0,
+            0,
+            0});
             // 
             // pbar
             // 
