@@ -62,7 +62,6 @@ namespace Aida64_Esp8266_DisplayControler
         public string bmpPath = "";
         //DEBUG
         public string json_out;
-        public string xml_out;
 
 
         public uint selectedUI;
