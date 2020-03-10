@@ -52,12 +52,9 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
-
         MemoryMappedFile mapFile;
         MemoryMappedViewAccessor Accessor;
-
         private CancellationToken token;
-
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
@@ -67,29 +64,10 @@ namespace Aida64_Esp8266_DisplayControler
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
         public string bmpPath = "";
-        //DEBUG
-        public string json_out;
-        public string xml_out;
-
-
         public uint selectedUI;
-
-
         ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
         public List<string> clientList = new List<string>();
-
-
-        public void CreatDebugFile(string file, string data)
-        {
-            if (File.Exists(file))
-                File.Delete(file);
-            FileStream fs = new FileStream(file, FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs);
-            sw.Write(data);
-            sw.Dispose();
-            fs.Dispose();
-        }
 
         public void GetAidaInfo()
         {
@@ -104,7 +82,6 @@ namespace Aida64_Esp8266_DisplayControler
                         break;
                     ms.WriteByte(c);
                 }
-
                 tmp.Append("<AIDA>");
                 tmp.Append(Encoding.Default.GetString(ms.ToArray()));
                 tmp.Append("</AIDA>");
@@ -125,7 +102,6 @@ namespace Aida64_Esp8266_DisplayControler
                 Sync.Send(SetLogbox, ex.Message);
             }
         }
-
         public void InsertInfo(IEnumerable<XElement> xel)
         {
             foreach (var element in xel)
@@ -138,7 +114,6 @@ namespace Aida64_Esp8266_DisplayControler
                         hddvalue.Add(element.Element("value").Value);
                     }
                 }
-
                 switch (element.Element("id").Value)
                 {
                     case "SCPUCLK": //CPU频率
@@ -239,7 +214,6 @@ namespace Aida64_Esp8266_DisplayControler
                 selested.Add("FCPU"); //CPU风扇转速
             if ((selectedUI & UI_SPEED_GPU) > 0)
                 selested.Add("FGPU1"); //GPU风扇转速
-
             if ((selectedUI & UI_POWER_CPU) > 0)
             {
                 selested.Add("VCPU");
@@ -247,11 +221,9 @@ namespace Aida64_Esp8266_DisplayControler
             }
             if ((selectedUI & UI_POWER_GPU) > 0)
                 selested.Add("VGPU1");
-
             selested.Add("PGPU1TDPP");
 
         }
-
 
         public void SetLogbox(object o)
         {
@@ -338,7 +310,7 @@ namespace Aida64_Esp8266_DisplayControler
             return p;
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private bool AIDAQuery()
         {
 
   
@@ -347,18 +319,19 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 mapFile = MemoryMappedFile.OpenExisting("AIDA64_SensorValues");
                 Accessor = mapFile.CreateViewAccessor();
+                return true;
             }
             catch
             {
-                MessageBox.Show("请启动AIDA64后再运行本软件！");
-                this.Close();
+                MessageBox.Show("请启动AIDA64后再尝试发送！");
+                return false;
             }
-
-
+        }
+        private void Main_Load(object sender, EventArgs e)
+        {
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
-
             recivesTask = new Task(() =>
             {
                 while (true)
@@ -388,8 +361,6 @@ namespace Aida64_Esp8266_DisplayControler
             });
             recivesTask.Start();
         }
-
-
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             logBox.ResetText();
@@ -553,12 +524,6 @@ namespace Aida64_Esp8266_DisplayControler
             byte[] ba = BuildPacket(PACKET_TOGGLE_LED);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
-            //
-        }
-
-        private void BtnDisplay_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void BtnReboot_Click(object sender, EventArgs e)
@@ -574,23 +539,19 @@ namespace Aida64_Esp8266_DisplayControler
         {
             bmpPath = Directory.GetCurrentDirectory() + @"\bad apple\";
         }
-
         private void BiliButton_CheckedChanged(object sender, EventArgs e)
         {
             bmpPath = Directory.GetCurrentDirectory() + @"\bilibili\";
         }
-
         private void AsusButton_CheckedChanged(object sender, EventArgs e)
         {
             bmpPath = Directory.GetCurrentDirectory() + @"\asus\";
         }
-
         private void CustomButton_CheckedChanged(object sender, EventArgs e)
         {
             customPath.Enabled = (sender as RadioButton).Checked;
             selButton.Enabled = (sender as RadioButton).Checked;
         }
-
         private void SelButton_Click(object sender, EventArgs e)
         {
             var op = new FolderBrowserDialog
@@ -603,7 +564,6 @@ namespace Aida64_Esp8266_DisplayControler
                 customPath.Text = op.SelectedPath;
             }
         }
-
         private void selectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = true;
@@ -622,7 +582,6 @@ namespace Aida64_Esp8266_DisplayControler
             hddTmp.Checked = true;
             mbTmp.Checked = true;
         }
-
         private void unSelectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = false;
@@ -641,96 +600,84 @@ namespace Aida64_Esp8266_DisplayControler
             hddTmp.Checked = false;
             mbTmp.Checked = false;
         }
-
-        private void cpuTmp_CheckedChanged(object sender, EventArgs e)
+        private void CpuTmp_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_TEMP_CPU;
             else
                 selectedUI ^= UI_TEMP_CPU;
         }
-
-        private void mbTmp_CheckedChanged(object sender, EventArgs e)
+        private void MbTmp_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_TEMP_BOARD;
             else
                 selectedUI ^= UI_TEMP_BOARD;
         }
-
-        private void gpuTmp_CheckedChanged(object sender, EventArgs e)
+        private void GpuTmp_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_TEMP_GPU;
             else
                 selectedUI ^= UI_TEMP_GPU;
         }
-
-        private void hddTmp_CheckedChanged(object sender, EventArgs e)
+        private void HddTmp_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_TEMP_HDD;
             else
                 selectedUI ^= UI_TEMP_HDD;
         }
-
-        private void cpuUTI_CheckedChanged(object sender, EventArgs e)
+        private void CpuUTI_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_USE_CPU;
             else
                 selectedUI ^= UI_USE_CPU;
         }
-
-        private void ramUTI_CheckedChanged(object sender, EventArgs e)
+        private void RamUTI_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_USE_RAM;
             else
                 selectedUI ^= UI_USE_RAM;
         }
-
-        private void gpuUTI_CheckedChanged(object sender, EventArgs e)
+        private void GpuUTI_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_USE_GPU;
             else
                 selectedUI ^= UI_USE_GPU;
         }
-
-        private void vramUTI_CheckedChanged(object sender, EventArgs e)
+        private void VramUTI_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_USE_VRAM;
             else
                 selectedUI ^= UI_USE_VRAM;
         }
-
-        private void cpuClk_CheckedChanged(object sender, EventArgs e)
+        private void CpuClk_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_RATE_CPU;
             else
                 selectedUI ^= UI_RATE_CPU;
         }
-
-        private void gpuClk_CheckedChanged(object sender, EventArgs e)
+        private void GpuClk_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_RATE_GPU;
             else
                 selectedUI ^= UI_RATE_GPU;
         }
-
-        private void cpuRpm_CheckedChanged(object sender, EventArgs e)
+        private void CpuRpm_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_SPEED_CPU;
             else
                 selectedUI ^= UI_SPEED_CPU;
         }
-
-        private void gpuRpm_CheckedChanged(object sender, EventArgs e)
+        private void GpuRpm_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_SPEED_GPU;
@@ -738,15 +685,14 @@ namespace Aida64_Esp8266_DisplayControler
                 selectedUI ^= UI_SPEED_GPU;
         }
 
-        private void cpuVol_CheckedChanged(object sender, EventArgs e)
+        private void CpuVol_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_POWER_CPU;
             else
                 selectedUI ^= UI_POWER_CPU;
         }
-
-        private void gpuVol_CheckedChanged(object sender, EventArgs e)
+        private void GpuVol_CheckedChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
                 selectedUI |= UI_POWER_GPU;
@@ -816,6 +762,8 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
+                if (!AIDAQuery())
+                    return;
                 string[] s;
                 if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                     return;
@@ -843,13 +791,10 @@ namespace Aida64_Esp8266_DisplayControler
                                 if (selested.Count == 0)
                                     continue;
                             }
-
-
                             JObject jsobj = new JObject
                             {
                                 {"l", selested.Count.ToString()},
                                 {"hl", hddid.Count.ToString()},
-                                {"t",displayTime.Checked.ToString()}
                             };
 
                             for (int i = 0; i < id.Count; i++)
@@ -866,9 +811,6 @@ namespace Aida64_Esp8266_DisplayControler
                             {
                                 jsobj.Add(hddid[i], hddvalue[i]);
                             }
-                            json_out = jsobj.ToString();
-                            //Sync.Send(SetLogbox,json_out);
-
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
                             Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
@@ -884,29 +826,5 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
-
-        #region 废弃代码
-
-        //CreatDebugFile("Aidainfo.json", json_out); //输出源JSON
-        //CreatDebugFile("Aidainfo.xml", xml_out); //输出源XML
-
-        /*
-        //文件流转byte[]
-        protected byte[] AuthGetFileData(string fileUrl)
-        {
-            using (FileStream fs = new FileStream(fileUrl, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                byte[] buffur = new byte[fs.Length];
-                using (BinaryWriter bw = new BinaryWriter(fs))
-                {
-                    bw.Write(buffur);
-                    bw.Close();
-                }
-                return buffur;
-            }
-        }
-*/
-
-        #endregion 废弃代码
     }
 }
