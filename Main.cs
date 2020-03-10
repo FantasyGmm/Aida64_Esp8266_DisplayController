@@ -51,7 +51,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private CancellationToken token;
 
-        public Serial serial;
         public List<string> id = new List<string>();
         public List<string> value = new List<string>();
         public List<string> selested = new List<string>();
@@ -326,12 +325,6 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void Main_Load(object sender, EventArgs e)
         {
-            string[] sa = Serial.getSerialPort();
-            cbxSerial.Items.AddRange(sa);
-
-            if (cbxSerial.Items.Count > 0)
-                cbxSerial.SelectedIndex = 0;
-
 
 
 
@@ -537,24 +530,6 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-        private void serialSendXBM(byte[] data)
-        {
-
-            if (serial == null || !serial.IsOpen)
-                return;
-
-            MemoryStream ms = new MemoryStream();
-            ms.Write(new byte[] { 0XAA, 0X55}, 0, 2);
-            ms.Write(data, 0, data.Length);
-            ms.Write(new byte[] { 0XAA, 0X22 }, 0, 2);
-            var ba = ms.ToArray();
-            ms.Dispose();
-            serial.Write(ba, 0, ba.Length);
-       
-            
-            
-         
-        }
 
 
 
@@ -769,15 +744,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void btnSerial_Click(object sender, EventArgs e)
         {
-            
-            serial = new Serial(cbxSerial.Text, 1500000);
 
-            if (serial.Open())
-            {
-                btnSerial.Enabled = false;
-                cbxSerial.Enabled = false;
-            }
-            
 
         }
 
@@ -855,8 +822,8 @@ namespace Aida64_Esp8266_DisplayControler
 
                             var data = ConvertXBM(Encoding.Default.GetString(tb));
 
-                            //udpSendXBM(data, width, height);
-                            serialSendXBM(data);
+                            udpSendXBM(data, width, height);
+                            //serialSendXBM(data);
 
                             bmpindex++;
 

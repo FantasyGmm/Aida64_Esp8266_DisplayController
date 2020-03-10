@@ -81,9 +81,6 @@
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
-            this.btnSerial = new System.Windows.Forms.Button();
-            this.cbxSerial = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -256,7 +253,7 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(360, 400);
+            this.logBox.Location = new System.Drawing.Point(361, 400);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
@@ -663,42 +660,11 @@
             0,
             0});
             // 
-            // btnSerial
-            // 
-            this.btnSerial.Location = new System.Drawing.Point(120, 40);
-            this.btnSerial.Name = "btnSerial";
-            this.btnSerial.Size = new System.Drawing.Size(61, 23);
-            this.btnSerial.TabIndex = 21;
-            this.btnSerial.Text = "连接";
-            this.btnSerial.UseVisualStyleBackColor = true;
-            this.btnSerial.Click += new System.EventHandler(this.btnSerial_Click);
-            // 
-            // cbxSerial
-            // 
-            this.cbxSerial.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxSerial.FormattingEnabled = true;
-            this.cbxSerial.Location = new System.Drawing.Point(14, 42);
-            this.cbxSerial.Name = "cbxSerial";
-            this.cbxSerial.Size = new System.Drawing.Size(100, 20);
-            this.cbxSerial.TabIndex = 22;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 27);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(53, 12);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "串口列表";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(731, 518);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.cbxSerial);
-            this.Controls.Add(this.btnSerial);
             this.Controls.Add(this.cbSendBmp);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
@@ -796,14 +762,11 @@
         private System.Windows.Forms.NumericUpDown timerInterval;
         private System.Windows.Forms.Button btnSendGif;
         private System.Windows.Forms.ListBox lbxClient;
-        private System.Windows.Forms.Button btnSerial;
         private System.Windows.Forms.NumericUpDown nbxHeight;
         private System.Windows.Forms.NumericUpDown nbxWidth;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox displayTime;
-        private System.Windows.Forms.ComboBox cbxSerial;
-        private System.Windows.Forms.Label label6;
     }
 }
 
