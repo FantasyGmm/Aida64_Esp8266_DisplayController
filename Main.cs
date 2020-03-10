@@ -16,7 +16,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.InteropServices;
-using System.IO.Ports;
+using System.Diagnostics;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -777,6 +777,9 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
+                            Stopwatch watch = new Stopwatch();
+                            watch.Start();
+
                             resetBmp.WaitOne();
                             //检测按钮变动
                             if (bmppath != bmpPath)
@@ -823,7 +826,12 @@ namespace Aida64_Esp8266_DisplayControler
                             var data = ConvertXBM(Encoding.Default.GetString(tb));
 
                             udpSendXBM(data, width, height);
-                            //serialSendXBM(data);
+
+                            DateTime ntime = DateTime.Now;
+
+                            watch.Stop();
+                            var mSeconds = watch.ElapsedMilliseconds;
+                            Sync.Send(SetLogbox, mSeconds.ToString());
 
                             bmpindex++;
 
