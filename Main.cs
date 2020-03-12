@@ -712,9 +712,9 @@ namespace Aida64_Esp8266_DisplayControler
                 if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                     return;
                 s = clientList[0].Split(':');
-                byte[] ba = BuildPacket(PACKET_TOGGLE_DISPLAY);
+
                 IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-                Udp.Send(ba, ba.Length, addr);
+
                 btnSendData.Text = "停止发送数据";
                 if (sendInfoTask == null)
                 {
@@ -722,7 +722,12 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
+
                             resetInfo.WaitOne();
+
+                            if (selectedUI == 0)
+                                continue;
+
                             id.Clear();
                             value.Clear();
                             selested.Clear();
@@ -730,11 +735,8 @@ namespace Aida64_Esp8266_DisplayControler
                             hddvalue.Clear();
                             GetAidaInfo();
                             QuerySelested();
-                            lock (selested)
-                            {
-                                if (selested.Count == 0)
-                                    continue;
-                            }
+             
+                            
                             JObject jsobj = new JObject
                             {
                                 {"l", selested.Count.ToString()},
@@ -755,10 +757,8 @@ namespace Aida64_Esp8266_DisplayControler
                             {
                                 jsobj.Add(hddid[i], hddvalue[i]);
                             }
-                            byte[] pack = BuildPacket(PACKET_DISPLAY_INFO,
-                            Encoding.UTF8.GetBytes(jsobj.ToString()));
+                            byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
-
                             Thread.Sleep((int)timerInterval.Value);
                         }
                     }, token);
