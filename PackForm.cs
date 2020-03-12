@@ -127,15 +127,16 @@ namespace Aida64_Esp8266_DisplayControler
         private List<string[]> SplitAry(string[] arr, int splitCount)
         {
             int size = arr.Length / splitCount;
-            if (arr.Length % splitCount !=0)
-            {
-
-                splitCount++;
-            }
+ 
             List<string[]> splitList = new List<string[]>();
+
             for (int i = 0; i < splitCount; i++)
             {
                 int index = i * size;
+
+                if (i == splitCount - 1)
+                    size = arr.Length;
+
                 string[] subarr = arr.Skip(index).Take(size).ToArray();
                 splitList.Add(subarr);
             }
