@@ -55,7 +55,6 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
-            this.lbxData = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.nbxHeight = new System.Windows.Forms.NumericUpDown();
@@ -76,6 +75,7 @@
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.displayTime = new System.Windows.Forms.CheckBox();
+            this.dataBox = new System.Windows.Forms.ComboBox();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -98,7 +98,7 @@
             this.关于ToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(731, 25);
+            this.menuStrip.Size = new System.Drawing.Size(701, 25);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -113,7 +113,7 @@
             // 制作动画包ToolStripMenuItem
             // 
             this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.制作动画包ToolStripMenuItem.Text = "制作动画包";
             this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
             // 
@@ -128,7 +128,7 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
@@ -144,7 +144,7 @@
             this.tmpBox.Controls.Add(this.mbTmp);
             this.tmpBox.Controls.Add(this.gpuTmp);
             this.tmpBox.Controls.Add(this.cpuTmp);
-            this.tmpBox.Location = new System.Drawing.Point(360, 68);
+            this.tmpBox.Location = new System.Drawing.Point(332, 68);
             this.tmpBox.Name = "tmpBox";
             this.tmpBox.Size = new System.Drawing.Size(157, 71);
             this.tmpBox.TabIndex = 1;
@@ -197,7 +197,7 @@
             // 
             // btnSendData
             // 
-            this.btnSendData.Location = new System.Drawing.Point(537, 28);
+            this.btnSendData.Location = new System.Drawing.Point(509, 28);
             this.btnSendData.Name = "btnSendData";
             this.btnSendData.Size = new System.Drawing.Size(85, 23);
             this.btnSendData.TabIndex = 4;
@@ -211,7 +211,7 @@
             this.utiBox.Controls.Add(this.ramUTI);
             this.utiBox.Controls.Add(this.gpuUTI);
             this.utiBox.Controls.Add(this.cpuUTI);
-            this.utiBox.Location = new System.Drawing.Point(360, 145);
+            this.utiBox.Location = new System.Drawing.Point(332, 145);
             this.utiBox.Name = "utiBox";
             this.utiBox.Size = new System.Drawing.Size(157, 77);
             this.utiBox.TabIndex = 5;
@@ -264,7 +264,7 @@
             // 
             // logBox
             // 
-            this.logBox.Location = new System.Drawing.Point(361, 400);
+            this.logBox.Location = new System.Drawing.Point(332, 345);
             this.logBox.Multiline = true;
             this.logBox.Name = "logBox";
             this.logBox.ReadOnly = true;
@@ -274,29 +274,29 @@
             // 
             // selectAll
             // 
-            this.selectAll.Location = new System.Drawing.Point(361, 28);
+            this.selectAll.Location = new System.Drawing.Point(333, 28);
             this.selectAll.Name = "selectAll";
             this.selectAll.Size = new System.Drawing.Size(75, 23);
             this.selectAll.TabIndex = 8;
             this.selectAll.Text = "全选";
             this.selectAll.UseVisualStyleBackColor = true;
-            this.selectAll.Click += new System.EventHandler(this.selectAll_Click);
+            this.selectAll.Click += new System.EventHandler(this.SelectAll_Click);
             // 
             // unSelectAll
             // 
-            this.unSelectAll.Location = new System.Drawing.Point(443, 28);
+            this.unSelectAll.Location = new System.Drawing.Point(415, 28);
             this.unSelectAll.Name = "unSelectAll";
             this.unSelectAll.Size = new System.Drawing.Size(75, 23);
             this.unSelectAll.TabIndex = 9;
             this.unSelectAll.Text = "全不选";
             this.unSelectAll.UseVisualStyleBackColor = true;
-            this.unSelectAll.Click += new System.EventHandler(this.unSelectAll_Click);
+            this.unSelectAll.Click += new System.EventHandler(this.UnSelectAll_Click);
             // 
             // clkBox
             // 
             this.clkBox.Controls.Add(this.gpuClk);
             this.clkBox.Controls.Add(this.cpuClk);
-            this.clkBox.Location = new System.Drawing.Point(360, 228);
+            this.clkBox.Location = new System.Drawing.Point(332, 228);
             this.clkBox.Name = "clkBox";
             this.clkBox.Size = new System.Drawing.Size(157, 57);
             this.clkBox.TabIndex = 10;
@@ -333,7 +333,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(535, 369);
+            this.label1.Location = new System.Drawing.Point(507, 311);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 12;
@@ -341,33 +341,23 @@
             // 
             // bmpPanel
             // 
-            this.bmpPanel.Controls.Add(this.lbxData);
+            this.bmpPanel.Controls.Add(this.dataBox);
             this.bmpPanel.Controls.Add(this.label5);
             this.bmpPanel.Controls.Add(this.label4);
             this.bmpPanel.Controls.Add(this.nbxHeight);
             this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.pictureBox);
-            this.bmpPanel.Location = new System.Drawing.Point(524, 68);
+            this.bmpPanel.Location = new System.Drawing.Point(496, 131);
             this.bmpPanel.Name = "bmpPanel";
-            this.bmpPanel.Size = new System.Drawing.Size(196, 271);
+            this.bmpPanel.Size = new System.Drawing.Size(196, 154);
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
             // 
-            // lbxData
-            // 
-            this.lbxData.FormattingEnabled = true;
-            this.lbxData.ItemHeight = 12;
-            this.lbxData.Location = new System.Drawing.Point(6, 21);
-            this.lbxData.Name = "lbxData";
-            this.lbxData.Size = new System.Drawing.Size(184, 124);
-            this.lbxData.TabIndex = 26;
-            this.lbxData.SelectedIndexChanged += new System.EventHandler(this.lbxData_SelectedIndexChanged);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(109, 223);
+            this.label5.Location = new System.Drawing.Point(109, 112);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 25;
@@ -376,7 +366,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 223);
+            this.label4.Location = new System.Drawing.Point(11, 112);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 24;
@@ -384,7 +374,7 @@
             // 
             // nbxHeight
             // 
-            this.nbxHeight.Location = new System.Drawing.Point(111, 238);
+            this.nbxHeight.Location = new System.Drawing.Point(111, 127);
             this.nbxHeight.Maximum = new decimal(new int[] {
             255,
             0,
@@ -401,7 +391,7 @@
             // 
             // nbxWidth
             // 
-            this.nbxWidth.Location = new System.Drawing.Point(13, 238);
+            this.nbxWidth.Location = new System.Drawing.Point(13, 127);
             this.nbxWidth.Maximum = new decimal(new int[] {
             255,
             0,
@@ -418,7 +408,7 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(35, 154);
+            this.pictureBox.Location = new System.Drawing.Point(26, 43);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(128, 64);
             this.pictureBox.TabIndex = 0;
@@ -487,7 +477,7 @@
             // 
             // btnSendGif
             // 
-            this.btnSendGif.Location = new System.Drawing.Point(628, 28);
+            this.btnSendGif.Location = new System.Drawing.Point(600, 28);
             this.btnSendGif.Name = "btnSendGif";
             this.btnSendGif.Size = new System.Drawing.Size(92, 24);
             this.btnSendGif.TabIndex = 20;
@@ -499,7 +489,7 @@
             // 
             this.rpmBox.Controls.Add(this.gpuRpm);
             this.rpmBox.Controls.Add(this.cpuRpm);
-            this.rpmBox.Location = new System.Drawing.Point(361, 291);
+            this.rpmBox.Location = new System.Drawing.Point(333, 291);
             this.rpmBox.Name = "rpmBox";
             this.rpmBox.Size = new System.Drawing.Size(156, 48);
             this.rpmBox.TabIndex = 17;
@@ -532,9 +522,9 @@
             // 
             this.volBox.Controls.Add(this.gpuVol);
             this.volBox.Controls.Add(this.cpuVol);
-            this.volBox.Location = new System.Drawing.Point(361, 347);
+            this.volBox.Location = new System.Drawing.Point(496, 75);
             this.volBox.Name = "volBox";
-            this.volBox.Size = new System.Drawing.Size(156, 47);
+            this.volBox.Size = new System.Drawing.Size(196, 47);
             this.volBox.TabIndex = 18;
             this.volBox.TabStop = false;
             this.volBox.Text = "电压功耗";
@@ -542,7 +532,7 @@
             // gpuVol
             // 
             this.gpuVol.AutoSize = true;
-            this.gpuVol.Location = new System.Drawing.Point(81, 20);
+            this.gpuVol.Location = new System.Drawing.Point(111, 20);
             this.gpuVol.Name = "gpuVol";
             this.gpuVol.Size = new System.Drawing.Size(42, 16);
             this.gpuVol.TabIndex = 1;
@@ -553,7 +543,7 @@
             // cpuVol
             // 
             this.cpuVol.AutoSize = true;
-            this.cpuVol.Location = new System.Drawing.Point(12, 21);
+            this.cpuVol.Location = new System.Drawing.Point(13, 20);
             this.cpuVol.Name = "cpuVol";
             this.cpuVol.Size = new System.Drawing.Size(42, 16);
             this.cpuVol.TabIndex = 0;
@@ -563,7 +553,7 @@
             // 
             // timerInterval
             // 
-            this.timerInterval.Location = new System.Drawing.Point(594, 365);
+            this.timerInterval.Location = new System.Drawing.Point(566, 307);
             this.timerInterval.Maximum = new decimal(new int[] {
             500,
             0,
@@ -588,11 +578,22 @@
             this.displayTime.Text = "显示时间";
             this.displayTime.UseVisualStyleBackColor = true;
             // 
+            // dataBox
+            // 
+            this.dataBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dataBox.FormattingEnabled = true;
+            this.dataBox.Location = new System.Drawing.Point(6, 17);
+            this.dataBox.Name = "dataBox";
+            this.dataBox.Size = new System.Drawing.Size(183, 20);
+            this.dataBox.Sorted = true;
+            this.dataBox.TabIndex = 27;
+            this.dataBox.SelectedIndexChanged += new System.EventHandler(this.DataBox_SelectedIndexChanged);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(731, 518);
+            this.ClientSize = new System.Drawing.Size(701, 465);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
             this.Controls.Add(this.volBox);
@@ -688,7 +689,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 制作动画包ToolStripMenuItem;
         private System.Windows.Forms.CheckBox displayTime;
-        private System.Windows.Forms.ListBox lbxData;
+        private System.Windows.Forms.ComboBox dataBox;
     }
 }
 

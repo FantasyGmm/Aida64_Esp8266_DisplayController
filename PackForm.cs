@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,7 +21,7 @@ namespace Aida64_Esp8266_DisplayControler
         public PackForm(Main main)
         {
             InitializeComponent();
-            this.Sync = SynchronizationContext.Current;
+            Sync = SynchronizationContext.Current;
             this.main = main;
         }
 
@@ -36,17 +30,17 @@ namespace Aida64_Esp8266_DisplayControler
             // nbxThread.Value = Environment.ProcessorCount;
         }
 
-        private void setPbar(object o)
+        private void SetPbar(object o)
         {
-            this.pbar.Value = (int)o;
+            pbar.Value = (int)o;
         }
 
-        private void setPanel(object o)
+        private void SetPanel(object o)
         {
-            this.pnMain.Enabled = !this.pnMain.Enabled;
+            pnMain.Enabled = !pnMain.Enabled;
         }
 
-        private void btnBrowser_Click(object sender, EventArgs e)
+        private void BtnBrowser_Click(object sender, EventArgs e)
         {
 
             FolderBrowserDialog od = new FolderBrowserDialog();
@@ -57,16 +51,18 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private void BtnStart_Click(object sender, EventArgs e)
         {
             pnMain.Enabled = false;
 
             if (tbxPath.Text != string.Empty)
             {
                 string fname;
-                SaveFileDialog sd = new SaveFileDialog();
-                sd.Filter = "PackFile(*.dat)|*.dat";
-                sd.Title = "请输入保存文件名";
+                SaveFileDialog sd = new SaveFileDialog
+                {
+                    Filter = "PackFile(*.dat)|*.dat",
+                    Title = "请输入保存文件名"
+                };
 
                 if (sd.ShowDialog(this) == DialogResult.OK)
                 {
@@ -91,7 +87,7 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         var td = (count / files.Length) * 100;
                         var percent = decimal.ToInt32(td);
-                        Sync.Send(setPbar, percent);
+                        Sync.Send(SetPbar, percent);
 
                         var buf = Main.GetSingleBitmap(file);
                         MagickImage img = new MagickImage(buf) { Format = MagickFormat.Xbm };
@@ -121,21 +117,41 @@ namespace Aida64_Esp8266_DisplayControler
                     fs.Write(zdata, 0, zdata.Length);
                     fs.Dispose();
                     Process.Start("Explorer.exe", "/select," + fname);
-                    Sync.Send(setPanel, null);
+                    Sync.Send(SetPanel, null);
 
                 });
-
-
                 procTask.Start();
-
             }
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
+        private List<string[]> SplitAry(string[] arr, int splitCount)
         {
+            int size = arr.Length / splitCount;
+            if (arr.Length % splitCount !=0)
+            {
 
+                splitCount++;
+            }
+            List<string[]> splitList = new List<string[]>();
+            for (int i = 0; i < splitCount; i++)
+            {
+                int index = i * size;
+                string[] subarr = arr.Skip(index).Take(size).ToArray();
+                splitList.Add(subarr);
+            }
+            return splitList;
         }
 
-
+        private void BtnStop_Click(object sender, EventArgs e)
+        {
+            var files = Directory.GetFiles(tbxPath.Text);
+            int count = 0;
+            foreach (var arry in SplitAry(files, Convert.ToInt32(threadCount.Text)))
+            {
+                count += arry.Length;
+                main.logBox.AppendText(count + Environment.NewLine);
+            }
+            List<string[]> spitList = SplitAry(files, Convert.ToInt32(threadCount.Text));
+        }
     }
 }

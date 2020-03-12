@@ -12,19 +12,14 @@ using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Threading.Tasks;
-using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Ionic.Zlib;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Aida64_Esp8266_DisplayControler
 {
-    /*
-     * TODO:加入动画自选下拉框，自适应识别是打包好的dat文件或者文件夹
-     */
     public partial class Main : Form
     {
         public struct Packet
@@ -313,24 +308,22 @@ namespace Aida64_Esp8266_DisplayControler
             return p;
         }
 
-        private void dataChange(object source, FileSystemEventArgs e)
+        private void DataChange(object source, FileSystemEventArgs e)
         {
-            Sync.Send(flushPack, null);
+            Sync.Send(FlushPack, null);
         }
 
 
-        public void flushPack(object o)
+        public void FlushPack(object o)
         {
             var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data", "*.dat");
-            lbxData.Items.Clear();
-
+            dataBox.Items.Clear();
             lock(packList)
             {
                 packList.Clear();
-
                 foreach (var f in files)
                 {
-                    lbxData.Items.Add(Path.GetFileName(f));
+                    dataBox.Items.Add(Path.GetFileName(f));
                     packList.Add(Path.GetFileName(f));
                 }
             }
@@ -341,9 +334,6 @@ namespace Aida64_Esp8266_DisplayControler
      
         private bool AIDAQuery()
         {
-
-  
-
             try
             {
                 mapFile = MemoryMappedFile.OpenExisting("AIDA64_SensorValues");
@@ -361,12 +351,14 @@ namespace Aida64_Esp8266_DisplayControler
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
 
-            flushPack(null);
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = Directory.GetCurrentDirectory() + "/data";
-            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName |NotifyFilters.DirectoryName;
-            watcher.Created += dataChange;
-            watcher.Deleted += dataChange;
+            FlushPack(null);
+            FileSystemWatcher watcher = new FileSystemWatcher
+            {
+                Path = Directory.GetCurrentDirectory() + "/data",
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName
+            };
+            watcher.Created += DataChange;
+            watcher.Deleted += DataChange;
             watcher.EnableRaisingEvents = true;
 
             Sync = SynchronizationContext.Current;
@@ -406,9 +398,6 @@ namespace Aida64_Esp8266_DisplayControler
             logBox.ResetText();
         }
 
-  
-
-
 
         private byte[] ConvertXBM(string input)
         {
@@ -429,7 +418,7 @@ namespace Aida64_Esp8266_DisplayControler
 
 
 
-        private void udpSendXBM(byte[] data, int width, int height)
+        private void UdpSendXBM(byte[] data, int width, int height)
         {
             using(MemoryStream ms = new MemoryStream())
             {
@@ -451,7 +440,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-        private void procPack(string file, int width, int height)
+        private void ProcPack(string file, int width, int height)
         {
             Pack_Start:
 
@@ -482,7 +471,7 @@ namespace Aida64_Esp8266_DisplayControler
                     }
 
                     var buf = ConvertXBM(Encoding.Default.GetString(m.ToArray()));
-                    udpSendXBM(buf, width, height);
+                    UdpSendXBM(buf, width, height);
                     MagickImage img = new MagickImage(m.ToArray()) { Format = MagickFormat.Xbm };
                     //img.Resize(new MagickGeometry($"{width}x{height}!"));
                     img.Format = MagickFormat.Bmp;
@@ -495,80 +484,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             }
         }
-
-
-        private void procDir()
-        {
-            byte[] buffer = new byte[2048];
-            string bmppath = bmpPath;
-            int bmpindex = 0;
-
-            if (!Directory.Exists(bmppath))
-            {
-                MessageBox.Show("请选择正确的文件夹！");
-                return;
-            }
-
-            string[] bmplist = Directory.GetFiles(bmppath);
-
-            
-           //检测按钮变动
-           if (bmppath != bmpPath)
-           {
-               if (!Directory.Exists(bmppath))
-                   return;
-
-               bmppath = bmpPath;
-               bmpindex = 0;
-               bmplist = Directory.GetFiles(bmppath);
-           }
-
-           //重置动画播放
-           if (bmpindex >= bmplist.Length)
-               bmpindex = 0;
-
-           //未选择文件不作任何操作
-           if (bmplist.Length == 0)
-                return;
-
-           buffer = GetSingleBitmap(bmplist[bmpindex]);
-           MagickImage img = new MagickImage(buffer){Format = MagickFormat.Xbm};
-
-
-           Stopwatch watch = new Stopwatch();
-           watch.Start();
-
-
-           var width = Convert.ToInt32(nbxWidth.Value);
-           var height = Convert.ToInt32(nbxHeight.Value);
-           img.Resize(new MagickGeometry($"{width}x{height}!"));
-           buffer = img.ToByteArray();
-
-           watch.Stop();
-           var mSeconds = watch.ElapsedMilliseconds;
-           Sync.Send(SetLogbox, mSeconds.ToString());
-
-           using (MemoryStream ms = new MemoryStream())
-           {
-               img.Format = MagickFormat.Jpg;
-               img.Write(ms);
-               pictureBox.Image = Image.FromStream(ms);
-               img.Dispose();
-           }
-
-
-           buffer = ConvertXBM(Encoding.Default.GetString(buffer));
-
-
-
-
-           udpSendXBM(buffer, width, height);
-           bmpindex++;
-           
-
-        }
-
-
 
         private void BtnLed_Click(object sender, EventArgs e)
         {
@@ -589,21 +504,8 @@ namespace Aida64_Esp8266_DisplayControler
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
-        private void BaButton_CheckedChanged(object sender, EventArgs e)
-        {
-            bmpPath = Directory.GetCurrentDirectory() + @"\bad apple\";
-        }
-        private void BiliButton_CheckedChanged(object sender, EventArgs e)
-        {
-            bmpPath = Directory.GetCurrentDirectory() + @"\bilibili\";
-        }
-        private void AsusButton_CheckedChanged(object sender, EventArgs e)
-        {
-            bmpPath = Directory.GetCurrentDirectory() + @"\asus\";
-        }
-   
-     
-        private void selectAll_Click(object sender, EventArgs e)
+
+        private void SelectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = true;
             cpuClk.Checked = true;
@@ -621,7 +523,7 @@ namespace Aida64_Esp8266_DisplayControler
             hddTmp.Checked = true;
             mbTmp.Checked = true;
         }
-        private void unSelectAll_Click(object sender, EventArgs e)
+        private void UnSelectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = false;
             cpuClk.Checked = false;
@@ -745,9 +647,9 @@ namespace Aida64_Esp8266_DisplayControler
             p.ShowDialog(this);
         }
 
-        private void lbxData_SelectedIndexChanged(object sender, EventArgs e)
+        private void DataBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            packIndex = (sender as ListBox).SelectedIndex;
+            packIndex = (sender as ComboBox).SelectedIndex;
         }
 
         private void BtnSendGif_Click(object sender, EventArgs e)
@@ -760,15 +662,12 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
-           
-                if (lbxData.SelectedIndex < 0)
+                if (dataBox.SelectedIndex < 0)
                 {
                     MessageBox.Show("请选择动画文件!");
                     return;
                 }
-
-                string packfile = Directory.GetCurrentDirectory() + "/data/" + lbxData.Text;
-
+                string packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
                 if (!File.Exists(packfile))
                 {
                     MessageBox.Show("动画文件不存在!");
@@ -785,7 +684,7 @@ namespace Aida64_Esp8266_DisplayControler
                             
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
-                            procPack(packfile, width, height);
+                            ProcPack(packfile, width, height);
                         }
                     }, token);
                     sendBmpTask.Start();
