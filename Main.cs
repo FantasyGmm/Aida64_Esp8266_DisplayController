@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
+using System.Resources;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -46,6 +47,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
+        private ResourceManager rm = new ResourceManager("Resources", Assembly.GetExecutingAssembly());
         MemoryMappedFile mapFile;
         MemoryMappedViewAccessor Accessor;
         private CancellationToken token;
@@ -57,7 +59,6 @@ namespace Aida64_Esp8266_DisplayControler
         public UdpClient Udp;
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
-        public string bmpPath = "";
         public uint selectedUI;
         ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
@@ -644,7 +645,8 @@ namespace Aida64_Esp8266_DisplayControler
         {
             try
             {
-                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName);
+
+                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName,iconLocation: Process.GetCurrentProcess().MainModule.FileName);
             }
             catch (Exception)
             {
@@ -675,7 +677,7 @@ namespace Aida64_Esp8266_DisplayControler
             string appPath = Process.GetCurrentProcess().MainModule.FileName;
             try
             {
-                CreateShortcut(systemStartPath, "Aida64_DisplayControler", appPath);
+                CreateShortcut(systemStartPath, "Aida64_DisplayControler", appPath, iconLocation: Process.GetCurrentProcess().MainModule.FileName);
             }
             catch (Exception)
             {

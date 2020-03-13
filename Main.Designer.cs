@@ -745,7 +745,6 @@
             this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Aida64_DisplayControler";
             this.Load += new System.EventHandler(this.Main_Load);

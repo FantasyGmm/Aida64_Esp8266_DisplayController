@@ -139,22 +139,16 @@ namespace Aida64_Esp8266_DisplayControler
             for (int i = 0; i < splitCount; i++)
             {
                 int index = i * size;
-
                 if (i == splitCount - 1)
                     size = arr.Length;
-
                 string[] subarr = arr.Skip(index).Take(size).ToArray();
-
-
                 var t = Task.Run(() => {
          
                     PackImage(subarr);
                 
                 });
-                
                 taskArr[i] = t;
             }
-
             await Task.WhenAll(taskArr);
             Sync.Send(SetLog, "转换完成,正在打包...");
             pbar.Value = 99;
