@@ -200,34 +200,44 @@ namespace Aida64_Esp8266_DisplayControler
             var files = Directory.GetFiles(tbxPath.Text);
             List<string[]> spitList = SplitAry(files, threadcount);
             threadcount = spitList.Count;
-            ThreadPool.GetMaxThreads(out threadcount,out threadcount);
             Imgpack imgpack = new Imgpack
             {
                 Ls = new List<MemoryStream>(),
                 Pack = new Main.PackData(),
                 Zdata = new List<byte[]>(threadcount)
             };
+            ThreadPool.SetMaxThreads(threadcount, threadcount);
+            ThreadPool.SetMinThreads(1, 1);
             for (int i = 0; i < threadcount; i++)
             {
                 imgpack.Files = spitList[i];
                 imgpack.Index = i;
                 ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage),imgpack);
             }
-            string fname;
-            SaveFileDialog sd = new SaveFileDialog
+            int AvailableWorker = 0;
+            int AvailablePort = 0;
+            ThreadPool.GetAvailableThreads(out AvailableWorker,out AvailablePort);
+            if (AvailablePort == 0)
             {
-                Filter = "PackFile(*.dat)|*.dat",
-                Title = "请输入保存文件名"
-            };
-            if (sd.ShowDialog(this) == DialogResult.OK)
-            {
-                fname = sd.FileName;
+                if (AvailableWorker == 0)
+                {
+                    string fname;
+                    SaveFileDialog sd = new SaveFileDialog
+                    {
+                        Filter = "PackFile(*.dat)|*.dat",
+                        Title = "请输入保存文件名"
+                    };
+                    if (sd.ShowDialog(this) == DialogResult.OK)
+                    {
+                        fname = sd.FileName;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    SaveFile(fname, ConvertDoubleArrayToBytes(imgpack.Zdata));
+                }
             }
-            else
-            {
-                return;
-            }
-            SaveFile(fname,ConvertDoubleArrayToBytes(imgpack.Zdata));
         }
     }
 }
