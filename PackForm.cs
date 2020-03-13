@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
@@ -17,15 +18,7 @@ namespace Aida64_Esp8266_DisplayControler
         private SynchronizationContext Sync = null;
         private Task procTask = null;
         private Main main;
-
-        [Serializable]
-        public class Imgpack
-        {
-            public int Index { get; set; }
-            public string[] Files { get; set; }
-            public List<MemoryStream> Ls { get; set; }
-            public List<byte[]> Zdata { get; set; }
-        }
+        private Hashtable hashtable = new Hashtable();
 
         public PackForm(Main main)
         {
@@ -97,7 +90,6 @@ namespace Aida64_Esp8266_DisplayControler
                         var td = (count / files.Length) * 100;
                         var percent = decimal.ToInt32(td);
                         Sync.Send(SetPbar, percent);
-
                         var buf = Main.GetSingleBitmap(file);
                         MagickImage img = new MagickImage(buf) { Format = MagickFormat.Xbm };
                         var width = Convert.ToInt32(nbxWidth.Value);
@@ -131,13 +123,37 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        //分割文件名数组
-        private List<string[]> SplitAry(string[] arr, int splitCount)
+
+        private void PackImage(object files)
+        {
+            foreach (var file in (string[])files)
+            {
+                byte[] buf = Main.GetSingleBitmap(file);
+                MagickImage img = new MagickImage(buf) { Format = MagickFormat.Xbm };
+                var width = Convert.ToInt32(nbxWidth.Value);
+                var height = Convert.ToInt32(nbxHeight.Value);
+                img.Resize(new MagickGeometry($"{width}x{height}!"));
+                buf = img.ToByteArray();
+                lock (hashtable)
+                {
+                    hashtable.Add(Path.GetFileName(file), buf);
+                }
+            }
+        }
+        private void SaveFile(string fname, byte[] data)
+        {
+            byte[] zdata = GZipStream.CompressBuffer(data);
+            if (File.Exists(fname))
+                File.Delete(fname);
+            FileStream fs = new FileStream(fname, FileMode.Create);
+            fs.Write(zdata, 0, zdata.Length);
+            fs.Dispose();
+            Process.Start("Explorer.exe", "/select," + fname);
+        }
+        private void MutilPack(string[] arr, int splitCount)
         {
             int size = arr.Length / splitCount;
- 
-            List<string[]> splitList = new List<string[]>();
-
+            List<string[]> ls = new List<string[]>();
             for (int i = 0; i < splitCount; i++)
             {
                 int index = i * size;
@@ -146,83 +162,22 @@ namespace Aida64_Esp8266_DisplayControler
                     size = arr.Length;
 
                 string[] subarr = arr.Skip(index).Take(size).ToArray();
-                splitList.Add(subarr);
-            }
-            return splitList;
-        }
-
-        private void PackImage(object o)
-        {
-            Imgpack imgpack = (Imgpack) o;
-            int index = imgpack.Index;
-            foreach (var file in imgpack.Files)
-            {
-                var buf = Main.GetSingleBitmap(file);
-                MagickImage img = new MagickImage(buf) { Format = MagickFormat.Xbm };
-                var width = Convert.ToInt32(nbxWidth.Value);
-                var height = Convert.ToInt32(nbxHeight.Value);
-                img.Resize(new MagickGeometry($"{width}x{height}!"));
-                buf = img.ToByteArray();
-                MemoryStream ms = new MemoryStream();
-                ms.Write(buf, 0, buf.Length);
-                imgpack.Ls.Add(ms);
-            }
-            MemoryStream mm = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(mm, imgpack.Ls);
-            byte[] zdata = GZipStream.CompressBuffer(mm.ToArray());
-            imgpack.Zdata.Insert(index,zdata);
-            Sync.Send(main.SetLogbox, $"线程执行完毕{index}");
-        }
-        private void SaveFile(string fname,byte[] zdata)
-        {
-            if (File.Exists(fname))
-                File.Delete(fname);
-            FileStream fs = new FileStream(fname, FileMode.Create);
-            fs.Write(zdata, 0, zdata.Length);
-            fs.Dispose();
-            Process.Start("Explorer.exe", "/select," + fname);
-        }
-
-        private byte[] ConvertDoubleArrayToBytes(List<byte[]> matrix)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(stream,matrix);
-                return stream.ToArray();
-            }
-        }
-
-        private void BtnStop_Click(object sender, EventArgs e)
-        {
-            int threadcount = Convert.ToInt32(threadCount.Text);
-            var files = Directory.GetFiles(tbxPath.Text);
-            List<string[]> spitList = SplitAry(files, threadcount);
-            threadcount = spitList.Count;
-            Imgpack imgpack = new Imgpack
-            {
-                Ls = new List<MemoryStream>(),
-                Zdata = new List<byte[]>()
-            };
-            ThreadPool.SetMaxThreads(threadcount, threadcount);
-            ThreadPool.SetMinThreads(1, 1);
-            for (int i = 0; i < threadcount; i++)
-            {
-                imgpack.Files = spitList[i];
-                imgpack.Zdata.Add(null);
-                if (ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage), imgpack))
+                if (ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage),subarr))
                 {
-                    Sync.Send(main.SetLogbox,"添加线程成功");
+                    Sync.Send(main.SetLogbox, "添加线程成功");
                 }
+                ls.Add(subarr);
             }
-            ThreadPool.GetAvailableThreads(out int availableWorker, out int PortThreads);
-            ThreadPool.GetMinThreads(out int maxWorker, out PortThreads);
+            Task updatpbar = new Task(() =>
+                {
+                    pbar.Value = hashtable.Count / Directory.GetFiles(tbxPath.Text).Length * 100;
+                });
+            updatpbar.Start();
             Task saveTask = new Task(() =>
             {
                 while (true)
                 {
-                    if (maxWorker - availableWorker == 0)
+                    if (hashtable.Count == Directory.GetFiles(tbxPath.Text).Length)
                     {
                         string fname;
                         SaveFileDialog sd = new SaveFileDialog
@@ -238,12 +193,33 @@ namespace Aida64_Esp8266_DisplayControler
                         {
                             return;
                         }
-                        SaveFile(fname, ConvertDoubleArrayToBytes(imgpack.Zdata));
+                        byte[] data = null;
+                        List<byte[]> lb = new List<byte[]>();
+                        foreach (var subarr in ls)
+                        {
+                            foreach (var file in subarr)
+                            {
+                                lb.Add((byte[])hashtable[Path.GetFileName(file)]);
+                            }
+                        }
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            var formatter = new BinaryFormatter();
+                            formatter.Serialize(ms, data);
+                        }
+                        SaveFile(fname,data);
                         break;
                     }
                 }
             });
             saveTask.Start();
+        }
+
+        private void BtnStop_Click(object sender, EventArgs e)
+        {
+            int threadcount = Convert.ToInt32(threadCount.Text);
+            var files = Directory.GetFiles(tbxPath.Text);
+            MutilPack(files, threadcount);
         }
     }
 }

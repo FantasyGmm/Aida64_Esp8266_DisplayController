@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.pnMain = new System.Windows.Forms.Panel();
+            this.threadCount = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.pbar = new System.Windows.Forms.ProgressBar();
@@ -38,12 +40,10 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.btnBrowser = new System.Windows.Forms.Button();
             this.tbxPath = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.threadCount = new System.Windows.Forms.NumericUpDown();
             this.pnMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.threadCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.threadCount)).BeginInit();
             this.SuspendLayout();
             // 
             // pnMain
@@ -63,6 +63,32 @@
             this.pnMain.Name = "pnMain";
             this.pnMain.Size = new System.Drawing.Size(530, 215);
             this.pnMain.TabIndex = 0;
+            // 
+            // threadCount
+            // 
+            this.threadCount.Location = new System.Drawing.Point(300, 78);
+            this.threadCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.threadCount.Name = "threadCount";
+            this.threadCount.Size = new System.Drawing.Size(81, 21);
+            this.threadCount.TabIndex = 10;
+            this.threadCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(298, 64);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "线程数";
             // 
             // btnStop
             // 
@@ -160,32 +186,6 @@
             this.tbxPath.Size = new System.Drawing.Size(404, 21);
             this.tbxPath.TabIndex = 0;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(298, 64);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "线程数";
-            // 
-            // threadCount
-            // 
-            this.threadCount.Location = new System.Drawing.Point(300, 78);
-            this.threadCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.threadCount.Name = "threadCount";
-            this.threadCount.Size = new System.Drawing.Size(81, 21);
-            this.threadCount.TabIndex = 10;
-            this.threadCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // PackForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -204,9 +204,9 @@
             this.Load += new System.EventHandler(this.PackForm_Load);
             this.pnMain.ResumeLayout(false);
             this.pnMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.threadCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.threadCount)).EndInit();
             this.ResumeLayout(false);
 
         }
