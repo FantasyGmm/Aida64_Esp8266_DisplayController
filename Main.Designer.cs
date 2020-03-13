@@ -52,9 +52,9 @@
             this.clkBox = new System.Windows.Forms.GroupBox();
             this.gpuClk = new System.Windows.Forms.CheckBox();
             this.cpuClk = new System.Windows.Forms.CheckBox();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
+            this.dataBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.nbxHeight = new System.Windows.Forms.NumericUpDown();
@@ -75,7 +75,17 @@
             this.cpuVol = new System.Windows.Forms.CheckBox();
             this.timerInterval = new System.Windows.Forms.NumericUpDown();
             this.displayTime = new System.Windows.Forms.CheckBox();
-            this.dataBox = new System.Windows.Forms.ComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.开源地址ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.开机启动ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.创建桌面快捷方式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.版本号Aplha001ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -88,6 +98,7 @@
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -113,14 +124,16 @@
             // 制作动画包ToolStripMenuItem
             // 
             this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.制作动画包ToolStripMenuItem.Text = "制作动画包";
             this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
             // 
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.清空日志ToolStripMenuItem});
+            this.清空日志ToolStripMenuItem,
+            this.开机启动ToolStripMenuItem,
+            this.创建桌面快捷方式ToolStripMenuItem});
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.设置ToolStripMenuItem.Text = "设置";
@@ -128,12 +141,15 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
+            this.关于ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.开源地址ToolStripMenuItem,
+            this.版本号Aplha001ToolStripMenuItem});
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
             this.关于ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.关于ToolStripMenuItem.Text = "关于";
@@ -325,11 +341,6 @@
             this.cpuClk.UseVisualStyleBackColor = true;
             this.cpuClk.CheckedChanged += new System.EventHandler(this.CpuClk_CheckedChanged);
             // 
-            // notifyIcon1
-            // 
-            this.notifyIcon1.Text = "notifyIcon";
-            this.notifyIcon1.Visible = true;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -353,6 +364,17 @@
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
+            // 
+            // dataBox
+            // 
+            this.dataBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dataBox.FormattingEnabled = true;
+            this.dataBox.Location = new System.Drawing.Point(6, 17);
+            this.dataBox.Name = "dataBox";
+            this.dataBox.Size = new System.Drawing.Size(183, 20);
+            this.dataBox.Sorted = true;
+            this.dataBox.TabIndex = 27;
+            this.dataBox.SelectedIndexChanged += new System.EventHandler(this.DataBox_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -563,7 +585,7 @@
             this.timerInterval.Size = new System.Drawing.Size(93, 21);
             this.timerInterval.TabIndex = 19;
             this.timerInterval.Value = new decimal(new int[] {
-            30,
+            40,
             0,
             0,
             0});
@@ -578,22 +600,103 @@
             this.displayTime.Text = "显示时间";
             this.displayTime.UseVisualStyleBackColor = true;
             // 
-            // dataBox
+            // panel2
             // 
-            this.dataBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.dataBox.FormattingEnabled = true;
-            this.dataBox.Location = new System.Drawing.Point(6, 17);
-            this.dataBox.Name = "dataBox";
-            this.dataBox.Size = new System.Drawing.Size(183, 20);
-            this.dataBox.Sorted = true;
-            this.dataBox.TabIndex = 27;
-            this.dataBox.SelectedIndexChanged += new System.EventHandler(this.DataBox_SelectedIndexChanged);
+            this.panel2.Controls.Add(this.linkLabel2);
+            this.panel2.Controls.Add(this.linkLabel1);
+            this.panel2.Controls.Add(this.label7);
+            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Location = new System.Drawing.Point(14, 360);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(312, 96);
+            this.panel2.TabIndex = 21;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(41, 12);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "作者：";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(13, 39);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 12);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Crtget";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(13, 63);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(59, 12);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "FantasyGM";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(78, 39);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(155, 12);
+            this.linkLabel1.TabIndex = 3;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "https://github.com/ctrget";
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(78, 63);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(179, 12);
+            this.linkLabel2.TabIndex = 4;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "https://github.com/FantasyGmm";
+            // 
+            // 开源地址ToolStripMenuItem
+            // 
+            this.开源地址ToolStripMenuItem.Name = "开源地址ToolStripMenuItem";
+            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开源地址ToolStripMenuItem.Text = "开源地址";
+            this.开源地址ToolStripMenuItem.Click += new System.EventHandler(this.开源地址ToolStripMenuItem_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "Aida64_Esp8266_DisplayControler";
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // 开机启动ToolStripMenuItem
+            // 
+            this.开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
+            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开机启动ToolStripMenuItem.Text = "开机启动";
+            this.开机启动ToolStripMenuItem.Click += new System.EventHandler(this.开机启动ToolStripMenuItem_Click);
+            // 
+            // 创建桌面快捷方式ToolStripMenuItem
+            // 
+            this.创建桌面快捷方式ToolStripMenuItem.Name = "创建桌面快捷方式ToolStripMenuItem";
+            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
+            this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
+            // 
+            // 版本号Aplha001ToolStripMenuItem
+            // 
+            this.版本号Aplha001ToolStripMenuItem.Name = "版本号Aplha001ToolStripMenuItem";
+            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.版本号Aplha001ToolStripMenuItem.Text = "版本号:Aplha 0.01";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 465);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.btnSendGif);
             this.Controls.Add(this.timerInterval);
             this.Controls.Add(this.volBox);
@@ -614,7 +717,8 @@
             this.Name = "Main";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Aida64_Esp8266_DisplayControler";
+            this.Text = "Aida64_DisplayControler";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
@@ -636,6 +740,8 @@
             this.volBox.ResumeLayout(false);
             this.volBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timerInterval)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -663,7 +769,6 @@
         private System.Windows.Forms.CheckBox vramUTI;
         private System.Windows.Forms.CheckBox gpuClk;
         private System.Windows.Forms.CheckBox cpuClk;
-        public System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox bmpPanel;
         private System.Windows.Forms.PictureBox pictureBox;
@@ -690,6 +795,17 @@
         private System.Windows.Forms.ToolStripMenuItem 制作动画包ToolStripMenuItem;
         private System.Windows.Forms.CheckBox displayTime;
         private System.Windows.Forms.ComboBox dataBox;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ToolStripMenuItem 开源地址ToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ToolStripMenuItem 开机启动ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 创建桌面快捷方式ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 版本号Aplha001ToolStripMenuItem;
     }
 }
 

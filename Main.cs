@@ -8,11 +8,13 @@ using System.Xml.Linq;
 using System.Threading;
 using System.Reflection;
 using System.Net.Sockets;
+using IWshRuntimeLibrary;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using Ionic.Zlib;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -649,6 +651,54 @@ namespace Aida64_Esp8266_DisplayControler
             packIndex = (sender as ComboBox).SelectedIndex;
         }
 
+        private void 开源地址ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/FantasyGmm/Aida64_Esp8266_DisplayControler");
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (this.Visible == false)
+            {
+                this.Visible = true;
+                notifyIcon1.Visible = false;
+            }
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Visible = false;
+            notifyIcon1.Visible = true;
+        }
+
+        private void 创建桌面快捷方式ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName);
+        }
+        public static void CreateShortcut(string directory, string shortcutName, string targetPath,
+            string description = null, string iconLocation = null)
+        {
+            string shortcutPath = Path.Combine(directory, string.Format("{0}.lnk", shortcutName));
+            if (!System.IO.File.Exists(shortcutPath))
+            {
+                WshShell shell = new WshShell();
+                IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);//创建快捷方式对象
+                shortcut.TargetPath = targetPath;//指定目标路径
+                shortcut.WorkingDirectory = Path.GetDirectoryName(targetPath);//设置起始位置
+                shortcut.WindowStyle = 1;//设置运行方式，默认为常规窗口
+                shortcut.Description = description;//设置备注
+                shortcut.IconLocation = string.IsNullOrWhiteSpace(iconLocation) ? targetPath : iconLocation;//设置图标路径
+                shortcut.Save();//保存快捷方式
+            }
+        }
+
+        private void 开机启动ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string systemStartPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            string appPath = Process.GetCurrentProcess().MainModule.FileName;
+            CreateShortcut(systemStartPath, "Aida64_DisplayControler",appPath);
+        }
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             if (btnSendGif.Text == "停止发送动画")
@@ -665,7 +715,7 @@ namespace Aida64_Esp8266_DisplayControler
                     return;
                 }
                 string packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
-                if (!File.Exists(packfile))
+                if (!System.IO.File.Exists(packfile))
                 {
                     MessageBox.Show("动画文件不存在!");
                     return;
