@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.pnMain = new System.Windows.Forms.Panel();
-            this.threadCount = new System.Windows.Forms.NumericUpDown();
+            this.tbxThread = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
@@ -40,15 +40,16 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.btnBrowser = new System.Windows.Forms.Button();
             this.tbxPath = new System.Windows.Forms.TextBox();
+            this.tbxlog = new System.Windows.Forms.TextBox();
             this.pnMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.threadCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbxThread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // pnMain
             // 
-            this.pnMain.Controls.Add(this.threadCount);
+            this.pnMain.Controls.Add(this.tbxThread);
             this.pnMain.Controls.Add(this.label3);
             this.pnMain.Controls.Add(this.btnStop);
             this.pnMain.Controls.Add(this.btnStart);
@@ -64,18 +65,18 @@
             this.pnMain.Size = new System.Drawing.Size(396, 215);
             this.pnMain.TabIndex = 0;
             // 
-            // threadCount
+            // tbxThread
             // 
-            this.threadCount.Location = new System.Drawing.Point(300, 78);
-            this.threadCount.Minimum = new decimal(new int[] {
+            this.tbxThread.Location = new System.Drawing.Point(300, 78);
+            this.tbxThread.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.threadCount.Name = "threadCount";
-            this.threadCount.Size = new System.Drawing.Size(81, 21);
-            this.threadCount.TabIndex = 10;
-            this.threadCount.Value = new decimal(new int[] {
+            this.tbxThread.Name = "tbxThread";
+            this.tbxThread.Size = new System.Drawing.Size(81, 21);
+            this.tbxThread.TabIndex = 10;
+            this.tbxThread.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -186,11 +187,20 @@
             this.tbxPath.Size = new System.Drawing.Size(296, 21);
             this.tbxPath.TabIndex = 0;
             // 
+            // tbxlog
+            // 
+            this.tbxlog.Location = new System.Drawing.Point(12, 233);
+            this.tbxlog.Multiline = true;
+            this.tbxlog.Name = "tbxlog";
+            this.tbxlog.Size = new System.Drawing.Size(396, 147);
+            this.tbxlog.TabIndex = 1;
+            // 
             // PackForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(417, 237);
+            this.ClientSize = new System.Drawing.Size(417, 392);
+            this.Controls.Add(this.tbxlog);
             this.Controls.Add(this.pnMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -204,10 +214,11 @@
             this.Load += new System.EventHandler(this.PackForm_Load);
             this.pnMain.ResumeLayout(false);
             this.pnMain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.threadCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbxThread)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -223,7 +234,8 @@
         private System.Windows.Forms.ProgressBar pbar;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.NumericUpDown threadCount;
+        private System.Windows.Forms.NumericUpDown tbxThread;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbxlog;
     }
 }
