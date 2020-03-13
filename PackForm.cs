@@ -24,7 +24,6 @@ namespace Aida64_Esp8266_DisplayControler
             public int Index { get; set; }
             public string[] Files { get; set; }
             public List<MemoryStream> Ls { get; set; }
-            public Main.PackData Pack { get; set; }
             public List<byte[]> Zdata { get; set; }
         }
 
@@ -167,12 +166,12 @@ namespace Aida64_Esp8266_DisplayControler
                 ms.Write(buf, 0, buf.Length);
                 imgpack.Ls.Add(ms);
             }
-            imgpack.Pack.img = imgpack.Ls;
             MemoryStream mm = new MemoryStream();
             var formatter = new BinaryFormatter();
-            formatter.Serialize(mm, imgpack.Pack);
-            var zdata = GZipStream.CompressBuffer(mm.ToArray());
+            formatter.Serialize(mm, imgpack.Ls);
+            byte[] zdata = GZipStream.CompressBuffer(mm.ToArray());
             imgpack.Zdata.Insert(imgpack.Index,zdata);
+
         }
         private void SaveFile(string fname,byte[] zdata)
         {
@@ -203,8 +202,7 @@ namespace Aida64_Esp8266_DisplayControler
             Imgpack imgpack = new Imgpack
             {
                 Ls = new List<MemoryStream>(),
-                Pack = new Main.PackData(),
-                Zdata = new List<byte[]>(threadcount)
+                Zdata = new List<byte[]>()
             };
             ThreadPool.SetMaxThreads(threadcount, threadcount);
             ThreadPool.SetMinThreads(1, 1);
@@ -212,11 +210,13 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 imgpack.Files = spitList[i];
                 imgpack.Index = i;
-                ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage),imgpack);
+                imgpack.Zdata.Add(null);
+                if (ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage), imgpack))
+                {
+                    Sync.Send(main.SetLogbox,"添加线程成功");
+                }
             }
-            int AvailableWorker = 0;
-            int AvailablePort = 0;
-            ThreadPool.GetAvailableThreads(out AvailableWorker,out AvailablePort);
+            ThreadPool.GetAvailableThreads(out int AvailableWorker, out int AvailablePort);
             if (AvailablePort == 0)
             {
                 if (AvailableWorker == 0)
