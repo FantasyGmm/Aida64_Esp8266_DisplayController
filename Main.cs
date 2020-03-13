@@ -468,11 +468,9 @@ namespace Aida64_Esp8266_DisplayControler
                         }
                             
                     }
-
                     var buf = ConvertXBM(Encoding.Default.GetString(m.ToArray()));
                     UdpSendXBM(buf, width, height);
                     MagickImage img = new MagickImage(m.ToArray()) { Format = MagickFormat.Xbm };
-                    //img.Resize(new MagickGeometry($"{width}x{height}!"));
                     img.Format = MagickFormat.Bmp;
                     buf = img.ToByteArray();
                     ms = new MemoryStream();

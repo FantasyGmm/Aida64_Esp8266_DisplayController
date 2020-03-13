@@ -61,7 +61,7 @@
             this.pnMain.Controls.Add(this.tbxPath);
             this.pnMain.Location = new System.Drawing.Point(12, 12);
             this.pnMain.Name = "pnMain";
-            this.pnMain.Size = new System.Drawing.Size(530, 215);
+            this.pnMain.Size = new System.Drawing.Size(396, 215);
             this.pnMain.TabIndex = 0;
             // 
             // threadCount
@@ -92,7 +92,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(300, 165);
+            this.btnStop.Location = new System.Drawing.Point(237, 165);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(102, 31);
             this.btnStop.TabIndex = 8;
@@ -102,7 +102,7 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(71, 165);
+            this.btnStart.Location = new System.Drawing.Point(12, 165);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(102, 31);
             this.btnStart.TabIndex = 7;
@@ -114,7 +114,7 @@
             // 
             this.pbar.Location = new System.Drawing.Point(12, 127);
             this.pbar.Name = "pbar";
-            this.pbar.Size = new System.Drawing.Size(502, 15);
+            this.pbar.Size = new System.Drawing.Size(369, 15);
             this.pbar.TabIndex = 6;
             // 
             // label2
@@ -171,7 +171,7 @@
             // 
             // btnBrowser
             // 
-            this.btnBrowser.Location = new System.Drawing.Point(447, 26);
+            this.btnBrowser.Location = new System.Drawing.Point(314, 26);
             this.btnBrowser.Name = "btnBrowser";
             this.btnBrowser.Size = new System.Drawing.Size(67, 21);
             this.btnBrowser.TabIndex = 1;
@@ -183,14 +183,14 @@
             // 
             this.tbxPath.Location = new System.Drawing.Point(12, 26);
             this.tbxPath.Name = "tbxPath";
-            this.tbxPath.Size = new System.Drawing.Size(404, 21);
+            this.tbxPath.Size = new System.Drawing.Size(296, 21);
             this.tbxPath.TabIndex = 0;
             // 
             // PackForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(553, 237);
+            this.ClientSize = new System.Drawing.Size(417, 237);
             this.Controls.Add(this.pnMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
