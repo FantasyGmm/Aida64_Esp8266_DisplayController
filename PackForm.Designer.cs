@@ -31,7 +31,6 @@
             this.pnMain = new System.Windows.Forms.Panel();
             this.tbxThread = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.pbar = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
@@ -51,7 +50,6 @@
             // 
             this.pnMain.Controls.Add(this.tbxThread);
             this.pnMain.Controls.Add(this.label3);
-            this.pnMain.Controls.Add(this.btnStop);
             this.pnMain.Controls.Add(this.btnStart);
             this.pnMain.Controls.Add(this.pbar);
             this.pnMain.Controls.Add(this.label2);
@@ -91,19 +89,9 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "线程数";
             // 
-            // btnStop
-            // 
-            this.btnStop.Location = new System.Drawing.Point(237, 165);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(102, 31);
-            this.btnStop.TabIndex = 8;
-            this.btnStop.Text = "停止";
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.BtnStop_Click);
-            // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(12, 165);
+            this.btnStart.Location = new System.Drawing.Point(146, 167);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(102, 31);
             this.btnStart.TabIndex = 7;
@@ -192,6 +180,8 @@
             this.tbxlog.Location = new System.Drawing.Point(12, 233);
             this.tbxlog.Multiline = true;
             this.tbxlog.Name = "tbxlog";
+            this.tbxlog.ReadOnly = true;
+            this.tbxlog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tbxlog.Size = new System.Drawing.Size(396, 147);
             this.tbxlog.TabIndex = 1;
             // 
@@ -232,7 +222,6 @@
         private System.Windows.Forms.NumericUpDown nbxHeight;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar pbar;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.NumericUpDown tbxThread;
         private System.Windows.Forms.Label label3;

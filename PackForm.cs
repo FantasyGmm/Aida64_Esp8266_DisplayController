@@ -15,8 +15,7 @@ namespace Aida64_Esp8266_DisplayControler
 {
     public partial class PackForm : Form
     {
-        private SynchronizationContext Sync = null;
-        private Task procTask = null;
+        private SynchronizationContext Sync;
         private Main main;
         private Hashtable hashtable = new Hashtable();
         private Dictionary<int, int> threadPercent = new Dictionary<int, int>();
@@ -32,7 +31,8 @@ namespace Aida64_Esp8266_DisplayControler
         private void PackForm_Load(object sender, EventArgs e)
         {
             var tcount = Environment.ProcessorCount;
-            tbxThread.Value = tcount;
+            tbxThread.Value = tcount-1;
+            tbxThread.Maximum = tcount;
         }
 
         private void SetPbar(object o)
@@ -51,12 +51,6 @@ namespace Aida64_Esp8266_DisplayControler
 
 
             pbar.Value = total / threadCount;
-        }
-
-
-        private void SetPanel(object o)
-        {
-            pnMain.Enabled = !pnMain.Enabled;
         }
 
         private void SetLog(object o)
@@ -91,7 +85,7 @@ namespace Aida64_Esp8266_DisplayControler
             decimal i = 1;
             int lastpercent = 0;
             var fileArr = (string[])files;
-            Sync.Send(SetLog, $"线程{Thread.CurrentThread.ManagedThreadId}开始执行");
+            //Sync.Send(SetLog, $"线程{Thread.CurrentThread.ManagedThreadId}开始执行");
 
 
             foreach (var file in fileArr)
@@ -119,17 +113,6 @@ namespace Aida64_Esp8266_DisplayControler
 
                 i++;
             }
-        }
-
-
-        private void SaveFile(string fname, byte[] data)
-        {
-            if (File.Exists(fname))
-                File.Delete(fname);
-            FileStream fs = new FileStream(fname, FileMode.Create);
-            fs.Write(data, 0, data.Length);
-            fs.Dispose();
-            Process.Start("Explorer.exe", "/select," + fname);
         }
 
         private async void MutilPack(string[] arr, int splitCount)
@@ -209,11 +192,6 @@ namespace Aida64_Esp8266_DisplayControler
             Process.Start("Explorer.exe", "/select," + fname);
             pnMain.Enabled = true;
 
-        }
-
-        private void BtnStop_Click(object sender, EventArgs e)
-        {
-            //
         }
     }
 }
