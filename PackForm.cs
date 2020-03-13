@@ -18,6 +18,16 @@ namespace Aida64_Esp8266_DisplayControler
         private Task procTask = null;
         private Main main;
 
+        [Serializable]
+        public class Imgpack
+        {
+            public int Index { get; set; }
+            public string[] Files { get; set; }
+            public List<MemoryStream> Ls { get; set; }
+            public Main.PackData Pack { get; set; }
+            public List<byte[]> Zdata { get; set; }
+        }
+
         public PackForm(Main main)
         {
             InitializeComponent();
@@ -108,8 +118,6 @@ namespace Aida64_Esp8266_DisplayControler
 
                     var zdata = GZipStream.CompressBuffer(mm.ToArray());
 
-
-
                     if (File.Exists(fname))
                         File.Delete(fname);
 
@@ -124,6 +132,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
+        //分割文件名数组
         private List<string[]> SplitAry(string[] arr, int splitCount)
         {
             int size = arr.Length / splitCount;
@@ -143,16 +152,82 @@ namespace Aida64_Esp8266_DisplayControler
             return splitList;
         }
 
+        private void PackImage(object o)
+        {
+            Imgpack imgpack = (Imgpack) o;
+            foreach (var file in imgpack.Files)
+            {
+                var buf = Main.GetSingleBitmap(file);
+                MagickImage img = new MagickImage(buf) { Format = MagickFormat.Xbm };
+                var width = Convert.ToInt32(nbxWidth.Value);
+                var height = Convert.ToInt32(nbxHeight.Value);
+                img.Resize(new MagickGeometry($"{width}x{height}!"));
+                buf = img.ToByteArray();
+                MemoryStream ms = new MemoryStream();
+                ms.Write(buf, 0, buf.Length);
+                imgpack.Ls.Add(ms);
+            }
+            imgpack.Pack.img = imgpack.Ls;
+            MemoryStream mm = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(mm, imgpack.Pack);
+            var zdata = GZipStream.CompressBuffer(mm.ToArray());
+            imgpack.Zdata.Insert(imgpack.Index,zdata);
+        }
+        private void SaveFile(string fname,byte[] zdata)
+        {
+            if (File.Exists(fname))
+                File.Delete(fname);
+            FileStream fs = new FileStream(fname, FileMode.Create);
+            fs.Write(zdata, 0, zdata.Length);
+            fs.Dispose();
+            Process.Start("Explorer.exe", "/select," + fname);
+        }
+
+        private byte[] ConvertDoubleArrayToBytes(List<byte[]> matrix)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(stream,matrix);
+                return stream.ToArray();
+            }
+        }
+
         private void BtnStop_Click(object sender, EventArgs e)
         {
+            int threadcount = Convert.ToInt32(threadCount.Text);
             var files = Directory.GetFiles(tbxPath.Text);
-            int count = 0;
-            foreach (var arry in SplitAry(files, Convert.ToInt32(threadCount.Text)))
+            List<string[]> spitList = SplitAry(files, threadcount);
+            threadcount = spitList.Count;
+            ThreadPool.GetMaxThreads(out threadcount,out threadcount);
+            Imgpack imgpack = new Imgpack
             {
-                count += arry.Length;
-                main.logBox.AppendText(count + Environment.NewLine);
+                Ls = new List<MemoryStream>(),
+                Pack = new Main.PackData(),
+                Zdata = new List<byte[]>(threadcount)
+            };
+            for (int i = 0; i < threadcount; i++)
+            {
+                imgpack.Files = spitList[i];
+                imgpack.Index = i;
+                ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage),imgpack);
             }
-            List<string[]> spitList = SplitAry(files, Convert.ToInt32(threadCount.Text));
+            string fname;
+            SaveFileDialog sd = new SaveFileDialog
+            {
+                Filter = "PackFile(*.dat)|*.dat",
+                Title = "请输入保存文件名"
+            };
+            if (sd.ShowDialog(this) == DialogResult.OK)
+            {
+                fname = sd.FileName;
+            }
+            else
+            {
+                return;
+            }
+            SaveFile(fname,ConvertDoubleArrayToBytes(imgpack.Zdata));
         }
     }
 }
