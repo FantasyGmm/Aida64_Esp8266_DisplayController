@@ -142,16 +142,29 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void SaveFile(string fname, byte[] data)
         {
-            byte[] zdata = GZipStream.CompressBuffer(data);
             if (File.Exists(fname))
                 File.Delete(fname);
             FileStream fs = new FileStream(fname, FileMode.Create);
-            fs.Write(zdata, 0, zdata.Length);
+            fs.Write(data, 0, data.Length);
             fs.Dispose();
             Process.Start("Explorer.exe", "/select," + fname);
         }
         private void MutilPack(string[] arr, int splitCount)
         {
+            string fname;
+            SaveFileDialog sd = new SaveFileDialog
+            {
+                Filter = "PackFile(*.dat)|*.dat",
+                Title = "请输入保存文件名"
+            };
+            if (sd.ShowDialog(this) == DialogResult.OK)
+            {
+                fname = sd.FileName;
+            }
+            else
+            {
+                return;
+            }
             int size = arr.Length / splitCount;
             List<string[]> ls = new List<string[]>();
             for (int i = 0; i < splitCount; i++)
@@ -170,7 +183,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
             Task updatpbar = new Task(() =>
                 {
-                    pbar.Value = hashtable.Count / Directory.GetFiles(tbxPath.Text).Length * 100;
+                    Sync.Send(SetPbar, hashtable.Count / Directory.GetFiles(tbxPath.Text).Length * 100);
                 });
             updatpbar.Start();
             Task saveTask = new Task(() =>
@@ -179,21 +192,6 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     if (hashtable.Count == Directory.GetFiles(tbxPath.Text).Length)
                     {
-                        string fname;
-                        SaveFileDialog sd = new SaveFileDialog
-                        {
-                            Filter = "PackFile(*.dat)|*.dat",
-                            Title = "请输入保存文件名"
-                        };
-                        if (sd.ShowDialog(this) == DialogResult.OK)
-                        {
-                            fname = sd.FileName;
-                        }
-                        else
-                        {
-                            return;
-                        }
-                        byte[] data = null;
                         List<byte[]> lb = new List<byte[]>();
                         foreach (var subarr in ls)
                         {
@@ -205,9 +203,9 @@ namespace Aida64_Esp8266_DisplayControler
                         using (MemoryStream ms = new MemoryStream())
                         {
                             var formatter = new BinaryFormatter();
-                            formatter.Serialize(ms, data);
+                            formatter.Serialize(ms, lb);
+                            SaveFile(fname, GZipStream.CompressBuffer(ms.ToArray()));
                         }
-                        SaveFile(fname,data);
                         break;
                     }
                 }
