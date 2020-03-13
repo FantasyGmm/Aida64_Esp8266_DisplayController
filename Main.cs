@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using Ionic.Zlib;
 using System.Text;
 using ImageMagick;
 using System.Drawing;
@@ -9,14 +10,13 @@ using System.Threading;
 using System.Reflection;
 using System.Net.Sockets;
 using IWshRuntimeLibrary;
+using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using Ionic.Zlib;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -29,7 +29,6 @@ namespace Aida64_Esp8266_DisplayControler
             public byte ver;
             public short len;
             public byte[] data;
-
             public Packet(byte c, byte[] d = null, short l = 0)
             {
                 cmd = c;
@@ -38,7 +37,6 @@ namespace Aida64_Esp8266_DisplayControler
                 data = d;
             }
         }
-
         [Serializable]
         public class PackData
         {
@@ -48,7 +46,6 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
-
         MemoryMappedFile mapFile;
         MemoryMappedViewAccessor Accessor;
         private CancellationToken token;
@@ -67,7 +64,6 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> clientList = new List<string>();
         public int packIndex = -1;
         public List<string> packList = new List<string>();
-
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
@@ -223,7 +219,6 @@ namespace Aida64_Esp8266_DisplayControler
             selested.Add("PGPU1TDPP");
 
         }
-
         public void SetLogbox(object o)
         {
             try
@@ -236,7 +231,6 @@ namespace Aida64_Esp8266_DisplayControler
             }
             
         }
-
         public void SetButtonText(object o)
         {
             var sa = o as string[];
@@ -259,7 +253,6 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
-
         public void AddClientBox(object o)
         {
             lbxClient.Items.Add(o as string);
@@ -269,7 +262,6 @@ namespace Aida64_Esp8266_DisplayControler
                 clientList.Add(o as string);
             }
         }
-
         public void AddClient(IPEndPoint addr)
         {
             string s = addr.ToString();
@@ -295,7 +287,6 @@ namespace Aida64_Esp8266_DisplayControler
                 mem.Write(data, 0, len);
             return mem.ToArray();
         }
-
         public Packet ParsePacket(byte[] ba)
         {
             byte cmd = ba[0];
@@ -308,12 +299,10 @@ namespace Aida64_Esp8266_DisplayControler
             p.data = data;
             return p;
         }
-
         private void DataChange(object source, FileSystemEventArgs e)
         {
             Sync.Send(FlushPack, null);
         }
-
 
         public void FlushPack(object o)
         {
@@ -330,9 +319,6 @@ namespace Aida64_Esp8266_DisplayControler
             }
            
         }
-
-
-     
         private bool AIDAQuery()
         {
             try
@@ -399,7 +385,6 @@ namespace Aida64_Esp8266_DisplayControler
             logBox.ResetText();
         }
 
-
         private byte[] ConvertXBM(string input)
         {
             string bytes = System.Text.RegularExpressions.Regex
@@ -415,9 +400,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             return pixels;
         }
-
-
-
 
         private void UdpSendXBM(byte[] data, int width, int height)
         {
@@ -439,8 +421,6 @@ namespace Aida64_Esp8266_DisplayControler
                 Udp.Send(packet, packet.Length, addr);
             }
         }
-
-
         private void ProcPack(string file, int width, int height)
         {
             Pack_Start:
@@ -456,7 +436,6 @@ namespace Aida64_Esp8266_DisplayControler
                 ms.Seek(0, SeekOrigin.Begin);
                 var formatter = new BinaryFormatter();
                 PackData pack = (PackData)formatter.Deserialize(ms);
-
                 foreach (var m in pack.img)
                 {
                     resetBmp.WaitOne();
@@ -483,7 +462,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             }
         }
-
         private void BtnLed_Click(object sender, EventArgs e)
         {
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -493,7 +471,6 @@ namespace Aida64_Esp8266_DisplayControler
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
-
         private void BtnReboot_Click(object sender, EventArgs e)
         {
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -503,7 +480,6 @@ namespace Aida64_Esp8266_DisplayControler
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
-
         private void SelectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = true;
@@ -656,11 +632,11 @@ namespace Aida64_Esp8266_DisplayControler
             Process.Start("https://github.com/FantasyGmm/Aida64_Esp8266_DisplayControler");
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (this.Visible == false)
+            if (Visible == false)
             {
-                this.Visible = true;
+                Visible = true;
                 notifyIcon1.Visible = false;
             }
         }
@@ -668,7 +644,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            this.Visible = false;
+            Visible = false;
             notifyIcon1.Visible = true;
         }
 
@@ -742,7 +718,6 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
-
         private void BtnSendData_Click(object sender, EventArgs e)
         {
             if (btnSendData.Text == "停止发送数据")
@@ -759,9 +734,7 @@ namespace Aida64_Esp8266_DisplayControler
                 if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                     return;
                 s = clientList[0].Split(':');
-
                 IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
-
                 btnSendData.Text = "停止发送数据";
                 if (sendInfoTask == null)
                 {
@@ -769,12 +742,9 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
-
                             resetInfo.WaitOne();
-
                             if (selectedUI == 0)
                                 continue;
-
                             id.Clear();
                             value.Clear();
                             selested.Clear();
@@ -782,8 +752,6 @@ namespace Aida64_Esp8266_DisplayControler
                             hddvalue.Clear();
                             GetAidaInfo();
                             QuerySelested();
-             
-                            
                             JObject jsobj = new JObject
                             {
                                 {"l", selested.Count.ToString()},

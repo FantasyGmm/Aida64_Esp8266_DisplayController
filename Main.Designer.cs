@@ -669,7 +669,7 @@
             // notifyIcon1
             // 
             this.notifyIcon1.Text = "Aida64_Esp8266_DisplayControler";
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseDoubleClick);
             // 
             // 开机启动ToolStripMenuItem
             // 
