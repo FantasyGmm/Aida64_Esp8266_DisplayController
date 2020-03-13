@@ -317,7 +317,6 @@ namespace Aida64_Esp8266_DisplayControler
                     packList.Add(Path.GetFileName(f));
                 }
             }
-           
         }
         private bool AIDAQuery()
         {
@@ -337,7 +336,6 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
-
             FlushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher
             {
@@ -347,7 +345,6 @@ namespace Aida64_Esp8266_DisplayControler
             watcher.Created += DataChange;
             watcher.Deleted += DataChange;
             watcher.EnableRaisingEvents = true;
-
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
@@ -634,18 +631,13 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (Visible == false)
+            if (WindowState == FormWindowState.Minimized)
             {
-                Visible = true;
+                WindowState = FormWindowState.Normal;
+                Activate();
                 notifyIcon1.Visible = false;
+                ShowInTaskbar = true;
             }
-        }
-
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            Visible = false;
-            notifyIcon1.Visible = true;
         }
 
         private void 创建桌面快捷方式ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -675,6 +667,32 @@ namespace Aida64_Esp8266_DisplayControler
             string appPath = Process.GetCurrentProcess().MainModule.FileName;
             CreateShortcut(systemStartPath, "Aida64_DisplayControler",appPath);
         }
+
+        private void Main_SizeChanged(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                ShowInTaskbar = false;
+                notifyIcon1.Visible = true;
+            }
+        }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void 显示ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                WindowState = FormWindowState.Normal;
+                Activate();
+                notifyIcon1.Visible = false;
+                ShowInTaskbar = true;
+            }
+        }
+
         private void BtnSendGif_Click(object sender, EventArgs e)
         {
             if (btnSendGif.Text == "停止发送动画")
