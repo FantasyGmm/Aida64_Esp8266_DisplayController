@@ -642,7 +642,15 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void 创建桌面快捷方式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName);
+            try
+            {
+                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("创建桌面快捷方式失败");
+                throw;
+            }
         }
         public static void CreateShortcut(string directory, string shortcutName, string targetPath,
             string description = null, string iconLocation = null)
@@ -665,7 +673,15 @@ namespace Aida64_Esp8266_DisplayControler
         {
             string systemStartPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
             string appPath = Process.GetCurrentProcess().MainModule.FileName;
-            CreateShortcut(systemStartPath, "Aida64_DisplayControler",appPath);
+            try
+            {
+                CreateShortcut(systemStartPath, "Aida64_DisplayControler", appPath);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("创建开启启动失败");
+                throw;
+            }
         }
 
         private void Main_SizeChanged(object sender, EventArgs e)
