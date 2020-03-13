@@ -154,6 +154,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void PackImage(object o)
         {
             Imgpack imgpack = (Imgpack) o;
+            int index = imgpack.Index;
             foreach (var file in imgpack.Files)
             {
                 var buf = Main.GetSingleBitmap(file);
@@ -170,8 +171,8 @@ namespace Aida64_Esp8266_DisplayControler
             var formatter = new BinaryFormatter();
             formatter.Serialize(mm, imgpack.Ls);
             byte[] zdata = GZipStream.CompressBuffer(mm.ToArray());
-            imgpack.Zdata.Insert(imgpack.Index,zdata);
-
+            imgpack.Zdata.Insert(index,zdata);
+            Sync.Send(main.SetLogbox, $"线程执行完毕{index}");
         }
         private void SaveFile(string fname,byte[] zdata)
         {
@@ -209,35 +210,40 @@ namespace Aida64_Esp8266_DisplayControler
             for (int i = 0; i < threadcount; i++)
             {
                 imgpack.Files = spitList[i];
-                imgpack.Index = i;
                 imgpack.Zdata.Add(null);
                 if (ThreadPool.QueueUserWorkItem(new WaitCallback(PackImage), imgpack))
                 {
                     Sync.Send(main.SetLogbox,"添加线程成功");
                 }
             }
-            ThreadPool.GetAvailableThreads(out int AvailableWorker, out int AvailablePort);
-            if (AvailablePort == 0)
+            ThreadPool.GetAvailableThreads(out int availableWorker, out int PortThreads);
+            ThreadPool.GetMinThreads(out int maxWorker, out PortThreads);
+            Task saveTask = new Task(() =>
             {
-                if (AvailableWorker == 0)
+                while (true)
                 {
-                    string fname;
-                    SaveFileDialog sd = new SaveFileDialog
+                    if (maxWorker - availableWorker == 0)
                     {
-                        Filter = "PackFile(*.dat)|*.dat",
-                        Title = "请输入保存文件名"
-                    };
-                    if (sd.ShowDialog(this) == DialogResult.OK)
-                    {
-                        fname = sd.FileName;
+                        string fname;
+                        SaveFileDialog sd = new SaveFileDialog
+                        {
+                            Filter = "PackFile(*.dat)|*.dat",
+                            Title = "请输入保存文件名"
+                        };
+                        if (sd.ShowDialog(this) == DialogResult.OK)
+                        {
+                            fname = sd.FileName;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                        SaveFile(fname, ConvertDoubleArrayToBytes(imgpack.Zdata));
+                        break;
                     }
-                    else
-                    {
-                        return;
-                    }
-                    SaveFile(fname, ConvertDoubleArrayToBytes(imgpack.Zdata));
                 }
-            }
+            });
+            saveTask.Start();
         }
     }
 }
