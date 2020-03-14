@@ -58,8 +58,13 @@
             this.cpuClk = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.bmpPanel = new System.Windows.Forms.GroupBox();
+            this.lblPlay = new System.Windows.Forms.Label();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnStartPause = new System.Windows.Forms.Button();
+            this.tbarPlay = new System.Windows.Forms.TrackBar();
             this.dataBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.nbxFPS = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.nbxHeight = new System.Windows.Forms.NumericUpDown();
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
@@ -76,7 +81,6 @@
             this.volBox = new System.Windows.Forms.GroupBox();
             this.gpuVol = new System.Windows.Forms.CheckBox();
             this.cpuVol = new System.Windows.Forms.CheckBox();
-            this.nbxFPS = new System.Windows.Forms.NumericUpDown();
             this.displayTime = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -88,25 +92,21 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tbarPlay = new System.Windows.Forms.TrackBar();
-            this.btnStartPause = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.lblPlay = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
             this.clkBox.SuspendLayout();
             this.bmpPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbarPlay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxFPS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nbxFPS)).BeginInit();
             this.panel2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbarPlay)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -132,7 +132,7 @@
             // 制作动画包ToolStripMenuItem
             // 
             this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.制作动画包ToolStripMenuItem.Text = "制作动画包";
             this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
             // 
@@ -149,21 +149,21 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
             // 开机启动ToolStripMenuItem
             // 
             this.开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
-            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.开机启动ToolStripMenuItem.Text = "开机启动";
             this.开机启动ToolStripMenuItem.Click += new System.EventHandler(this.开机启动ToolStripMenuItem_Click);
             // 
             // 创建桌面快捷方式ToolStripMenuItem
             // 
             this.创建桌面快捷方式ToolStripMenuItem.Name = "创建桌面快捷方式ToolStripMenuItem";
-            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
             this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
             // 
@@ -179,14 +179,14 @@
             // 开源地址ToolStripMenuItem
             // 
             this.开源地址ToolStripMenuItem.Name = "开源地址ToolStripMenuItem";
-            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.开源地址ToolStripMenuItem.Text = "开源地址";
             this.开源地址ToolStripMenuItem.Click += new System.EventHandler(this.开源地址ToolStripMenuItem_Click);
             // 
             // 版本号Aplha001ToolStripMenuItem
             // 
             this.版本号Aplha001ToolStripMenuItem.Name = "版本号Aplha001ToolStripMenuItem";
-            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.版本号Aplha001ToolStripMenuItem.Text = "版本号:Aplha 0.01";
             // 
             // tmpBox
@@ -264,7 +264,7 @@
             this.utiBox.Controls.Add(this.cpuUTI);
             this.utiBox.Location = new System.Drawing.Point(332, 145);
             this.utiBox.Name = "utiBox";
-            this.utiBox.Size = new System.Drawing.Size(157, 77);
+            this.utiBox.Size = new System.Drawing.Size(157, 68);
             this.utiBox.TabIndex = 5;
             this.utiBox.TabStop = false;
             this.utiBox.Text = "使用率";
@@ -337,9 +337,9 @@
             // 
             this.clkBox.Controls.Add(this.gpuClk);
             this.clkBox.Controls.Add(this.cpuClk);
-            this.clkBox.Location = new System.Drawing.Point(332, 228);
+            this.clkBox.Location = new System.Drawing.Point(332, 219);
             this.clkBox.Name = "clkBox";
-            this.clkBox.Size = new System.Drawing.Size(157, 57);
+            this.clkBox.Size = new System.Drawing.Size(157, 49);
             this.clkBox.TabIndex = 10;
             this.clkBox.TabStop = false;
             this.clkBox.Text = "频率";
@@ -369,7 +369,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(139, 198);
+            this.label1.Location = new System.Drawing.Point(76, 251);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 12);
             this.label1.TabIndex = 12;
@@ -389,12 +389,51 @@
             this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.label1);
             this.bmpPanel.Controls.Add(this.pictureBox);
-            this.bmpPanel.Location = new System.Drawing.Point(496, 121);
+            this.bmpPanel.Location = new System.Drawing.Point(496, 68);
             this.bmpPanel.Name = "bmpPanel";
-            this.bmpPanel.Size = new System.Drawing.Size(196, 256);
+            this.bmpPanel.Size = new System.Drawing.Size(196, 309);
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
+            // 
+            // lblPlay
+            // 
+            this.lblPlay.AutoSize = true;
+            this.lblPlay.Location = new System.Drawing.Point(76, 112);
+            this.lblPlay.Name = "lblPlay";
+            this.lblPlay.Size = new System.Drawing.Size(23, 12);
+            this.lblPlay.TabIndex = 31;
+            this.lblPlay.Text = "0/0";
+            // 
+            // btnStop
+            // 
+            this.btnStop.Location = new System.Drawing.Point(48, 172);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(24, 24);
+            this.btnStop.TabIndex = 30;
+            this.btnStop.Text = "■";
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // btnStartPause
+            // 
+            this.btnStartPause.Location = new System.Drawing.Point(116, 175);
+            this.btnStartPause.Name = "btnStartPause";
+            this.btnStartPause.Size = new System.Drawing.Size(24, 24);
+            this.btnStartPause.TabIndex = 29;
+            this.btnStartPause.Text = "▶";
+            this.btnStartPause.UseVisualStyleBackColor = true;
+            this.btnStartPause.Click += new System.EventHandler(this.btnStartPause_Click);
+            // 
+            // tbarPlay
+            // 
+            this.tbarPlay.LargeChange = 1;
+            this.tbarPlay.Location = new System.Drawing.Point(4, 128);
+            this.tbarPlay.Name = "tbarPlay";
+            this.tbarPlay.Size = new System.Drawing.Size(188, 45);
+            this.tbarPlay.TabIndex = 28;
+            this.tbarPlay.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.tbarPlay.Scroll += new System.EventHandler(this.tbarPlay_Scroll);
             // 
             // dataBox
             // 
@@ -410,16 +449,33 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(68, 198);
+            this.label5.Location = new System.Drawing.Point(111, 205);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 25;
             this.label5.Text = "高度";
             // 
+            // nbxFPS
+            // 
+            this.nbxFPS.Location = new System.Drawing.Point(78, 266);
+            this.nbxFPS.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.nbxFPS.Name = "nbxFPS";
+            this.nbxFPS.Size = new System.Drawing.Size(53, 21);
+            this.nbxFPS.TabIndex = 19;
+            this.nbxFPS.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(0, 198);
+            this.label4.Location = new System.Drawing.Point(43, 205);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 24;
@@ -427,7 +483,7 @@
             // 
             // nbxHeight
             // 
-            this.nbxHeight.Location = new System.Drawing.Point(70, 213);
+            this.nbxHeight.Location = new System.Drawing.Point(113, 220);
             this.nbxHeight.Maximum = new decimal(new int[] {
             255,
             0,
@@ -444,7 +500,7 @@
             // 
             // nbxWidth
             // 
-            this.nbxWidth.Location = new System.Drawing.Point(2, 213);
+            this.nbxWidth.Location = new System.Drawing.Point(45, 220);
             this.nbxWidth.Maximum = new decimal(new int[] {
             255,
             0,
@@ -470,7 +526,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 41);
+            this.label3.Location = new System.Drawing.Point(19, 40);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 15;
@@ -484,16 +540,16 @@
             this.panel1.Controls.Add(this.btnReboot);
             this.panel1.Controls.Add(this.btnLed);
             this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(14, 68);
+            this.panel1.Location = new System.Drawing.Point(14, 112);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(312, 309);
+            this.panel1.Size = new System.Drawing.Size(312, 265);
             this.panel1.TabIndex = 16;
             // 
             // lbxClient
             // 
             this.lbxClient.FormattingEnabled = true;
             this.lbxClient.ItemHeight = 12;
-            this.lbxClient.Location = new System.Drawing.Point(12, 56);
+            this.lbxClient.Location = new System.Drawing.Point(21, 63);
             this.lbxClient.Name = "lbxClient";
             this.lbxClient.Size = new System.Drawing.Size(265, 148);
             this.lbxClient.TabIndex = 4;
@@ -501,7 +557,7 @@
             // cbSendAll
             // 
             this.cbSendAll.AutoSize = true;
-            this.cbSendAll.Location = new System.Drawing.Point(12, 20);
+            this.cbSendAll.Location = new System.Drawing.Point(21, 19);
             this.cbSendAll.Name = "cbSendAll";
             this.cbSendAll.Size = new System.Drawing.Size(120, 16);
             this.cbSendAll.TabIndex = 3;
@@ -510,7 +566,7 @@
             // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(213, 254);
+            this.btnReboot.Location = new System.Drawing.Point(222, 217);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -520,7 +576,7 @@
             // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(12, 254);
+            this.btnLed.Location = new System.Drawing.Point(21, 217);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -532,9 +588,9 @@
             // 
             this.rpmBox.Controls.Add(this.gpuRpm);
             this.rpmBox.Controls.Add(this.cpuRpm);
-            this.rpmBox.Location = new System.Drawing.Point(333, 291);
+            this.rpmBox.Location = new System.Drawing.Point(334, 274);
             this.rpmBox.Name = "rpmBox";
-            this.rpmBox.Size = new System.Drawing.Size(156, 86);
+            this.rpmBox.Size = new System.Drawing.Size(156, 50);
             this.rpmBox.TabIndex = 17;
             this.rpmBox.TabStop = false;
             this.rpmBox.Text = "风扇转速";
@@ -565,9 +621,9 @@
             // 
             this.volBox.Controls.Add(this.gpuVol);
             this.volBox.Controls.Add(this.cpuVol);
-            this.volBox.Location = new System.Drawing.Point(496, 68);
+            this.volBox.Location = new System.Drawing.Point(333, 330);
             this.volBox.Name = "volBox";
-            this.volBox.Size = new System.Drawing.Size(196, 47);
+            this.volBox.Size = new System.Drawing.Size(159, 47);
             this.volBox.TabIndex = 18;
             this.volBox.TabStop = false;
             this.volBox.Text = "电压功耗";
@@ -575,7 +631,7 @@
             // gpuVol
             // 
             this.gpuVol.AutoSize = true;
-            this.gpuVol.Location = new System.Drawing.Point(111, 20);
+            this.gpuVol.Location = new System.Drawing.Point(81, 20);
             this.gpuVol.Name = "gpuVol";
             this.gpuVol.Size = new System.Drawing.Size(42, 16);
             this.gpuVol.TabIndex = 1;
@@ -594,23 +650,6 @@
             this.cpuVol.UseVisualStyleBackColor = true;
             this.cpuVol.CheckedChanged += new System.EventHandler(this.CpuVol_CheckedChanged);
             // 
-            // nbxFPS
-            // 
-            this.nbxFPS.Location = new System.Drawing.Point(141, 213);
-            this.nbxFPS.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.nbxFPS.Name = "nbxFPS";
-            this.nbxFPS.Size = new System.Drawing.Size(53, 21);
-            this.nbxFPS.TabIndex = 19;
-            this.nbxFPS.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            // 
             // displayTime
             // 
             this.displayTime.AutoSize = true;
@@ -628,15 +667,15 @@
             this.panel2.Controls.Add(this.label7);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(57, 397);
+            this.panel2.Location = new System.Drawing.Point(14, 28);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(581, 34);
+            this.panel2.Size = new System.Drawing.Size(312, 76);
             this.panel2.TabIndex = 21;
             // 
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(373, 10);
+            this.linkLabel2.Location = new System.Drawing.Point(108, 40);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(179, 12);
             this.linkLabel2.TabIndex = 4;
@@ -646,7 +685,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(123, 10);
+            this.linkLabel1.Location = new System.Drawing.Point(132, 22);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(155, 12);
             this.linkLabel1.TabIndex = 3;
@@ -656,7 +695,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(308, 10);
+            this.label7.Location = new System.Drawing.Point(20, 40);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(59, 12);
             this.label7.TabIndex = 2;
@@ -665,7 +704,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(58, 10);
+            this.label6.Location = new System.Drawing.Point(20, 22);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(41, 12);
             this.label6.TabIndex = 1;
@@ -674,7 +713,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 10);
+            this.label2.Location = new System.Drawing.Point(20, 5);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 0;
@@ -709,50 +748,11 @@
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
-            // tbarPlay
-            // 
-            this.tbarPlay.LargeChange = 1;
-            this.tbarPlay.Location = new System.Drawing.Point(4, 128);
-            this.tbarPlay.Name = "tbarPlay";
-            this.tbarPlay.Size = new System.Drawing.Size(188, 45);
-            this.tbarPlay.TabIndex = 28;
-            this.tbarPlay.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.tbarPlay.Scroll += new System.EventHandler(this.tbarPlay_Scroll);
-            // 
-            // btnStartPause
-            // 
-            this.btnStartPause.Location = new System.Drawing.Point(95, 171);
-            this.btnStartPause.Name = "btnStartPause";
-            this.btnStartPause.Size = new System.Drawing.Size(24, 24);
-            this.btnStartPause.TabIndex = 29;
-            this.btnStartPause.Text = "▶";
-            this.btnStartPause.UseVisualStyleBackColor = true;
-            this.btnStartPause.Click += new System.EventHandler(this.btnStartPause_Click);
-            // 
-            // btnStop
-            // 
-            this.btnStop.Location = new System.Drawing.Point(65, 171);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(24, 24);
-            this.btnStop.TabIndex = 30;
-            this.btnStop.Text = "■";
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            // 
-            // lblPlay
-            // 
-            this.lblPlay.AutoSize = true;
-            this.lblPlay.Location = new System.Drawing.Point(76, 112);
-            this.lblPlay.Name = "lblPlay";
-            this.lblPlay.Size = new System.Drawing.Size(23, 12);
-            this.lblPlay.TabIndex = 31;
-            this.lblPlay.Text = "0/0";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(701, 454);
+            this.ClientSize = new System.Drawing.Size(701, 387);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.volBox);
             this.Controls.Add(this.rpmBox);
@@ -783,6 +783,8 @@
             this.clkBox.PerformLayout();
             this.bmpPanel.ResumeLayout(false);
             this.bmpPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbarPlay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nbxFPS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
@@ -792,11 +794,9 @@
             this.rpmBox.PerformLayout();
             this.volBox.ResumeLayout(false);
             this.volBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nbxFPS)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tbarPlay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
