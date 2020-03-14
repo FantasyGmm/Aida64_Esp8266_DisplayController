@@ -47,7 +47,6 @@ namespace Aida64_Esp8266_DisplayControler
         {
             InitializeComponent();
         }
-        private ResourceManager rm = new ResourceManager("Resources", Assembly.GetExecutingAssembly());
         MemoryMappedFile mapFile;
         MemoryMappedViewAccessor Accessor;
         private CancellationToken token;
