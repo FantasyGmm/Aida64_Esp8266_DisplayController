@@ -390,9 +390,9 @@
             this.bmpPanel.Controls.Add(this.nbxHeight);
             this.bmpPanel.Controls.Add(this.nbxWidth);
             this.bmpPanel.Controls.Add(this.pictureBox);
-            this.bmpPanel.Location = new System.Drawing.Point(496, 131);
+            this.bmpPanel.Location = new System.Drawing.Point(496, 121);
             this.bmpPanel.Name = "bmpPanel";
-            this.bmpPanel.Size = new System.Drawing.Size(196, 154);
+            this.bmpPanel.Size = new System.Drawing.Size(196, 180);
             this.bmpPanel.TabIndex = 13;
             this.bmpPanel.TabStop = false;
             this.bmpPanel.Text = "动画";
@@ -411,7 +411,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(109, 112);
+            this.label5.Location = new System.Drawing.Point(109, 131);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 12);
             this.label5.TabIndex = 25;
@@ -420,7 +420,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 112);
+            this.label4.Location = new System.Drawing.Point(11, 131);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 24;
@@ -428,7 +428,7 @@
             // 
             // nbxHeight
             // 
-            this.nbxHeight.Location = new System.Drawing.Point(111, 127);
+            this.nbxHeight.Location = new System.Drawing.Point(111, 146);
             this.nbxHeight.Maximum = new decimal(new int[] {
             255,
             0,
@@ -445,7 +445,7 @@
             // 
             // nbxWidth
             // 
-            this.nbxWidth.Location = new System.Drawing.Point(13, 127);
+            this.nbxWidth.Location = new System.Drawing.Point(13, 146);
             this.nbxWidth.Maximum = new decimal(new int[] {
             255,
             0,
@@ -576,7 +576,7 @@
             // 
             this.volBox.Controls.Add(this.gpuVol);
             this.volBox.Controls.Add(this.cpuVol);
-            this.volBox.Location = new System.Drawing.Point(496, 75);
+            this.volBox.Location = new System.Drawing.Point(496, 68);
             this.volBox.Name = "volBox";
             this.volBox.Size = new System.Drawing.Size(196, 47);
             this.volBox.TabIndex = 18;
