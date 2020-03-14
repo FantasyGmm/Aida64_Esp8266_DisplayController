@@ -64,6 +64,8 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> clientList = new List<string>();
         public int packIndex = -1;
         public List<string> packList = new List<string>();
+        public int playPostion = 0; //播放进度
+
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
@@ -221,6 +223,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         public void SetLogbox(object o)
         {
+            /*
             try
             {
                 logBox.AppendText(o as string + Environment.NewLine);
@@ -229,7 +232,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 return;
             }
-            
+            */
         }
         public void SetButtonText(object o)
         {
@@ -253,6 +256,27 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
+
+
+
+
+        private void setPlayInit(object o)
+        {
+            tbarPlay.Maximum = (int)o;
+            btnStartPause.Text = "‖";
+        }
+
+
+
+        private void setPlayStatus(object o)
+        {
+            var ia = (int[])o;
+            lblPlay.Text = $"{ia[0]}/{ia[1]}";
+            tbarPlay.Value = ia[0];
+
+        }
+
+
         public void AddClientBox(object o)
         {
             lbxClient.Items.Add(o as string);
@@ -379,7 +403,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            logBox.ResetText();
+            //logBox.ResetText();
         }
 
         private byte[] ConvertXBM(string input)
@@ -420,7 +444,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void ProcPack(string file, int width, int height)
         {
-            Pack_Start:
+            //Pack_Start:
 
             using (FileStream fs = new FileStream(file, FileMode.Open))
             {
@@ -433,7 +457,11 @@ namespace Aida64_Esp8266_DisplayControler
                 ms.Seek(0, SeekOrigin.Begin);
                 var formatter = new BinaryFormatter();
                 PackData pack = (PackData)formatter.Deserialize(ms);
-                foreach (var m in pack.img)
+                Sync.Send(setPlayInit, pack.img.Count);
+
+                var imgList = pack.img.ToArray();
+
+                for(playPostion = 0; playPostion < imgList.Length; playPostion++)
                 {
                     resetBmp.WaitOne();
 
@@ -442,21 +470,25 @@ namespace Aida64_Esp8266_DisplayControler
                         if (packList[packIndex] != Path.GetFileName(file))
                         {
                             file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
-                            goto Pack_Start;
+                            //goto Pack_Start;
+                            return;
                         }
-                            
+
                     }
-                    var buf = ConvertXBM(Encoding.Default.GetString(m.ToArray()));
+                    var buf = ConvertXBM(Encoding.Default.GetString(imgList[playPostion].ToArray()));
                     UdpSendXBM(buf, width, height);
-                    MagickImage img = new MagickImage(m.ToArray()) { Format = MagickFormat.Xbm };
+                    MagickImage img = new MagickImage(imgList[playPostion].ToArray()) { Format = MagickFormat.Xbm };
                     img.Format = MagickFormat.Bmp;
                     buf = img.ToByteArray();
                     ms = new MemoryStream();
                     ms.Write(buf, 0, buf.Length);
                     pictureBox.Image = Image.FromStream(ms);
-                    Thread.Sleep((int)timerInterval.Value);
+                    Sync.Send(setPlayStatus, new int[] { playPostion, pack.img.Count });
+                    playPostion++;
+                    Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
                 }
 
+  
             }
         }
         private void BtnLed_Click(object sender, EventArgs e)
@@ -710,36 +742,56 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        private void BtnSendGif_Click(object sender, EventArgs e)
+        private void tbarPlay_Scroll(object sender, EventArgs e)
         {
-            if (btnSendGif.Text == "停止发送动画")
+            var bar = sender as TrackBar;
+            playPostion = bar.Value;
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            resetBmp.Reset();
+            btnStartPause.Text = "▶";
+            playPostion = 0;
+            setPlayStatus(new int[] { 0, 0 });
+            tbarPlay.Value = 0;
+        }
+
+        private void btnStartPause_Click(object sender, EventArgs e)
+        {
+
+            if (btnStartPause.Text == "‖")
             {
                 resetBmp.Reset();
-                btnSendGif.Text = "发送动画";
+                btnStartPause.Text = "▶";
                 return;
             }
             else
             {
+
                 if (dataBox.SelectedIndex < 0)
                 {
                     MessageBox.Show("请选择动画文件!");
                     return;
                 }
+
                 string packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
+
                 if (!System.IO.File.Exists(packfile))
                 {
                     MessageBox.Show("动画文件不存在!");
                     return;
                 }
 
-                btnSendGif.Text = "停止发送动画";
+                btnStartPause.Text = "‖";
+
                 if (sendBmpTask == null)
                 {
                     sendBmpTask = new Task(() =>
                     {
                         while (!token.IsCancellationRequested)
                         {
-                            
+
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
                             ProcPack(packfile, width, height);
@@ -752,7 +804,12 @@ namespace Aida64_Esp8266_DisplayControler
                     resetBmp.Set();
                 }
             }
+
+   
+
         }
+
+      
         private void BtnSendData_Click(object sender, EventArgs e)
         {
             if (btnSendData.Text == "停止发送数据")
@@ -809,7 +866,7 @@ namespace Aida64_Esp8266_DisplayControler
                             }
                             byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, Encoding.UTF8.GetBytes(jsobj.ToString()));
                             Udp.Send(pack, pack.Length, addr);
-                            Thread.Sleep((int)timerInterval.Value);
+                            Thread.Sleep((int)nbxFPS.Value);
                         }
                     }, token);
                     sendInfoTask.Start();

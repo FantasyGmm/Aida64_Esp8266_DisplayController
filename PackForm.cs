@@ -56,7 +56,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void SetLog(object o)
         {
             var str = o as string;
-            tbxlog.AppendText(str + "\r\n");
+            //tbxlog.AppendText(str + "\r\n");
         }
 
         private void BtnBrowser_Click(object sender, EventArgs e)

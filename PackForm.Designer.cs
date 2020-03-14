@@ -39,7 +39,6 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.btnBrowser = new System.Windows.Forms.Button();
             this.tbxPath = new System.Windows.Forms.TextBox();
-            this.tbxlog = new System.Windows.Forms.TextBox();
             this.pnMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbxThread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
@@ -175,22 +174,11 @@
             this.tbxPath.Size = new System.Drawing.Size(296, 21);
             this.tbxPath.TabIndex = 0;
             // 
-            // tbxlog
-            // 
-            this.tbxlog.Location = new System.Drawing.Point(12, 233);
-            this.tbxlog.Multiline = true;
-            this.tbxlog.Name = "tbxlog";
-            this.tbxlog.ReadOnly = true;
-            this.tbxlog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbxlog.Size = new System.Drawing.Size(396, 147);
-            this.tbxlog.TabIndex = 1;
-            // 
             // PackForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(417, 392);
-            this.Controls.Add(this.tbxlog);
+            this.ClientSize = new System.Drawing.Size(417, 240);
             this.Controls.Add(this.pnMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -208,7 +196,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -225,6 +212,5 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.NumericUpDown tbxThread;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox tbxlog;
     }
 }
