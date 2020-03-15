@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -17,6 +13,7 @@ namespace Aida64_Esp8266_DisplayControler
         const byte PACKET_ALIVE = 0X0;
         const byte PACKET_OK = 0X1;
         const byte PACKET_FAIL = 0X2;
+        const byte PACKET_UPDATE = 0x3;
         const byte PACKET_DEBUG = 0X4;
         const byte PACKET_DISPLAY_IMG = 0XF;
         const byte PACKET_DISPLAY_INFO = 0X10;
@@ -24,7 +21,6 @@ namespace Aida64_Esp8266_DisplayControler
         const byte PACKET_TOGGLE_LED = 0X12;
         const byte PACKET_TOGGLE_DISPLAY = 0X13;
         const byte PACKET_REBOOT = 0X14;
-
 
         //UI
         const UInt32 UI_TEMP_CPU = 0X1;

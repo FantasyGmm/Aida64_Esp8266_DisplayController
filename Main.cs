@@ -17,7 +17,6 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
-using System.Resources;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -260,7 +259,7 @@ namespace Aida64_Esp8266_DisplayControler
 
 
 
-        private void setPlayInit(object o)
+        private void SetPlayInit(object o)
         {
             tbarPlay.Maximum = (int)o;
             btnStartPause.Text = "‖";
@@ -268,7 +267,7 @@ namespace Aida64_Esp8266_DisplayControler
 
 
 
-        private void setPlayStatus(object o)
+        private void SetPlayStatus(object o)
         {
             var ia = (int[])o;
             lblPlay.Text = $"{ia[0]}/{ia[1]}";
@@ -457,7 +456,7 @@ namespace Aida64_Esp8266_DisplayControler
                 ms.Seek(0, SeekOrigin.Begin);
                 var formatter = new BinaryFormatter();
                 PackData pack = (PackData)formatter.Deserialize(ms);
-                Sync.Send(setPlayInit, pack.img.Count);
+                Sync.Send(SetPlayInit, pack.img.Count);
 
                 var imgList = pack.img.ToArray();
 
@@ -483,7 +482,7 @@ namespace Aida64_Esp8266_DisplayControler
                     ms = new MemoryStream();
                     ms.Write(buf, 0, buf.Length);
                     pictureBox.Image = Image.FromStream(ms);
-                    Sync.Send(setPlayStatus, new int[] { playPostion, pack.img.Count });
+                    Sync.Send(SetPlayStatus, new int[] { playPostion, pack.img.Count });
                     playPostion++;
                     Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
                 }
@@ -742,22 +741,28 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        private void tbarPlay_Scroll(object sender, EventArgs e)
+        private void TbarPlay_Scroll(object sender, EventArgs e)
         {
             var bar = sender as TrackBar;
             playPostion = bar.Value;
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
+        private void BtnStop_Click(object sender, EventArgs e)
         {
             resetBmp.Reset();
             btnStartPause.Text = "▶";
             playPostion = 0;
-            setPlayStatus(new int[] { 0, 0 });
+            SetPlayStatus(new int[] { 0, 0 });
             tbarPlay.Value = 0;
         }
 
-        private void btnStartPause_Click(object sender, EventArgs e)
+        private void OTA升级ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OTAUpdate ota = new OTAUpdate();
+            ota.ShowDialog(this);
+        }
+
+        private void BtnStartPause_Click(object sender, EventArgs e)
         {
 
             if (btnStartPause.Text == "‖")

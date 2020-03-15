@@ -40,8 +40,6 @@ namespace Aida64_Esp8266_DisplayControler
             var dic = (int[])o;
 
             threadPercent[dic[0]] = dic[1];
-
-
             var total = 0;
 
             foreach (var d in threadPercent)
@@ -52,13 +50,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             pbar.Value = total / threadCount;
         }
-
-        private void SetLog(object o)
-        {
-            var str = o as string;
-            //tbxlog.AppendText(str + "\r\n");
-        }
-
         private void BtnBrowser_Click(object sender, EventArgs e)
         {
 
@@ -150,7 +141,6 @@ namespace Aida64_Esp8266_DisplayControler
                 taskArr[i] = t;
             }
             await Task.WhenAll(taskArr);
-            Sync.Send(SetLog, "转换完成,正在打包...");
             pbar.Value = 99;
             Main.PackData pack = new Main.PackData();
             List<MemoryStream> ls = new List<MemoryStream>();
