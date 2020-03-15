@@ -773,23 +773,18 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
-
                 if (dataBox.SelectedIndex < 0)
                 {
                     MessageBox.Show("请选择动画文件!");
                     return;
                 }
-
                 string packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
-
                 if (!System.IO.File.Exists(packfile))
                 {
                     MessageBox.Show("动画文件不存在!");
                     return;
                 }
-
                 btnStartPause.Text = "‖";
-
                 if (sendBmpTask == null)
                 {
                     sendBmpTask = new Task(() =>
@@ -809,12 +804,8 @@ namespace Aida64_Esp8266_DisplayControler
                     resetBmp.Set();
                 }
             }
-
-   
-
         }
 
-      
         private void BtnSendData_Click(object sender, EventArgs e)
         {
             if (btnSendData.Text == "停止发送数据")
