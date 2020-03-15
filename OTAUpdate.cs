@@ -48,6 +48,7 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         reset.WaitOne();
                         HttpListenerContext hlc = httpListener.GetContext();
+                        HttpListenerRequest hlrequst = hlc.Request;
                         hlc.Response.StatusCode = 200;
                         using (StreamWriter sw = new StreamWriter(hlc.Response.OutputStream))
                         {
@@ -65,8 +66,13 @@ namespace Aida64_Esp8266_DisplayControler
                                 throw;
                             }
                         }
-                        hlc.Response.Abort();
-                        reset.Reset();
+                        string input = new StreamReader(hlrequst.InputStream).ReadToEnd();
+                        if (input == "end")
+                        {
+                            hlc.Response.Abort();
+                            httpListener.Close();
+                            reset.Reset();
+                        }
                     }
                 });
                 httpServer.Start();
