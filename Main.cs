@@ -64,6 +64,7 @@ namespace Aida64_Esp8266_DisplayControler
         public int packIndex = -1;
         public List<string> packList = new List<string>();
         public int playPostion = 0; //播放进度
+        public Process httpProcess; //http服务器
 
         public void GetAidaInfo()
         {
@@ -331,7 +332,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data", "*.dat");
             dataBox.Items.Clear();
-            lock(packList)
+            lock (packList)
             {
                 packList.Clear();
                 foreach (var f in files)
@@ -355,6 +356,25 @@ namespace Aida64_Esp8266_DisplayControler
                 return false;
             }
         }
+
+
+        public void doUpdate(string filename)
+        {
+
+            if (httpProcess != null && !httpProcess.HasExited)
+                httpProcess.Kill();
+
+            httpProcess = new Process();
+            httpProcess.StartInfo.FileName = "python.exe";
+            httpProcess.StartInfo.Arguments = "httpserver.py " + filename;
+            httpProcess.StartInfo.UseShellExecute = false;
+            httpProcess.StartInfo.RedirectStandardOutput = true;
+            httpProcess.StartInfo.RedirectStandardInput = true;
+            httpProcess.StartInfo.RedirectStandardError = true;
+            httpProcess.StartInfo.CreateNoWindow = true;
+            httpProcess.Start();
+        }
+
         private void Main_Load(object sender, EventArgs e)
         {
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
@@ -375,15 +395,35 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 while (true)
                 {
-                    byte[] pack = Udp.Receive(ref remoteAddr);
+                    byte[] packet = Udp.Receive(ref remoteAddr);
 
-                    if (pack.Length > 2)
+                    if (packet.Length > 2)
                     {
-                        var p = ParsePacket(pack);
+                        var p = ParsePacket(packet);
                         switch (p.cmd)
                         {
                             case PACKET_ALIVE:
                                 AddClient(remoteAddr);
+
+                                if (System.IO.File.Exists(binPath.Text))
+                                {
+
+                                    using (FileStream fs = new FileStream(binPath.Text, FileMode.Open))
+                                    {
+                                        var espmd5 = Encoding.Default.GetString(p.data).ToUpper();
+                                        var binmd5 = MD5Helper.CalcMD5(fs);
+
+                                        if (espmd5 != binmd5)
+                                        {
+                                            byte[] pack = BuildPacket(PACKET_UPDATE);
+                                            Udp.Send(pack, pack.Length, remoteAddr);
+                                            doUpdate(binPath.Text);
+                                        }
+                                    }
+
+                                }
+
+
                                 break;
                             case PACKET_GET_INFO:
                                 Sync.Send(SetLogbox, p.data);
@@ -394,6 +434,7 @@ namespace Aida64_Esp8266_DisplayControler
                             case PACKET_TOGGLE_DISPLAY:
                                 Sync.Send(SetButtonText, new string[] { "btnDisplay", p.data[0].ToString() });
                                 break;
+
                         }
                     }
                 }
@@ -423,7 +464,7 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void UdpSendXBM(byte[] data, int width, int height)
         {
-            using(MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 string[] s;
 
@@ -447,7 +488,7 @@ namespace Aida64_Esp8266_DisplayControler
 
             using (FileStream fs = new FileStream(file, FileMode.Open))
             {
-                
+
                 MemoryStream ms = new MemoryStream();
                 fs.CopyTo(ms);
                 var data = GZipStream.UncompressBuffer(ms.ToArray());
@@ -460,7 +501,7 @@ namespace Aida64_Esp8266_DisplayControler
 
                 var imgList = pack.img.ToArray();
 
-                for(playPostion = 0; playPostion < imgList.Length; playPostion++)
+                for (playPostion = 0; playPostion < imgList.Length; playPostion++)
                 {
                     resetBmp.WaitOne();
 
@@ -487,7 +528,7 @@ namespace Aida64_Esp8266_DisplayControler
                     Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
                 }
 
-  
+
             }
         }
         private void BtnLed_Click(object sender, EventArgs e)
@@ -676,7 +717,7 @@ namespace Aida64_Esp8266_DisplayControler
             try
             {
 
-                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName,iconLocation: Process.GetCurrentProcess().MainModule.FileName);
+                CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "Aida64_DisplayControler", Process.GetCurrentProcess().MainModule.FileName, iconLocation: Process.GetCurrentProcess().MainModule.FileName);
             }
             catch (Exception)
             {
@@ -756,10 +797,26 @@ namespace Aida64_Esp8266_DisplayControler
             tbarPlay.Value = 0;
         }
 
-        private void OTA升级ToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void selBin_Click(object sender, EventArgs e)
         {
-            OTAUpdate ota = new OTAUpdate();
-            ota.ShowDialog(this);
+            OpenFileDialog fd = new OpenFileDialog
+            {
+                Filter = "固件文件(*.bin)|*.bin"
+            };
+            fd.ShowDialog();
+            binPath.Text = fd.FileName;
+        }
+
+        private void startUpdate_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (!httpProcess.HasExited)
+                httpProcess.Kill();
         }
 
         private void BtnStartPause_Click(object sender, EventArgs e)

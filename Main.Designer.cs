@@ -71,6 +71,10 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.binPath = new System.Windows.Forms.TextBox();
+            this.selBin = new System.Windows.Forms.Button();
             this.lbxClient = new System.Windows.Forms.ListBox();
             this.cbSendAll = new System.Windows.Forms.CheckBox();
             this.btnReboot = new System.Windows.Forms.Button();
@@ -92,7 +96,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.oTA升级ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -104,6 +107,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -125,8 +129,7 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.制作动画包ToolStripMenuItem,
-            this.oTA升级ToolStripMenuItem});
+            this.制作动画包ToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 21);
             this.toolStripMenuItem1.Text = "文件";
@@ -134,7 +137,7 @@
             // 制作动画包ToolStripMenuItem
             // 
             this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.制作动画包ToolStripMenuItem.Text = "制作动画包";
             this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
             // 
@@ -151,21 +154,21 @@
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.清空日志ToolStripMenuItem.Text = "清空LogBox";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
             // 开机启动ToolStripMenuItem
             // 
             this.开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
-            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.开机启动ToolStripMenuItem.Text = "开机启动";
             this.开机启动ToolStripMenuItem.Click += new System.EventHandler(this.开机启动ToolStripMenuItem_Click);
             // 
             // 创建桌面快捷方式ToolStripMenuItem
             // 
             this.创建桌面快捷方式ToolStripMenuItem.Name = "创建桌面快捷方式ToolStripMenuItem";
-            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
             this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
             // 
@@ -537,6 +540,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.panel3);
             this.panel1.Controls.Add(this.lbxClient);
             this.panel1.Controls.Add(this.cbSendAll);
             this.panel1.Controls.Add(this.btnReboot);
@@ -547,13 +551,50 @@
             this.panel1.Size = new System.Drawing.Size(312, 265);
             this.panel1.TabIndex = 16;
             // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.label8);
+            this.panel3.Controls.Add(this.binPath);
+            this.panel3.Controls.Add(this.selBin);
+            this.panel3.Location = new System.Drawing.Point(3, 109);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(304, 102);
+            this.panel3.TabIndex = 16;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(-1, 11);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(101, 12);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "请选择固件路径：";
+            // 
+            // binPath
+            // 
+            this.binPath.Location = new System.Drawing.Point(3, 37);
+            this.binPath.Name = "binPath";
+            this.binPath.Size = new System.Drawing.Size(267, 21);
+            this.binPath.TabIndex = 5;
+            // 
+            // selBin
+            // 
+            this.selBin.Location = new System.Drawing.Point(276, 35);
+            this.selBin.Name = "selBin";
+            this.selBin.Size = new System.Drawing.Size(25, 23);
+            this.selBin.TabIndex = 4;
+            this.selBin.Text = "...";
+            this.selBin.UseVisualStyleBackColor = true;
+            this.selBin.Click += new System.EventHandler(this.selBin_Click);
+            // 
             // lbxClient
             // 
             this.lbxClient.FormattingEnabled = true;
             this.lbxClient.ItemHeight = 12;
             this.lbxClient.Location = new System.Drawing.Point(21, 63);
             this.lbxClient.Name = "lbxClient";
-            this.lbxClient.Size = new System.Drawing.Size(265, 148);
+            this.lbxClient.Size = new System.Drawing.Size(265, 40);
             this.lbxClient.TabIndex = 4;
             // 
             // cbSendAll
@@ -750,13 +791,6 @@
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
-            // oTA升级ToolStripMenuItem
-            // 
-            this.oTA升级ToolStripMenuItem.Name = "oTA升级ToolStripMenuItem";
-            this.oTA升级ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.oTA升级ToolStripMenuItem.Text = "OTA升级";
-            this.oTA升级ToolStripMenuItem.Click += new System.EventHandler(this.OTA升级ToolStripMenuItem_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -774,12 +808,14 @@
             this.Controls.Add(this.utiBox);
             this.Controls.Add(this.tmpBox);
             this.Controls.Add(this.menuStrip);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Aida64_DisplayControler";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);
             this.SizeChanged += new System.EventHandler(this.Main_SizeChanged);
             this.menuStrip.ResumeLayout(false);
@@ -799,6 +835,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.rpmBox.ResumeLayout(false);
             this.rpmBox.PerformLayout();
             this.volBox.ResumeLayout(false);
@@ -875,7 +913,10 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnStartPause;
         private System.Windows.Forms.Label lblPlay;
-        private System.Windows.Forms.ToolStripMenuItem oTA升级ToolStripMenuItem;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox binPath;
+        private System.Windows.Forms.Button selBin;
     }
 }
 
