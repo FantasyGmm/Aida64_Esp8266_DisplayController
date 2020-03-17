@@ -71,7 +71,6 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.binPath = new System.Windows.Forms.TextBox();
             this.selBin = new System.Windows.Forms.Button();
@@ -107,7 +106,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -540,7 +538,9 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.panel3);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.binPath);
+            this.panel1.Controls.Add(this.selBin);
             this.panel1.Controls.Add(this.lbxClient);
             this.panel1.Controls.Add(this.cbSendAll);
             this.panel1.Controls.Add(this.btnReboot);
@@ -548,24 +548,13 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Location = new System.Drawing.Point(14, 112);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(312, 265);
+            this.panel1.Size = new System.Drawing.Size(312, 263);
             this.panel1.TabIndex = 16;
-            // 
-            // panel3
-            // 
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.label8);
-            this.panel3.Controls.Add(this.binPath);
-            this.panel3.Controls.Add(this.selBin);
-            this.panel3.Location = new System.Drawing.Point(3, 109);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(304, 102);
-            this.panel3.TabIndex = 16;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(-1, 11);
+            this.label8.Location = new System.Drawing.Point(17, 108);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(101, 12);
             this.label8.TabIndex = 6;
@@ -573,14 +562,14 @@
             // 
             // binPath
             // 
-            this.binPath.Location = new System.Drawing.Point(3, 37);
+            this.binPath.Location = new System.Drawing.Point(21, 134);
             this.binPath.Name = "binPath";
-            this.binPath.Size = new System.Drawing.Size(267, 21);
+            this.binPath.Size = new System.Drawing.Size(234, 21);
             this.binPath.TabIndex = 5;
             // 
             // selBin
             // 
-            this.selBin.Location = new System.Drawing.Point(276, 35);
+            this.selBin.Location = new System.Drawing.Point(261, 132);
             this.selBin.Name = "selBin";
             this.selBin.Size = new System.Drawing.Size(25, 23);
             this.selBin.TabIndex = 4;
@@ -609,7 +598,7 @@
             // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(222, 217);
+            this.btnReboot.Location = new System.Drawing.Point(222, 173);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -619,7 +608,7 @@
             // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(21, 217);
+            this.btnLed.Location = new System.Drawing.Point(21, 173);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -835,8 +824,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.rpmBox.ResumeLayout(false);
             this.rpmBox.PerformLayout();
             this.volBox.ResumeLayout(false);
@@ -913,7 +900,6 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnStartPause;
         private System.Windows.Forms.Label lblPlay;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox binPath;
         private System.Windows.Forms.Button selBin;

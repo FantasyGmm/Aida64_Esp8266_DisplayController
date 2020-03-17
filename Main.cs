@@ -808,11 +808,6 @@ namespace Aida64_Esp8266_DisplayControler
             binPath.Text = fd.FileName;
         }
 
-        private void startUpdate_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (!httpProcess.HasExited)
