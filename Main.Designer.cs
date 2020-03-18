@@ -575,7 +575,7 @@
             this.selBin.TabIndex = 4;
             this.selBin.Text = "...";
             this.selBin.UseVisualStyleBackColor = true;
-            this.selBin.Click += new System.EventHandler(this.selBin_Click);
+            this.selBin.Click += new System.EventHandler(this.SelBin_Click);
             // 
             // lbxClient
             // 

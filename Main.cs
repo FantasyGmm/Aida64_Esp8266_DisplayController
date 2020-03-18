@@ -65,7 +65,7 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> packList = new List<string>();
         public int playPostion = 0; //播放进度
         public Process httpProcess; //http服务器
-
+        private string packfile;
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
@@ -358,7 +358,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-        public void doUpdate(string filename)
+        public void DoUpdate(string filename)
         {
 
             if (httpProcess != null && !httpProcess.HasExited)
@@ -417,7 +417,7 @@ namespace Aida64_Esp8266_DisplayControler
                                         {
                                             byte[] pack = BuildPacket(PACKET_UPDATE);
                                             Udp.Send(pack, pack.Length, remoteAddr);
-                                            doUpdate(binPath.Text);
+                                            DoUpdate(binPath.Text);
                                         }
                                     }
 
@@ -694,6 +694,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void DataBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             packIndex = (sender as ComboBox).SelectedIndex;
+            packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
         }
 
         private void 开源地址ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -798,7 +799,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-        private void selBin_Click(object sender, EventArgs e)
+        private void SelBin_Click(object sender, EventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog
             {
@@ -830,8 +831,8 @@ namespace Aida64_Esp8266_DisplayControler
                     MessageBox.Show("请选择动画文件!");
                     return;
                 }
-                string packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
-                if (!System.IO.File.Exists(packfile))
+                packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
+                if (!System.IO.File.Exists(Directory.GetCurrentDirectory() + "/data/" + dataBox.Text))
                 {
                     MessageBox.Show("动画文件不存在!");
                     return;
@@ -843,7 +844,6 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         while (!token.IsCancellationRequested)
                         {
-
                             var width = Convert.ToInt32(nbxWidth.Value);
                             var height = Convert.ToInt32(nbxHeight.Value);
                             ProcPack(packfile, width, height);
