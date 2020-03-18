@@ -96,7 +96,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
             catch (Exception ex)
             {
-                Sync.Send(SetLogbox, ex.Message);
+                throw;
             }
         }
         public void InsertInfo(IEnumerable<XElement> xel)
@@ -219,20 +219,6 @@ namespace Aida64_Esp8266_DisplayControler
             if ((selectedUI & UI_POWER_GPU) > 0)
                 selested.Add("VGPU1");
             selested.Add("PGPU1TDPP");
-
-        }
-        public void SetLogbox(object o)
-        {
-            /*
-            try
-            {
-                logBox.AppendText(o as string + Environment.NewLine);
-            }
-            catch
-            {
-                return;
-            }
-            */
         }
         public void SetButtonText(object o)
         {
@@ -422,11 +408,6 @@ namespace Aida64_Esp8266_DisplayControler
                                     }
 
                                 }
-
-
-                                break;
-                            case PACKET_GET_INFO:
-                                Sync.Send(SetLogbox, p.data);
                                 break;
                             case PACKET_TOGGLE_LED:
                                 Sync.Send(SetButtonText, new string[] { "btnLed", p.data[0].ToString() });
@@ -804,8 +785,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 Filter = "固件文件(*.bin)|*.bin"
             };
-            fd.ShowDialog();
-            binPath.Text = fd.FileName;
+            fd.ShowDialog(); binPath.Text = fd.FileName;
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -862,7 +842,6 @@ namespace Aida64_Esp8266_DisplayControler
             if (btnSendData.Text == "停止发送数据")
             {
                 resetInfo.Reset();
-                Sync.Send(SetLogbox, "已停止监测发送数据");
                 btnSendData.Text = "发送监测数据";
             }
             else

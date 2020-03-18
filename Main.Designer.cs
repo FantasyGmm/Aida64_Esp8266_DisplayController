@@ -34,7 +34,6 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.制作动画包ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.清空日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开机启动ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.创建桌面快捷方式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,31 +141,23 @@
             // 设置ToolStripMenuItem
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.清空日志ToolStripMenuItem,
             this.开机启动ToolStripMenuItem,
             this.创建桌面快捷方式ToolStripMenuItem});
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.设置ToolStripMenuItem.Text = "设置";
             // 
-            // 清空日志ToolStripMenuItem
-            // 
-            this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.清空日志ToolStripMenuItem.Text = "清空LogBox";
-            this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
-            // 
             // 开机启动ToolStripMenuItem
             // 
             this.开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
-            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.开机启动ToolStripMenuItem.Text = "开机启动";
             this.开机启动ToolStripMenuItem.Click += new System.EventHandler(this.开机启动ToolStripMenuItem_Click);
             // 
             // 创建桌面快捷方式ToolStripMenuItem
             // 
             this.创建桌面快捷方式ToolStripMenuItem.Name = "创建桌面快捷方式ToolStripMenuItem";
-            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
             this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
             // 
@@ -841,7 +832,6 @@
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem 设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
         private System.Windows.Forms.GroupBox tmpBox;
         private System.Windows.Forms.Button btnSendData;
         private System.Windows.Forms.CheckBox gpuTmp;
