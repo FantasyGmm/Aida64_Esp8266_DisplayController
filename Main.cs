@@ -798,7 +798,6 @@ namespace Aida64_Esp8266_DisplayControler
             tbarPlay.Value = 0;
         }
 
-
         private void SelBin_Click(object sender, EventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog
@@ -809,9 +808,9 @@ namespace Aida64_Esp8266_DisplayControler
             binPath.Text = fd.FileName;
         }
 
-        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!httpProcess.HasExited)
+            if (httpProcess != null && !httpProcess.HasExited)
                 httpProcess.Kill();
         }
 
