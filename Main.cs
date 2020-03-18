@@ -94,7 +94,7 @@ namespace Aida64_Esp8266_DisplayControler
                 IEnumerable<XElement> pwrEnumerator = xmldoc.Element("AIDA").Elements("pwr");
                 InsertInfo(pwrEnumerator);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -792,6 +792,11 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (httpProcess != null && !httpProcess.HasExited)
                 httpProcess.Kill();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void BtnStartPause_Click(object sender, EventArgs e)
