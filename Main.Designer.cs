@@ -69,12 +69,12 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.s = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.binPath = new System.Windows.Forms.TextBox();
             this.selBin = new System.Windows.Forms.Button();
             this.lbxClient = new System.Windows.Forms.ListBox();
-            this.cbSendAll = new System.Windows.Forms.CheckBox();
             this.btnReboot = new System.Windows.Forms.Button();
             this.btnLed = new System.Windows.Forms.Button();
             this.rpmBox = new System.Windows.Forms.GroupBox();
@@ -94,7 +94,9 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
+            this.serialBox = new System.Windows.Forms.ComboBox();
+            this.updateBar = new System.Windows.Forms.ProgressBar();
+            this.labei8 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -105,7 +107,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.s.SuspendLayout();
             this.rpmBox.SuspendLayout();
             this.volBox.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -527,22 +529,34 @@
             this.label3.TabIndex = 15;
             this.label3.Text = "终端列表";
             // 
-            // panel1
+            // s
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.label8);
-            this.panel1.Controls.Add(this.binPath);
-            this.panel1.Controls.Add(this.selBin);
-            this.panel1.Controls.Add(this.lbxClient);
-            this.panel1.Controls.Add(this.cbSendAll);
-            this.panel1.Controls.Add(this.btnReboot);
-            this.panel1.Controls.Add(this.btnLed);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(14, 112);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(312, 263);
-            this.panel1.TabIndex = 16;
+            this.s.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.s.Controls.Add(this.labei8);
+            this.s.Controls.Add(this.updateBar);
+            this.s.Controls.Add(this.serialBox);
+            this.s.Controls.Add(this.button1);
+            this.s.Controls.Add(this.label8);
+            this.s.Controls.Add(this.binPath);
+            this.s.Controls.Add(this.selBin);
+            this.s.Controls.Add(this.lbxClient);
+            this.s.Controls.Add(this.btnReboot);
+            this.s.Controls.Add(this.btnLed);
+            this.s.Controls.Add(this.label3);
+            this.s.Location = new System.Drawing.Point(14, 112);
+            this.s.Name = "s";
+            this.s.Size = new System.Drawing.Size(312, 263);
+            this.s.TabIndex = 16;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(21, 175);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 32);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "串口上传";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // label8
             // 
@@ -579,19 +593,9 @@
             this.lbxClient.Size = new System.Drawing.Size(265, 40);
             this.lbxClient.TabIndex = 4;
             // 
-            // cbSendAll
-            // 
-            this.cbSendAll.AutoSize = true;
-            this.cbSendAll.Location = new System.Drawing.Point(21, 19);
-            this.cbSendAll.Name = "cbSendAll";
-            this.cbSendAll.Size = new System.Drawing.Size(120, 16);
-            this.cbSendAll.TabIndex = 3;
-            this.cbSendAll.Text = "发送至所有客户端";
-            this.cbSendAll.UseVisualStyleBackColor = true;
-            // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(222, 173);
+            this.btnReboot.Location = new System.Drawing.Point(222, 175);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -601,7 +605,7 @@
             // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(109, 175);
+            this.btnLed.Location = new System.Drawing.Point(122, 175);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -773,15 +777,30 @@
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
-            // button1
+            // serialBox
             // 
-            this.button1.Location = new System.Drawing.Point(21, 175);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 32);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "串口上传";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.serialBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.serialBox.FormattingEnabled = true;
+            this.serialBox.Location = new System.Drawing.Point(165, 18);
+            this.serialBox.Name = "serialBox";
+            this.serialBox.Size = new System.Drawing.Size(121, 20);
+            this.serialBox.TabIndex = 17;
+            // 
+            // updateBar
+            // 
+            this.updateBar.Location = new System.Drawing.Point(21, 221);
+            this.updateBar.Name = "updateBar";
+            this.updateBar.Size = new System.Drawing.Size(265, 24);
+            this.updateBar.TabIndex = 18;
+            // 
+            // labei8
+            // 
+            this.labei8.AutoSize = true;
+            this.labei8.Location = new System.Drawing.Point(19, 18);
+            this.labei8.Name = "labei8";
+            this.labei8.Size = new System.Drawing.Size(29, 12);
+            this.labei8.TabIndex = 19;
+            this.labei8.Text = "串口";
             // 
             // Main
             // 
@@ -791,7 +810,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.volBox);
             this.Controls.Add(this.rpmBox);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.s);
             this.Controls.Add(this.bmpPanel);
             this.Controls.Add(this.unSelectAll);
             this.Controls.Add(this.selectAll);
@@ -825,8 +844,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.s.ResumeLayout(false);
+            this.s.PerformLayout();
             this.rpmBox.ResumeLayout(false);
             this.rpmBox.PerformLayout();
             this.volBox.ResumeLayout(false);
@@ -863,10 +882,9 @@
         private System.Windows.Forms.GroupBox bmpPanel;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel s;
         private System.Windows.Forms.Button btnLed;
         private System.Windows.Forms.Button btnReboot;
-        private System.Windows.Forms.CheckBox cbSendAll;
         private System.Windows.Forms.CheckBox mbTmp;
         private System.Windows.Forms.GroupBox rpmBox;
         private System.Windows.Forms.CheckBox cpuRpm;
@@ -906,6 +924,9 @@
         private System.Windows.Forms.TextBox binPath;
         private System.Windows.Forms.Button selBin;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ProgressBar updateBar;
+        private System.Windows.Forms.ComboBox serialBox;
+        private System.Windows.Forms.Label labei8;
     }
 }
 

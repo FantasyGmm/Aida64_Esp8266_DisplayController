@@ -156,6 +156,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="esptool.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="GM-Logo.ico" />
   </ItemGroup>
   <ItemGroup>

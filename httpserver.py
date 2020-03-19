@@ -1,6 +1,5 @@
 import os
 import sys
-import pyserial
 import hashlib
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
