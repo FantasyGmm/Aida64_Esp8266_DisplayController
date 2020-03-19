@@ -67,7 +67,7 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> packList = new List<string>();
         public int playPostion = 0; //播放进度
         public Process httpProcess; //http服务器
-        public Shell Cmd;
+        public Shell CMD;
         private string packfile;
 
         public void GetAidaInfo()
@@ -385,7 +385,7 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
 
-            
+
 
 
             FlushPack(null);
@@ -544,43 +544,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-        public void OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
 
-            var s = e.Data;
-            
-
-            if (s != null)
-            {
-                var m = Regex.Match(s, @"(\b\d{1,3}\b)(\s)+%");
-                
-                if (m.Success)
-                {
-                    var progress = Int32.Parse(m.Groups[1].Value);
-
-                    this.Invoke(new MethodInvoker(() =>
-                    {
-                        tsProgress.Value = progress;
-                    }));
-
-                }
-                
-
-            }
-
-
-
-        }
-
-        public void ShellExited(object sender, EventArgs e)
-        {
-            this.Invoke(new MethodInvoker(() =>
-            {
-                tsLbl.Text = "准备就绪";
-                tsProgress.Value = 100;
-                btnSerial.Enabled = true;
-            }));
-        }
 
 
         private void BtnLed_Click(object sender, EventArgs e)
@@ -878,8 +842,38 @@ namespace Aida64_Esp8266_DisplayControler
             tsLbl.Text = "正在上传固件...";
             var sname = cbxSerial.Text;
             var firmware = Directory.GetCurrentDirectory() + "\\firmware\\init.bin";
-            Cmd = new Shell("python.exe", $"esptool.py --port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), OutputDataReceived, ShellExited);
-            Cmd.Start();
+            var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
+            {
+                var s = ee.Data;
+
+                if (s != null)
+                {
+                    var m = Regex.Match(s, @"(\b\d{1,3}\b)(\s)+%");
+
+                    if (m.Success)
+                    {
+                        var progress = Int32.Parse(m.Groups[1].Value);
+
+                        this.Invoke(new MethodInvoker(() =>
+                        {
+                            tsProgress.Value = progress;
+                        }));
+
+                    }
+                }
+            });
+
+            var exitHandler = new EventHandler((object o, EventArgs ee) =>
+            {
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    tsLbl.Text = "准备就绪";
+                    tsProgress.Value = 100;
+                    btnSerial.Enabled = true;
+                }));
+            });
+            CMD = new Shell("python.exe", $"esptool.py --port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
+            CMD.Start();
         }
 
         private void BtnStartPause_Click(object sender, EventArgs e)
