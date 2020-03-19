@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.IO.Ports;
+using System.Text.RegularExpressions;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -58,14 +60,16 @@ namespace Aida64_Esp8266_DisplayControler
         public Task recivesTask;
         public Task sendBmpTask, sendInfoTask;
         public uint selectedUI;
-        ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true), querySerial = new ManualResetEvent(true);
+        ManualResetEvent resetBmp = new ManualResetEvent(true), resetInfo = new ManualResetEvent(true);
         public SynchronizationContext Sync = null;
         public List<string> clientList = new List<string>();
         public int packIndex = -1;
         public List<string> packList = new List<string>();
         public int playPostion = 0; //播放进度
         public Process httpProcess; //http服务器
+        public Shell CMD;
         private string packfile;
+
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
@@ -243,27 +247,25 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
+
+
+
         private void SetPlayInit(object o)
         {
             tbarPlay.Maximum = (int)o;
             btnStartPause.Text = "‖";
         }
 
-        private void SetSerialBox(object o)
-        {
-            foreach (var item in (string[])o)
-            {
-                serialBox.Items.Add(item);
-            }
-            serialBox.SelectedIndex = 0;
-        }
+
 
         private void SetPlayStatus(object o)
         {
             var ia = (int[])o;
             lblPlay.Text = $"{ia[0]}/{ia[1]}";
             tbarPlay.Value = ia[0];
+
         }
+
 
         public void AddClientBox(object o)
         {
@@ -367,6 +369,25 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
+
+            if (!Directory.Exists(Directory.GetCurrentDirectory() + "/firmware"))
+                Directory.CreateDirectory("firmware");
+
+            var initbin = Directory.GetCurrentDirectory() + "/firmware/init.bin";
+
+            if (!System.IO.File.Exists(initbin))
+            {
+                using (FileStream fs = new FileStream(initbin, FileMode.OpenOrCreate))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    byte[] ba = (byte[])Properties.Resources.ResourceManager.GetObject("init", null);
+                    fs.Write(ba, 0, ba.Length);
+                }
+            }
+
+
+
+
             FlushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher
             {
@@ -376,6 +397,13 @@ namespace Aida64_Esp8266_DisplayControler
             watcher.Created += DataChange;
             watcher.Deleted += DataChange;
             watcher.EnableRaisingEvents = true;
+
+            cbxSerial.Items.AddRange(SerialPort.GetPortNames());
+
+            if (cbxSerial.Items.Count > 0)
+                cbxSerial.SelectedIndex = 0;
+
+
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
@@ -423,6 +451,10 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             });
             recivesTask.Start();
+        }
+        private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //logBox.ResetText();
         }
 
         private byte[] ConvertXBM(string input)
@@ -510,6 +542,11 @@ namespace Aida64_Esp8266_DisplayControler
 
             }
         }
+
+
+
+
+
         private void BtnLed_Click(object sender, EventArgs e)
         {
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -792,32 +829,51 @@ namespace Aida64_Esp8266_DisplayControler
                 httpProcess.Kill();
         }
 
-        private void QuerySerial()
-        {
-            Task queryTask = new Task(() =>
-            {
-                Sync.Send(SetSerialBox, System.IO.Ports.SerialPort.GetPortNames());
-                Thread.Sleep(1000);
-            });
-            queryTask.Start();
-        }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void btnSerial_Click(object sender, EventArgs e)
         {
-            //esptool.exe --port COM5 -b 1500000  write_flash -fm qio -ff 80m 0x00000000 firmware.bin
-            if (serialBox.SelectedIndex == -1)
+            if (cbxSerial.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择串口!");
                 return;
-            if (string.IsNullOrEmpty(binPath.Text))
-                return;
-            Process upload = new Process();
-            upload.StartInfo.FileName = "esptool.exe";
-            upload.StartInfo.Arguments = $" --port {serialBox.Text} -b 500000  write_flash -fm qio -ff 80m 0x00000000 {binPath}";
-            upload.StartInfo.UseShellExecute = false;
-            upload.StartInfo.RedirectStandardOutput = true;
-            upload.StartInfo.RedirectStandardInput = true;
-            upload.StartInfo.RedirectStandardError = true;
-            upload.StartInfo.CreateNoWindow = true;
-            upload.Start();
+            }
+
+            btnSerial.Enabled = false;
+            tsLbl.Text = "正在上传固件...";
+            var sname = cbxSerial.Text;
+            var firmware = Directory.GetCurrentDirectory() + "\\firmware\\init.bin";
+            var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
+            {
+                var s = ee.Data;
+
+                if (s != null)
+                {
+                    var m = Regex.Match(s, @"(\b\d{1,3}\b)(\s)+%");
+
+                    if (m.Success)
+                    {
+                        var progress = Int32.Parse(m.Groups[1].Value);
+
+                        this.Invoke(new MethodInvoker(() =>
+                        {
+                            tsProgress.Value = progress;
+                        }));
+
+                    }
+                }
+            });
+
+            var exitHandler = new EventHandler((object o, EventArgs ee) =>
+            {
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    tsLbl.Text = "准备就绪";
+                    tsProgress.Value = 100;
+                    btnSerial.Enabled = true;
+                }));
+            });
+            CMD = new Shell("python.exe", $"esptool.py --port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
+            CMD.Start();
         }
 
         private void BtnStartPause_Click(object sender, EventArgs e)

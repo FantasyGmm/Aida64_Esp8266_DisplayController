@@ -59,5 +59,15 @@ namespace Aida64_Esp8266_DisplayControler.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        public static byte[] init {
+            get {
+                object obj = ResourceManager.GetObject("init", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
