@@ -836,18 +836,29 @@ namespace Aida64_Esp8266_DisplayControler
         }
 
 
-        private void btnSerial_Click(object sender, EventArgs e)
+        private void BtnSerial_Click(object sender, EventArgs e)
         {
             if (cbxSerial.SelectedIndex < 0)
             {
                 MessageBox.Show("请选择串口!");
                 return;
             }
-
             btnSerial.Enabled = false;
             tsLbl.Text = "正在上传固件...";
-            var sname = cbxSerial.Text;
-            var firmware = Directory.GetCurrentDirectory() + "\\firmware\\init.bin";
+            string sname = cbxSerial.Text;
+            string firmware = Directory.GetCurrentDirectory() + "\\firmware\\init.bin";
+            if (!string.IsNullOrEmpty(binPath.Text))
+            {
+                firmware = binPath.Text;
+            }
+            Process esp = new Process();
+            esp.StartInfo.FileName = "esptool.exe";
+            esp.StartInfo.Arguments = $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}";
+            esp.Start();
+            esp.WaitForExit();
+            tsLbl.Text = "上传完毕";
+            btnSerial.Enabled = true;
+            /*
             var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
             {
                 var s = ee.Data;
@@ -858,9 +869,9 @@ namespace Aida64_Esp8266_DisplayControler
 
                     if (m.Success)
                     {
-                        var progress = Int32.Parse(m.Groups[1].Value);
+                        var progress = int.Parse(m.Groups[1].Value);
 
-                        this.Invoke(new MethodInvoker(() =>
+                        Invoke(new MethodInvoker(() =>
                         {
                             tsProgress.Value = progress;
                         }));
@@ -868,18 +879,36 @@ namespace Aida64_Esp8266_DisplayControler
                     }
                 }
             });
-
             var exitHandler = new EventHandler((object o, EventArgs ee) =>
             {
-                this.Invoke(new MethodInvoker(() =>
+                Invoke(new MethodInvoker(() =>
                 {
-                    tsLbl.Text = "准备就绪";
+                    tsLbl.Text = "固件上传完毕";
                     tsProgress.Value = 100;
                     btnSerial.Enabled = true;
                 }));
             });
-            CMD = new Shell("python.exe", $"esptool.py --port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
-            CMD.Start();
+            CMD = new Shell("esptool.exe", $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
+            CMD.Start();*/
+        }
+
+        private void Erase_flash_Click(object sender, EventArgs e)
+        {
+            if (cbxSerial.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择串口!");
+                return;
+            }
+            erase_flash.Enabled = false;
+            var sname = cbxSerial.Text;
+            tsLbl.Text = "擦除Flash...";
+            Process esp = new Process();
+            esp.StartInfo.FileName = "esptool.exe";
+            esp.StartInfo.Arguments = $"--port { sname} erase_flash";
+            esp.Start();
+            esp.WaitForExit();
+            tsLbl.Text = "擦除完毕";
+            erase_flash.Enabled = true;
         }
 
         private void BtnStartPause_Click(object sender, EventArgs e)
