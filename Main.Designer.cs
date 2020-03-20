@@ -99,6 +99,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.erase_flash = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -535,6 +536,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.erase_flash);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.cbxSerial);
             this.panel1.Controls.Add(this.btnSerial);
@@ -576,7 +578,7 @@
             this.btnSerial.TabIndex = 16;
             this.btnSerial.Text = "串口上传";
             this.btnSerial.UseVisualStyleBackColor = true;
-            this.btnSerial.Click += new System.EventHandler(this.btnSerial_Click);
+            this.btnSerial.Click += new System.EventHandler(this.BtnSerial_Click);
             // 
             // label8
             // 
@@ -615,7 +617,7 @@
             // 
             // btnReboot
             // 
-            this.btnReboot.Location = new System.Drawing.Point(157, 217);
+            this.btnReboot.Location = new System.Drawing.Point(120, 186);
             this.btnReboot.Name = "btnReboot";
             this.btnReboot.Size = new System.Drawing.Size(64, 32);
             this.btnReboot.TabIndex = 2;
@@ -625,7 +627,7 @@
             // 
             // btnLed
             // 
-            this.btnLed.Location = new System.Drawing.Point(47, 217);
+            this.btnLed.Location = new System.Drawing.Point(21, 186);
             this.btnLed.Name = "btnLed";
             this.btnLed.Size = new System.Drawing.Size(64, 32);
             this.btnLed.TabIndex = 0;
@@ -820,6 +822,16 @@
             this.tsProgress.Name = "tsProgress";
             this.tsProgress.Size = new System.Drawing.Size(100, 16);
             // 
+            // erase_flash
+            // 
+            this.erase_flash.Location = new System.Drawing.Point(210, 186);
+            this.erase_flash.Name = "erase_flash";
+            this.erase_flash.Size = new System.Drawing.Size(76, 32);
+            this.erase_flash.TabIndex = 19;
+            this.erase_flash.Text = "擦除Flash";
+            this.erase_flash.UseVisualStyleBackColor = true;
+            this.erase_flash.Click += new System.EventHandler(this.Erase_flash_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -950,6 +962,7 @@
         private System.Windows.Forms.ToolStripProgressBar tsProgress;
         private System.Windows.Forms.ComboBox cbxSerial;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button erase_flash;
     }
 }
 
