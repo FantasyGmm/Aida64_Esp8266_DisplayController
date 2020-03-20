@@ -70,6 +70,8 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cbxSerial = new System.Windows.Forms.ComboBox();
             this.btnSerial = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.binPath = new System.Windows.Forms.TextBox();
@@ -97,8 +99,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
-            this.cbxSerial = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -550,6 +550,24 @@
             this.panel1.Size = new System.Drawing.Size(312, 263);
             this.panel1.TabIndex = 16;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(19, 134);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "串口列表";
+            // 
+            // cbxSerial
+            // 
+            this.cbxSerial.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbxSerial.FormattingEnabled = true;
+            this.cbxSerial.Location = new System.Drawing.Point(21, 149);
+            this.cbxSerial.Name = "cbxSerial";
+            this.cbxSerial.Size = new System.Drawing.Size(195, 20);
+            this.cbxSerial.TabIndex = 17;
+            // 
             // btnSerial
             // 
             this.btnSerial.Location = new System.Drawing.Point(222, 146);
@@ -784,7 +802,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsLbl,
             this.tsProgress});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 435);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 388);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(701, 22);
             this.statusStrip1.SizingGrip = false;
@@ -802,29 +820,11 @@
             this.tsProgress.Name = "tsProgress";
             this.tsProgress.Size = new System.Drawing.Size(100, 16);
             // 
-            // cbxSerial
-            // 
-            this.cbxSerial.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbxSerial.FormattingEnabled = true;
-            this.cbxSerial.Location = new System.Drawing.Point(21, 149);
-            this.cbxSerial.Name = "cbxSerial";
-            this.cbxSerial.Size = new System.Drawing.Size(195, 20);
-            this.cbxSerial.TabIndex = 17;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(19, 134);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(53, 12);
-            this.label9.TabIndex = 18;
-            this.label9.Text = "串口列表";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(701, 457);
+            this.ClientSize = new System.Drawing.Size(701, 410);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.volBox);

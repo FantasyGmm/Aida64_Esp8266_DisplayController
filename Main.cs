@@ -837,7 +837,6 @@ namespace Aida64_Esp8266_DisplayControler
                 MessageBox.Show("请选择串口!");
                 return;
             }
-
             btnSerial.Enabled = false;
             tsLbl.Text = "正在上传固件...";
             var sname = cbxSerial.Text;
@@ -852,9 +851,9 @@ namespace Aida64_Esp8266_DisplayControler
 
                     if (m.Success)
                     {
-                        var progress = Int32.Parse(m.Groups[1].Value);
+                        var progress = int.Parse(m.Groups[1].Value);
 
-                        this.Invoke(new MethodInvoker(() =>
+                        Invoke(new MethodInvoker(() =>
                         {
                             tsProgress.Value = progress;
                         }));
@@ -862,12 +861,12 @@ namespace Aida64_Esp8266_DisplayControler
                     }
                 }
             });
-
             var exitHandler = new EventHandler((object o, EventArgs ee) =>
             {
-                this.Invoke(new MethodInvoker(() =>
+                Invoke(new MethodInvoker(() =>
                 {
                     tsLbl.Text = "准备就绪";
+                    MessageBox.Show("固件上传完毕");
                     tsProgress.Value = 100;
                     btnSerial.Enabled = true;
                 }));
