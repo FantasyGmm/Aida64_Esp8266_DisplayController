@@ -386,6 +386,12 @@ namespace Aida64_Esp8266_DisplayControler
             }
 
 
+            
+           
+            CtrPack cpk = new CtrPack(Directory.GetCurrentDirectory() + "/test.cpk", author:"CerTer", describe: "nidaye");
+            //cpk.initFile();
+            cpk.parseFile();
+
 
 
             FlushPack(null);
