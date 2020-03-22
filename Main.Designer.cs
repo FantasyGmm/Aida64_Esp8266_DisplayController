@@ -461,6 +461,7 @@
             // 
             // nbxFPS
             // 
+            this.nbxFPS.DecimalPlaces = 2;
             this.nbxFPS.Location = new System.Drawing.Point(78, 266);
             this.nbxFPS.Maximum = new decimal(new int[] {
             500,
