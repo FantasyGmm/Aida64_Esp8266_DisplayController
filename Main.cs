@@ -100,7 +100,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
             catch (Exception)
             {
-                throw;
+                return;
             }
         }
         public void InsertInfo(IEnumerable<XElement> xel)
@@ -246,17 +246,16 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
-
-
-
+        public void SetLogbox(object o)
+        {
+            logBox.AppendText((string)o + Environment.NewLine);
+        }
 
         private void SetPlayInit(object o)
         {
             tbarPlay.Maximum = (int)o;
             btnStartPause.Text = "‖";
         }
-
-
 
         private void SetPlayStatus(object o)
         {
@@ -384,10 +383,6 @@ namespace Aida64_Esp8266_DisplayControler
                     fs.Write(ba, 0, ba.Length);
                 }
             }
-
-
-
-
             FlushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher
             {
@@ -454,7 +449,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //logBox.ResetText();
+            logBox.ResetText();
         }
 
         private byte[] ConvertXBM(string input)
@@ -496,7 +491,6 @@ namespace Aida64_Esp8266_DisplayControler
         private void ProcPack(string file, int width, int height)
         {
             //Pack_Start:
-
             using (FileStream fs = new FileStream(file, FileMode.Open))
             {
 
@@ -542,10 +536,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             }
         }
-
-
-
-
 
         private void BtnLed_Click(object sender, EventArgs e)
         {
@@ -738,8 +728,7 @@ namespace Aida64_Esp8266_DisplayControler
             }
             catch (Exception)
             {
-                MessageBox.Show("创建桌面快捷方式失败");
-                throw;
+                MessageBox.Show("创建桌面快捷方式失败");                
             }
         }
         public static void CreateShortcut(string directory, string shortcutName, string targetPath,
@@ -770,7 +759,6 @@ namespace Aida64_Esp8266_DisplayControler
             catch (Exception)
             {
                 MessageBox.Show("创建开启启动失败");
-                throw;
             }
         }
 

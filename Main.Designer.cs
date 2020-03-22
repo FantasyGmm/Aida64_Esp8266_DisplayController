@@ -70,6 +70,7 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.erase_flash = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.cbxSerial = new System.Windows.Forms.ComboBox();
             this.btnSerial = new System.Windows.Forms.Button();
@@ -99,7 +100,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
-            this.erase_flash = new System.Windows.Forms.Button();
+            this.logBox = new System.Windows.Forms.TextBox();
+            this.清空日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -149,7 +151,8 @@
             // 
             this.设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.开机启动ToolStripMenuItem,
-            this.创建桌面快捷方式ToolStripMenuItem});
+            this.创建桌面快捷方式ToolStripMenuItem,
+            this.清空日志ToolStripMenuItem});
             this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             this.设置ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.设置ToolStripMenuItem.Text = "设置";
@@ -552,6 +555,16 @@
             this.panel1.Size = new System.Drawing.Size(312, 263);
             this.panel1.TabIndex = 16;
             // 
+            // erase_flash
+            // 
+            this.erase_flash.Location = new System.Drawing.Point(210, 186);
+            this.erase_flash.Name = "erase_flash";
+            this.erase_flash.Size = new System.Drawing.Size(76, 32);
+            this.erase_flash.TabIndex = 19;
+            this.erase_flash.Text = "擦除Flash";
+            this.erase_flash.UseVisualStyleBackColor = true;
+            this.erase_flash.Click += new System.EventHandler(this.Erase_flash_Click);
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -804,7 +817,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsLbl,
             this.tsProgress});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 388);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 454);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(701, 22);
             this.statusStrip1.SizingGrip = false;
@@ -822,21 +835,30 @@
             this.tsProgress.Name = "tsProgress";
             this.tsProgress.Size = new System.Drawing.Size(100, 16);
             // 
-            // erase_flash
+            // logBox
             // 
-            this.erase_flash.Location = new System.Drawing.Point(210, 186);
-            this.erase_flash.Name = "erase_flash";
-            this.erase_flash.Size = new System.Drawing.Size(76, 32);
-            this.erase_flash.TabIndex = 19;
-            this.erase_flash.Text = "擦除Flash";
-            this.erase_flash.UseVisualStyleBackColor = true;
-            this.erase_flash.Click += new System.EventHandler(this.Erase_flash_Click);
+            this.logBox.AllowDrop = true;
+            this.logBox.Location = new System.Drawing.Point(14, 383);
+            this.logBox.Multiline = true;
+            this.logBox.Name = "logBox";
+            this.logBox.ReadOnly = true;
+            this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.logBox.Size = new System.Drawing.Size(679, 66);
+            this.logBox.TabIndex = 23;
+            // 
+            // 清空日志ToolStripMenuItem
+            // 
+            this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清空日志ToolStripMenuItem.Text = "清空日志";
+            this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(701, 410);
+            this.ClientSize = new System.Drawing.Size(701, 476);
+            this.Controls.Add(this.logBox);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.volBox);
@@ -963,6 +985,8 @@
         private System.Windows.Forms.ComboBox cbxSerial;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button erase_flash;
+        private System.Windows.Forms.TextBox logBox;
+        private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
     }
 }
 
