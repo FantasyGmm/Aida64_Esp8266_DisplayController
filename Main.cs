@@ -569,6 +569,39 @@ namespace Aida64_Esp8266_DisplayControler
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
+
+        private void Erase_flash_Click(object sender, EventArgs e)
+        {
+            if (cbxSerial.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择串口!");
+                return;
+            }
+            erase_flash.Enabled = false;
+            var sname = cbxSerial.Text;
+            tsLbl.Text = "擦除Flash...";
+            Process esp = new Process();
+            esp.StartInfo.FileName = "esptool.exe";
+            esp.StartInfo.Arguments = $"--port { sname} erase_flash";
+            esp.Start();
+            esp.WaitForExit();
+            tsLbl.Text = "擦除完毕";
+            erase_flash.Enabled = true;
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                return;
+
+            if (MessageBox.Show("复位将会丢失全部设置信息，是否确定？", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                return;
+
+            string[] s = clientList[0].Split(':');
+            byte[] ba = BuildPacket(PACKET_RESET);
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+            Udp.Send(ba, ba.Length, addr);
+        }
         private void SelectAll_Click(object sender, EventArgs e)
         {
             vramUTI.Checked = true;
@@ -847,6 +880,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 firmware = binPath.Text;
             }
+            /*
             Process esp = new Process();
             esp.StartInfo.FileName = "esptool.exe";
             esp.StartInfo.Arguments = $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}";
@@ -854,7 +888,8 @@ namespace Aida64_Esp8266_DisplayControler
             esp.WaitForExit();
             tsLbl.Text = "上传完毕";
             btnSerial.Enabled = true;
-            /*
+            */
+            
             var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
             {
                 var s = ee.Data;
@@ -885,27 +920,12 @@ namespace Aida64_Esp8266_DisplayControler
                 }));
             });
             CMD = new Shell("esptool.exe", $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
-            CMD.Start();*/
+            CMD.Start();
         }
 
-        private void Erase_flash_Click(object sender, EventArgs e)
-        {
-            if (cbxSerial.SelectedIndex < 0)
-            {
-                MessageBox.Show("请选择串口!");
-                return;
-            }
-            erase_flash.Enabled = false;
-            var sname = cbxSerial.Text;
-            tsLbl.Text = "擦除Flash...";
-            Process esp = new Process();
-            esp.StartInfo.FileName = "esptool.exe";
-            esp.StartInfo.Arguments = $"--port { sname} erase_flash";
-            esp.Start();
-            esp.WaitForExit();
-            tsLbl.Text = "擦除完毕";
-            erase_flash.Enabled = true;
-        }
+
+
+
 
         private void BtnStartPause_Click(object sender, EventArgs e)
         {

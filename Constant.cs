@@ -21,6 +21,7 @@ namespace Aida64_Esp8266_DisplayControler
         public const byte PACKET_TOGGLE_LED = 0X12;
         public const byte PACKET_TOGGLE_DISPLAY = 0X13;
         public const byte PACKET_REBOOT = 0X14;
+        public const byte PACKET_RESET = 0X15;
 
         //UI
         public const UInt32 UI_TEMP_CPU = 0X1;

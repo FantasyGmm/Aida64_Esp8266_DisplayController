@@ -36,6 +36,7 @@
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开机启动ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.创建桌面快捷方式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.清空日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开源地址ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.版本号Aplha001ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,7 +102,7 @@
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.清空日志ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnReset = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -170,6 +171,13 @@
             this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
             this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
+            // 
+            // 清空日志ToolStripMenuItem
+            // 
+            this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.清空日志ToolStripMenuItem.Text = "清空日志";
+            this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
@@ -540,6 +548,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnReset);
             this.panel1.Controls.Add(this.erase_flash);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.cbxSerial);
@@ -847,12 +856,15 @@
             this.logBox.Size = new System.Drawing.Size(679, 66);
             this.logBox.TabIndex = 23;
             // 
-            // 清空日志ToolStripMenuItem
+            // btnReset
             // 
-            this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.清空日志ToolStripMenuItem.Text = "清空日志";
-            this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
+            this.btnReset.Location = new System.Drawing.Point(21, 224);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(64, 32);
+            this.btnReset.TabIndex = 20;
+            this.btnReset.Text = "复位";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // Main
             // 
@@ -988,6 +1000,7 @@
         private System.Windows.Forms.Button erase_flash;
         private System.Windows.Forms.TextBox logBox;
         private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
+        private System.Windows.Forms.Button btnReset;
     }
 }
 
