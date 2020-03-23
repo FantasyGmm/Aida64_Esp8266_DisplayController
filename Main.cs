@@ -893,6 +893,16 @@ namespace Aida64_Esp8266_DisplayControler
             erase_flash.Enabled = true;
         }
 
+        private void CleanConfig_Click(object sender, EventArgs e)
+        {
+            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                return;
+            string[] s = clientList[0].Split(':');
+            byte[] ba = BuildPacket(PACKET_RESET);
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+            Udp.Send(ba, ba.Length, addr);
+        }
+
         private void BtnStartPause_Click(object sender, EventArgs e)
         {
 
