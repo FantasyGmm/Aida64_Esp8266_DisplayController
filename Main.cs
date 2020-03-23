@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using Ionic.Zlib;
 using System.Text;
 using ImageMagick;
 using System.Drawing;
@@ -20,6 +19,7 @@ using System.IO.MemoryMappedFiles;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using Ionic.Zlib;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -386,9 +386,10 @@ namespace Aida64_Esp8266_DisplayControler
             }
 
 
-            
-           
-            CtrPack cpk = new CtrPack(Directory.GetCurrentDirectory() + "/test.cpk", author:"CerTer", describe: "nidaye");
+            var path = Directory.GetCurrentDirectory();
+            CtrPack.ZipDirectory(path, @"\");
+
+            CtrPack cpk = new CtrPack(Directory.GetCurrentDirectory() + "/test.cpk", author: "CerTer", describe: "nidaye");
             //cpk.initFile();
             cpk.parseFile();
 
@@ -501,52 +502,54 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void ProcPack(string file, int width, int height)
         {
-            //Pack_Start:
 
-            using (FileStream fs = new FileStream(file, FileMode.Open))
+            FileStream fs = new FileStream(file, FileMode.Open);
+            MemoryStream ms = new MemoryStream();
+            MemoryStream oms = new MemoryStream();
+            fs.CopyTo(ms);
+            fs.Dispose();
+            ms.Seek(0, SeekOrigin.Begin);
+            var data = GZipStream.UncompressBuffer(ms.ToArray());
+            ms = new MemoryStream();
+            ms.Write(data, 0, data.Length);
+            ms.Seek(0, SeekOrigin.Begin);
+            var formatter = new BinaryFormatter();
+            PackData pack = (PackData)formatter.Deserialize(ms);
+            Sync.Send(SetPlayInit, pack.img.Count);
+
+            var imgList = pack.img.ToArray();
+
+            for (playPostion = 0; playPostion < imgList.Length; playPostion++)
             {
+                resetBmp.WaitOne();
 
-                MemoryStream ms = new MemoryStream();
-                fs.CopyTo(ms);
-                var data = GZipStream.UncompressBuffer(ms.ToArray());
-                ms = new MemoryStream();
-                ms.Write(data, 0, data.Length);
-                ms.Seek(0, SeekOrigin.Begin);
-                var formatter = new BinaryFormatter();
-                PackData pack = (PackData)formatter.Deserialize(ms);
-                Sync.Send(SetPlayInit, pack.img.Count);
-
-                var imgList = pack.img.ToArray();
-
-                for (playPostion = 0; playPostion < imgList.Length; playPostion++)
+                lock (packList)
                 {
-                    resetBmp.WaitOne();
-
-                    lock (packList)
+                    if (packList[packIndex] != Path.GetFileName(file))
                     {
-                        if (packList[packIndex] != Path.GetFileName(file))
-                        {
-                            file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
-                            //goto Pack_Start;
-                            return;
-                        }
-
+                        file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
+                        return;
                     }
-                    var buf = ConvertXBM(Encoding.Default.GetString(imgList[playPostion].ToArray()));
-                    UdpSendXBM(buf, width, height);
-                    MagickImage img = new MagickImage(imgList[playPostion].ToArray()) { Format = MagickFormat.Xbm };
-                    img.Format = MagickFormat.Bmp;
-                    buf = img.ToByteArray();
-                    ms = new MemoryStream();
-                    ms.Write(buf, 0, buf.Length);
-                    pictureBox.Image = Image.FromStream(ms);
-                    Sync.Send(SetPlayStatus, new int[] { playPostion, pack.img.Count });
-                    playPostion++;
-                    Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
+
                 }
+                var buf = ConvertXBM(Encoding.Default.GetString(imgList[playPostion].ToArray()));
+                UdpSendXBM(buf, width, height);
+                MagickImage img = new MagickImage(imgList[playPostion].ToArray()) { Format = MagickFormat.Xbm };
+                img.Format = MagickFormat.Bmp;
+                buf = img.ToByteArray();
+                ms = new MemoryStream();
+                ms.Write(buf, 0, buf.Length);
+                pictureBox.Image = Image.FromStream(ms);
+                Sync.Send(SetPlayStatus, new int[] { playPostion, pack.img.Count });
+                playPostion++;
 
-
+                ms.Dispose();
+                oms.Dispose();
+                Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
             }
+
+
+
         }
 
 

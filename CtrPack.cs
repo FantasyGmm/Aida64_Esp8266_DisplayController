@@ -22,8 +22,6 @@ namespace Aida64_Esp8266_DisplayControler
         private bool _newFile;
         private long _metaOffset;
         private long _metaLen;
-        private ushort _describeOffset;
-        private int _describeLen;
         private int _headerLen;
 
         protected UInt32[] Crc32Table;
@@ -63,12 +61,9 @@ namespace Aida64_Esp8266_DisplayControler
             //保留
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 24)]
             public byte[] reserve;
-            //描述偏移
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-            public byte[] describeOffset;
-            //描述长度
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public byte[] describeLen;
+            //描述
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 512)]
+            public byte[] describe;
         }
 
         public struct Meta
@@ -95,11 +90,11 @@ namespace Aida64_Esp8266_DisplayControler
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
             public byte[] hasNext;
             //文件名长度
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
-            public byte[] nameLen;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 512)]
+            public byte[] name;
         }
 
-        public CtrPack(string fname, byte encrypt = 0x0, byte compress = 0x0, string author = "unknow", string describe = null)
+        public CtrPack(string fname, byte encrypt = 0x0, byte compress = 0x0, string author = "unknow", string describe = "")
         {
             GetCRC32Table();
             this._fname = fname;
@@ -313,14 +308,12 @@ namespace Aida64_Esp8266_DisplayControler
             h.metaLen = BitConverter.GetBytes((ulong)(0));
             h.author = Encoding.Unicode.GetBytes(Author.PadRight(32, '\0').ToCharArray());
             h.reserve = Encoding.ASCII.GetBytes("".PadRight(32, '\0').ToCharArray());
-            h.describeOffset = describeLen > 0 ? BitConverter.GetBytes((ushort)(Marshal.SizeOf(typeof(Header)) + HEADER_DEFAULT_RESERVE)) : BitConverter.GetBytes((ushort)0x0);
-            h.describeLen = BitConverter.GetBytes(describeLen);
+            //h.describeOffset = describeLen > 0 ? BitConverter.GetBytes((ushort)(Marshal.SizeOf(typeof(Header)) + HEADER_DEFAULT_RESERVE)) : BitConverter.GetBytes((ushort)0x0);
+            //h.describeLen = BitConverter.GetBytes(describeLen);
+            h.describe = Encoding.Unicode.GetBytes(Describe.PadRight(256, '\0').ToCharArray());
             byte[] ba = StructToBytes(h);
             _file.Write(ba, 0, ba.Length);
             _file.Write(new byte[HEADER_DEFAULT_RESERVE], 0, HEADER_DEFAULT_RESERVE);
-            if (Describe != null)
-                _file.Write(Encoding.Unicode.GetBytes(Describe.ToCharArray()), 0, describeLen);
-
             _file.Flush();
         }
 
@@ -361,10 +354,11 @@ namespace Aida64_Esp8266_DisplayControler
                 //保留
                 _file.Seek(24, SeekOrigin.Current);
                 //描述偏移
-                buf = new byte[2];
-                _file.Read(buf, 0, 2);
-                _describeOffset = BitConverter.ToUInt16(buf, 0);
+                buf = new byte[512];
+                _file.Read(buf, 0, 512);
+                Describe = Encoding.Unicode.GetString(buf);
 
+                /*
                 if (this._describeOffset > 0)
                 {
                     //描述长度
@@ -379,10 +373,11 @@ namespace Aida64_Esp8266_DisplayControler
                     if (_describeLen > 0)
                         Describe = Encoding.Unicode.GetString(buf);
                 }
+                */
   
 
                 //文件头长度
-                _headerLen = (Marshal.SizeOf(typeof(Header)) + this._describeLen + HEADER_DEFAULT_RESERVE);
+                _headerLen = (Marshal.SizeOf(typeof(Header)) + HEADER_DEFAULT_RESERVE);
                 //是否为新文件
                 _newFile = this._metaOffset == 0 ? true : false;
 
@@ -438,6 +433,49 @@ namespace Aida64_Esp8266_DisplayControler
             return true;
         }
 
+
+        public static bool ZipDirectory(string path, string rootPath)
+        {
+            bool result = true;
+            string[] folders, files;
+            FileStream fs = null;
+  
+
+            try
+            {
+                Console.WriteLine($"path:{rootPath}");
+                files = Directory.GetFiles(path);
+                foreach (string file in files)
+                {
+                    Console.WriteLine($"file:{file}");
+                    fs = File.OpenRead(file);
+
+                    byte[] buffer = new byte[fs.Length];
+                    fs.Read(buffer, 0, buffer.Length);
+                    fs.Close();
+                }
+
+            }
+            catch
+            {
+                result = false;
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
+            }
+
+            folders = Directory.GetDirectories(path);
+            foreach (string folder in folders)
+                if (!ZipDirectory(folder, Path.Combine(rootPath, Path.GetFileName(folder) + @"\")))
+                    return false;
+
+            return result;
+        }
 
 
 

@@ -31,7 +31,7 @@ namespace Aida64_Esp8266_DisplayControler
         private void PackForm_Load(object sender, EventArgs e)
         {
             var tcount = Environment.ProcessorCount;
-            tbxThread.Value = tcount-1;
+            tbxThread.Value = tcount - 1;
             tbxThread.Maximum = tcount;
         }
 
@@ -133,10 +133,11 @@ namespace Aida64_Esp8266_DisplayControler
                 if (i == splitCount - 1)
                     size = arr.Length;
                 string[] subarr = arr.Skip(index).Take(size).ToArray();
-                var t = Task.Run(() => {
-         
+                var t = Task.Run(() =>
+                {
+
                     PackImage(subarr);
-                
+
                 });
                 taskArr[i] = t;
             }
@@ -162,19 +163,20 @@ namespace Aida64_Esp8266_DisplayControler
             MemoryStream mm = new MemoryStream();
             var formatter = new BinaryFormatter();
             formatter.Serialize(mm, pack);
+            var data = GZipStream.CompressBuffer(mm.ToArray());
 
-            var zdata = GZipStream.CompressBuffer(mm.ToArray());
 
             if (File.Exists(fname))
                 File.Delete(fname);
 
             FileStream fs = new FileStream(fname, FileMode.Create);
-            fs.Write(zdata, 0, zdata.Length);
+            fs.Write(data, 0, data.Length);
             fs.Dispose();
             pbar.Value = 100;
 
             Process.Start("Explorer.exe", "/select," + fname);
             pnMain.Enabled = true;
+            mm.Dispose();
 
         }
     }
