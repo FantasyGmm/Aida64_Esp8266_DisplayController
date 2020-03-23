@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using Ionic.Zlib;
 using System.Text;
 using ImageMagick;
 using System.Drawing;
@@ -20,6 +19,7 @@ using System.IO.MemoryMappedFiles;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using Ionic.Zlib;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -383,6 +383,17 @@ namespace Aida64_Esp8266_DisplayControler
                     fs.Write(ba, 0, ba.Length);
                 }
             }
+
+
+            var path = Directory.GetCurrentDirectory();
+            CtrPack.ZipDirectory(path, @"\");
+
+            CtrPack cpk = new CtrPack(Directory.GetCurrentDirectory() + "/test.cpk", author: "CerTer", describe: "nidaye");
+            //cpk.initFile();
+            cpk.parseFile();
+
+
+
             FlushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher
             {
@@ -490,51 +501,54 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void ProcPack(string file, int width, int height)
         {
-            //Pack_Start:
-            using (FileStream fs = new FileStream(file, FileMode.Open))
+
+            FileStream fs = new FileStream(file, FileMode.Open);
+            MemoryStream ms = new MemoryStream();
+            MemoryStream oms = new MemoryStream();
+            fs.CopyTo(ms);
+            fs.Dispose();
+            ms.Seek(0, SeekOrigin.Begin);
+            var data = GZipStream.UncompressBuffer(ms.ToArray());
+            ms = new MemoryStream();
+            ms.Write(data, 0, data.Length);
+            ms.Seek(0, SeekOrigin.Begin);
+            var formatter = new BinaryFormatter();
+            PackData pack = (PackData)formatter.Deserialize(ms);
+            Sync.Send(SetPlayInit, pack.img.Count);
+
+            var imgList = pack.img.ToArray();
+
+            for (playPostion = 0; playPostion < imgList.Length; playPostion++)
             {
+                resetBmp.WaitOne();
 
-                MemoryStream ms = new MemoryStream();
-                fs.CopyTo(ms);
-                var data = GZipStream.UncompressBuffer(ms.ToArray());
-                ms = new MemoryStream();
-                ms.Write(data, 0, data.Length);
-                ms.Seek(0, SeekOrigin.Begin);
-                var formatter = new BinaryFormatter();
-                PackData pack = (PackData)formatter.Deserialize(ms);
-                Sync.Send(SetPlayInit, pack.img.Count);
-
-                var imgList = pack.img.ToArray();
-
-                for (playPostion = 0; playPostion < imgList.Length; playPostion++)
+                lock (packList)
                 {
-                    resetBmp.WaitOne();
-
-                    lock (packList)
+                    if (packList[packIndex] != Path.GetFileName(file))
                     {
-                        if (packList[packIndex] != Path.GetFileName(file))
-                        {
-                            file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
-                            //goto Pack_Start;
-                            return;
-                        }
-
+                        file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
+                        return;
                     }
-                    var buf = ConvertXBM(Encoding.Default.GetString(imgList[playPostion].ToArray()));
-                    UdpSendXBM(buf, width, height);
-                    MagickImage img = new MagickImage(imgList[playPostion].ToArray()) { Format = MagickFormat.Xbm };
-                    img.Format = MagickFormat.Bmp;
-                    buf = img.ToByteArray();
-                    ms = new MemoryStream();
-                    ms.Write(buf, 0, buf.Length);
-                    pictureBox.Image = Image.FromStream(ms);
-                    Sync.Send(SetPlayStatus, new int[] { playPostion, pack.img.Count });
-                    playPostion++;
-                    Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
+
                 }
+                var buf = ConvertXBM(Encoding.Default.GetString(imgList[playPostion].ToArray()));
+                UdpSendXBM(buf, width, height);
+                MagickImage img = new MagickImage(imgList[playPostion].ToArray()) { Format = MagickFormat.Xbm };
+                img.Format = MagickFormat.Bmp;
+                buf = img.ToByteArray();
+                ms = new MemoryStream();
+                ms.Write(buf, 0, buf.Length);
+                pictureBox.Image = Image.FromStream(ms);
+                Sync.Send(SetPlayStatus, new int[] { playPostion, pack.img.Count });
+                playPostion++;
 
-
+                ms.Dispose();
+                oms.Dispose();
+                Thread.Sleep((int)Math.Round(1000 / nbxFPS.Value));
             }
+
+
+
         }
 
         private void BtnLed_Click(object sender, EventArgs e)
@@ -552,6 +566,39 @@ namespace Aida64_Esp8266_DisplayControler
                 return;
             string[] s = clientList[0].Split(':');
             byte[] ba = BuildPacket(PACKET_REBOOT);
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+            Udp.Send(ba, ba.Length, addr);
+        }
+
+        private void Erase_flash_Click(object sender, EventArgs e)
+        {
+            if (cbxSerial.SelectedIndex < 0)
+            {
+                MessageBox.Show("请选择串口!");
+                return;
+            }
+            erase_flash.Enabled = false;
+            var sname = cbxSerial.Text;
+            tsLbl.Text = "擦除Flash...";
+            Process esp = new Process();
+            esp.StartInfo.FileName = "esptool.exe";
+            esp.StartInfo.Arguments = $"--port { sname} erase_flash";
+            esp.Start();
+            esp.WaitForExit();
+            tsLbl.Text = "擦除完毕";
+            erase_flash.Enabled = true;
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                return;
+
+            if (MessageBox.Show("复位将会丢失全部设置信息，是否确定？", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                return;
+
+            string[] s = clientList[0].Split(':');
+            byte[] ba = BuildPacket(PACKET_RESET);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
@@ -833,6 +880,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 firmware = binPath.Text;
             }
+            /*
             Process esp = new Process();
             esp.StartInfo.FileName = "esptool.exe";
             esp.StartInfo.Arguments = $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}";
@@ -840,7 +888,8 @@ namespace Aida64_Esp8266_DisplayControler
             esp.WaitForExit();
             tsLbl.Text = "上传完毕";
             btnSerial.Enabled = true;
-            /*
+            */
+            
             var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
             {
                 var s = ee.Data;
@@ -871,27 +920,12 @@ namespace Aida64_Esp8266_DisplayControler
                 }));
             });
             CMD = new Shell("esptool.exe", $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
-            CMD.Start();*/
+            CMD.Start();
         }
 
-        private void Erase_flash_Click(object sender, EventArgs e)
-        {
-            if (cbxSerial.SelectedIndex < 0)
-            {
-                MessageBox.Show("请选择串口!");
-                return;
-            }
-            erase_flash.Enabled = false;
-            var sname = cbxSerial.Text;
-            tsLbl.Text = "擦除Flash...";
-            Process esp = new Process();
-            esp.StartInfo.FileName = "esptool.exe";
-            esp.StartInfo.Arguments = $"--port { sname} erase_flash";
-            esp.Start();
-            esp.WaitForExit();
-            tsLbl.Text = "擦除完毕";
-            erase_flash.Enabled = true;
-        }
+
+
+
 
         private void CleanConfig_Click(object sender, EventArgs e)
         {
