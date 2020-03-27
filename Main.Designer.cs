@@ -71,6 +71,7 @@
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CleanConfig = new System.Windows.Forms.Button();
             this.erase_flash = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.cbxSerial = new System.Windows.Forms.ComboBox();
@@ -102,7 +103,6 @@
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.CleanConfig = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -565,6 +565,16 @@
             this.panel1.Size = new System.Drawing.Size(312, 263);
             this.panel1.TabIndex = 16;
             // 
+            // CleanConfig
+            // 
+            this.CleanConfig.Location = new System.Drawing.Point(162, 186);
+            this.CleanConfig.Name = "CleanConfig";
+            this.CleanConfig.Size = new System.Drawing.Size(54, 32);
+            this.CleanConfig.TabIndex = 20;
+            this.CleanConfig.Text = "清空Config";
+            this.CleanConfig.UseVisualStyleBackColor = true;
+            this.CleanConfig.Click += new System.EventHandler(this.CleanConfig_Click);
+            // 
             // erase_flash
             // 
             this.erase_flash.Location = new System.Drawing.Point(222, 186);
@@ -748,6 +758,7 @@
             // 
             // linkLabel2
             // 
+            this.linkLabel2.AllowDrop = true;
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.Location = new System.Drawing.Point(108, 40);
             this.linkLabel2.Name = "linkLabel2";
@@ -755,9 +766,11 @@
             this.linkLabel2.TabIndex = 4;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "https://github.com/FantasyGmm";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // linkLabel1
             // 
+            this.linkLabel1.AllowDrop = true;
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(132, 22);
             this.linkLabel1.Name = "linkLabel1";
@@ -765,6 +778,7 @@
             this.linkLabel1.TabIndex = 3;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "https://github.com/ctrget";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // label7
             // 
@@ -855,16 +869,6 @@
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.logBox.Size = new System.Drawing.Size(679, 66);
             this.logBox.TabIndex = 23;
-            // 
-            // CleanConfig
-            // 
-            this.CleanConfig.Location = new System.Drawing.Point(162, 186);
-            this.CleanConfig.Name = "CleanConfig";
-            this.CleanConfig.Size = new System.Drawing.Size(54, 32);
-            this.CleanConfig.TabIndex = 20;
-            this.CleanConfig.Text = "清空Config";
-            this.CleanConfig.UseVisualStyleBackColor = true;
-            this.CleanConfig.Click += new System.EventHandler(this.CleanConfig_Click);
             // 
             // Main
             // 

@@ -937,6 +937,16 @@ namespace Aida64_Esp8266_DisplayControler
             Udp.Send(ba, ba.Length, addr);
         }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/ctrget");
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/FantasyGmm");
+        }
+
         private void BtnStartPause_Click(object sender, EventArgs e)
         {
 
