@@ -39,14 +39,21 @@
             this.nbxWidth = new System.Windows.Forms.NumericUpDown();
             this.btnBrowser = new System.Windows.Forms.Button();
             this.tbxPath = new System.Windows.Forms.TextBox();
+            this.isVideo = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.fpsnum = new System.Windows.Forms.NumericUpDown();
             this.pnMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbxThread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpsnum)).BeginInit();
             this.SuspendLayout();
             // 
             // pnMain
             // 
+            this.pnMain.Controls.Add(this.fpsnum);
+            this.pnMain.Controls.Add(this.label4);
+            this.pnMain.Controls.Add(this.isVideo);
             this.pnMain.Controls.Add(this.tbxThread);
             this.pnMain.Controls.Add(this.label3);
             this.pnMain.Controls.Add(this.btnStart);
@@ -90,7 +97,7 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(146, 167);
+            this.btnStart.Location = new System.Drawing.Point(146, 171);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(102, 31);
             this.btnStart.TabIndex = 7;
@@ -100,7 +107,7 @@
             // 
             // pbar
             // 
-            this.pbar.Location = new System.Drawing.Point(12, 127);
+            this.pbar.Location = new System.Drawing.Point(12, 150);
             this.pbar.Name = "pbar";
             this.pbar.Size = new System.Drawing.Size(369, 15);
             this.pbar.TabIndex = 6;
@@ -159,7 +166,7 @@
             // 
             // btnBrowser
             // 
-            this.btnBrowser.Location = new System.Drawing.Point(314, 26);
+            this.btnBrowser.Location = new System.Drawing.Point(314, 25);
             this.btnBrowser.Name = "btnBrowser";
             this.btnBrowser.Size = new System.Drawing.Size(67, 21);
             this.btnBrowser.TabIndex = 1;
@@ -173,6 +180,47 @@
             this.tbxPath.Name = "tbxPath";
             this.tbxPath.Size = new System.Drawing.Size(296, 21);
             this.tbxPath.TabIndex = 0;
+            // 
+            // isVideo
+            // 
+            this.isVideo.AutoSize = true;
+            this.isVideo.Location = new System.Drawing.Point(12, 123);
+            this.isVideo.Name = "isVideo";
+            this.isVideo.Size = new System.Drawing.Size(48, 16);
+            this.isVideo.TabIndex = 11;
+            this.isVideo.Text = "视频";
+            this.isVideo.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(146, 107);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "视频帧率";
+            // 
+            // fpsnum
+            // 
+            this.fpsnum.Location = new System.Drawing.Point(146, 123);
+            this.fpsnum.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.fpsnum.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.fpsnum.Name = "fpsnum";
+            this.fpsnum.Size = new System.Drawing.Size(87, 21);
+            this.fpsnum.TabIndex = 13;
+            this.fpsnum.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
             // 
             // PackForm
             // 
@@ -195,6 +243,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbxThread)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbxWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpsnum)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -212,5 +261,8 @@
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.NumericUpDown tbxThread;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox isVideo;
+        private System.Windows.Forms.NumericUpDown fpsnum;
+        private System.Windows.Forms.Label label4;
     }
 }

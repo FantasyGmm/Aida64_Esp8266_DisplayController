@@ -589,7 +589,7 @@ namespace Aida64_Esp8266_DisplayControler
             erase_flash.Enabled = true;
         }
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void BtnReset_Click(object sender, EventArgs e)
         {
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                 return;
@@ -923,10 +923,6 @@ namespace Aida64_Esp8266_DisplayControler
             CMD.Start();
         }
 
-
-
-
-
         private void CleanConfig_Click(object sender, EventArgs e)
         {
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -937,12 +933,12 @@ namespace Aida64_Esp8266_DisplayControler
             Udp.Send(ba, ba.Length, addr);
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/ctrget");
         }
 
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/FantasyGmm");
         }

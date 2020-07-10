@@ -52,22 +52,48 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void BtnBrowser_Click(object sender, EventArgs e)
         {
-
-            FolderBrowserDialog od = new FolderBrowserDialog();
-
-            if (od.ShowDialog(this) == DialogResult.OK)
+            if(isVideo.Checked)
             {
-                tbxPath.Text = od.SelectedPath;
+                OpenFileDialog ofd = new OpenFileDialog
+                {
+                    Multiselect = false
+                };
+                if (ofd.ShowDialog(this) == DialogResult.OK)
+                {
+                    tbxPath.Text = ofd.FileName;
+                }
+            }
+            else
+            {
+                FolderBrowserDialog od = new FolderBrowserDialog();
+                if (od.ShowDialog(this) == DialogResult.OK)
+                {
+                    tbxPath.Text = od.SelectedPath;
+                }
             }
         }
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            hashtable.Clear();
-            threadPercent.Clear();
-            threadCount = Convert.ToInt32(tbxThread.Value);
-            var files = Directory.GetFiles(tbxPath.Text);
-            MutilPack(files, threadCount);
+            if(!isVideo.Checked)
+            {
+                isVideo.Enabled = false;
+                hashtable.Clear();
+                threadPercent.Clear();
+                threadCount = Convert.ToInt32(tbxThread.Value);
+                var files = Directory.GetFiles(tbxPath.Text);
+                MutilPack(files, threadCount);
+            }
+            else
+            {
+                isVideo.Enabled = false;
+                hashtable.Clear();
+                threadPercent.Clear();
+                GetPicFromVideo(tbxPath.Text,nbxWidth.Value.ToString()+"x"+nbxHeight.Value.ToString(),fpsnum.Value.ToString());
+                threadCount = Convert.ToInt32(tbxThread.Value);
+                var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\VideoTempOutput");
+                MutilPack(files, threadCount);
+            }
         }
 
 
@@ -173,11 +199,48 @@ namespace Aida64_Esp8266_DisplayControler
             fs.Write(data, 0, data.Length);
             fs.Dispose();
             pbar.Value = 100;
-
+            if(Directory.GetFiles(Directory.GetCurrentDirectory() + "\\VideoTempOutput").Length >= 0)
+            {
+                foreach(var file in Directory.GetFiles(Directory.GetCurrentDirectory() + "\\VideoTempOutput"))
+                {
+                    File.Delete(file);
+                }
+                Directory.Delete(Directory.GetCurrentDirectory() + "\\VideoTempOutput");
+            }
             Process.Start("Explorer.exe", "/select," + fname);
             pnMain.Enabled = true;
             mm.Dispose();
+            Close();
+        }
 
+        public void GetPicFromVideo(string VideoName, string WidthAndHeight,string FrameRate)
+        {
+            if(string.IsNullOrEmpty(tbxPath.Text))
+            {
+
+            }
+            string ffmpeg = Directory.GetCurrentDirectory() + "\\ffmpeg.exe";//ffmpeg执行文件的路径
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\VideoTempOutput");
+            ProcessStartInfo startInfo = new ProcessStartInfo(ffmpeg)
+            {
+                WindowStyle = ProcessWindowStyle.Normal,
+                Arguments = @"-i """ + VideoName + @"""" + " -r " + FrameRate + " -f image2 -s " + WidthAndHeight + " " + @"""" + Directory.GetCurrentDirectory() + "\\VideoTempOutput\\%d.jpg" + @""""
+            };
+            Process ffmpegP = new Process
+            {
+                StartInfo = startInfo
+            };
+            try
+            {
+                ffmpegP.Start();
+                ffmpegP.WaitForExit();
+                ffmpegP.Close();
+            }
+            catch
+            {
+                MessageBox.Show("导出视频帧失败，请确保ffmpeg.exe存在并且能够使用");
+                return;
+            }
         }
     }
 }
