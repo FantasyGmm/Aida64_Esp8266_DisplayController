@@ -446,10 +446,10 @@ namespace Aida64_Esp8266_DisplayControler
                                 }
                                 break;
                             case PACKET_TOGGLE_LED:
-                                Sync.Send(SetButtonText, new string[] { "btnLed", p.data[0].ToString() });
+                                Sync.Send(SetButtonText, new[] { "btnLed", p.data[0].ToString() });
                                 break;
                             case PACKET_TOGGLE_DISPLAY:
-                                Sync.Send(SetButtonText, new string[] { "btnDisplay", p.data[0].ToString() });
+                                Sync.Send(SetButtonText, new[] { "btnDisplay", p.data[0].ToString() });
                                 break;
 
                         }
@@ -557,7 +557,7 @@ namespace Aida64_Esp8266_DisplayControler
                 return;
             string[] s = clientList[0].Split(':');
             byte[] ba = BuildPacket(PACKET_TOGGLE_LED);
-            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), Int32.Parse(s[1]));
+            IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
             Udp.Send(ba, ba.Length, addr);
         }
         private void BtnReboot_Click(object sender, EventArgs e)
@@ -880,15 +880,6 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 firmware = binPath.Text;
             }
-            /*
-            Process esp = new Process();
-            esp.StartInfo.FileName = "esptool.exe";
-            esp.StartInfo.Arguments = $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}";
-            esp.Start();
-            esp.WaitForExit();
-            tsLbl.Text = "上传完毕";
-            btnSerial.Enabled = true;
-            */
             
             var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
             {
@@ -919,7 +910,7 @@ namespace Aida64_Esp8266_DisplayControler
                     btnSerial.Enabled = true;
                 }));
             });
-            CMD = new Shell("esptool.exe", $"--port {sname} -b 1000000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
+            CMD = new Shell("esptool.exe", $"--port {sname} -b 1152000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
             CMD.Start();
         }
 
