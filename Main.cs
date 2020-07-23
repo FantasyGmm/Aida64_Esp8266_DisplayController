@@ -20,6 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using Ionic.Zlib;
+using Newtonsoft.Json;
 using File = System.IO.File;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -44,6 +45,33 @@ namespace Aida64_Esp8266_DisplayControler
         public class PackData
         {
             public List<MemoryStream> img;
+        }
+        [Serializable]
+        public class ConfigJson
+        {
+            public int tcpu;
+            public int tmon;
+            public int tgpu;
+            public int thdd;
+            public int ucpu;
+            public int uram;
+            public int ugpu;
+            public int uvram;
+            public int ccpu;
+            public int cgpu;
+            public int rcpu;
+            public int rgpu;
+            public int pcpu;
+            public int pgpu;
+            public int width;
+            public int height;
+            public int fps;
+            public int dataindex;
+            public int clinetindex;
+            public int serialindxe;
+            public string path;
+            public int isPlayGIF = Convert.ToInt32(false);
+            public int isSendData = Convert.ToInt32(false);
         }
         public Main()
         {
@@ -70,7 +98,7 @@ namespace Aida64_Esp8266_DisplayControler
         public Process httpProcess; //http服务器
         public Shell CMD;
         private string packfile;
-
+        public ConfigJson cfgjson = new ConfigJson();
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
@@ -365,14 +393,98 @@ namespace Aida64_Esp8266_DisplayControler
             httpProcess.Start();
         }
 
+        public void GetConfigValue()
+        {
+            cfgjson.tcpu = Convert.ToInt32(cpuTmp.Checked);
+            cfgjson.tgpu = Convert.ToInt32(gpuTmp.Checked);
+            cfgjson.thdd = Convert.ToInt32(hddTmp.Checked);
+            cfgjson.tmon = Convert.ToInt32(mbTmp.Checked);
+            cfgjson.ucpu = Convert.ToInt32(cpuUTI.Checked);
+            cfgjson.ugpu = Convert.ToInt32(gpuUTI.Checked);
+            cfgjson.uram = Convert.ToInt32(ramUTI.Checked);
+            cfgjson.uvram = Convert.ToInt32(vramUTI.Checked);
+            cfgjson.ccpu = Convert.ToInt32(cpuClk.Checked);
+            cfgjson.cgpu = Convert.ToInt32(gpuClk.Checked);
+            cfgjson.rcpu = Convert.ToInt32(cpuRpm.Checked);
+            cfgjson.rgpu = Convert.ToInt32(gpuRpm.Checked);
+            cfgjson.pcpu = Convert.ToInt32(cpuVol.Checked);
+            cfgjson.pgpu = Convert.ToInt32(gpuVol.Checked);
+            cfgjson.clinetindex = lbxClient.SelectedIndex;
+            cfgjson.serialindxe = cbxSerial.SelectedIndex;
+            cfgjson.dataindex = dataBox.SelectedIndex;
+            cfgjson.fps = (int)nbxFPS.Value;
+            cfgjson.width = (int)nbxWidth.Value;
+            cfgjson.height = (int)nbxHeight.Value;
+            cfgjson.path = binPath.Text;
+        }
+        public void SetConfigValue()
+        {
+            cpuTmp.Checked = Convert.ToBoolean(cfgjson.tcpu);
+            gpuTmp.Checked = Convert.ToBoolean(cfgjson.tgpu);
+            hddTmp.Checked = Convert.ToBoolean(cfgjson.thdd);
+            mbTmp.Checked = Convert.ToBoolean(cfgjson.tmon);
+            cpuUTI.Checked = Convert.ToBoolean(cfgjson.ucpu);
+            gpuUTI.Checked = Convert.ToBoolean(cfgjson.ugpu);
+            ramUTI.Checked = Convert.ToBoolean(cfgjson.uram);
+            vramUTI.Checked = Convert.ToBoolean(cfgjson.uvram);
+            cpuClk.Checked = Convert.ToBoolean(cfgjson.ccpu);
+            gpuClk.Checked = Convert.ToBoolean(cfgjson.cgpu);
+            cpuRpm.Checked = Convert.ToBoolean(cfgjson.rcpu);
+            gpuRpm.Checked = Convert.ToBoolean(cfgjson.rgpu);
+            cpuVol.Checked = Convert.ToBoolean(cfgjson.pcpu);
+            gpuVol.Checked = Convert.ToBoolean(cfgjson.pgpu);
+            lbxClient.SelectedIndex = cfgjson.clinetindex;
+            cbxSerial.SelectedIndex = cfgjson.serialindxe;
+            dataBox.SelectedIndex = cfgjson.dataindex;
+            nbxFPS.Value = cfgjson.fps;
+            nbxWidth.Value = cfgjson.width;
+            nbxHeight.Value = cfgjson.height;
+            binPath.Text = cfgjson.path;
+        }
+        public void WriteConfig()
+        {
+            GetConfigValue();
+            try
+            {
+                File.WriteAllText("config.json", JsonConvert.SerializeObject(cfgjson));
+                SetLogbox("写入成功");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                throw;
+            }
+        }
+
+        public void ReadConfig()
+        {
+            try
+            {
+                cfgjson = JsonConvert.DeserializeObject<ConfigJson>(File.ReadAllText("config.json"));
+                SetLogbox("载入成功");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+                throw;
+            }
+        }
         private void Main_Load(object sender, EventArgs e)
         {
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/firmware"))
                 Directory.CreateDirectory("firmware");
-            if (!File.Exists("config.cfg"))
-                File.Create("config.cfg");
+            if (!File.Exists("config.json"))
+            {
+                File.Create("config.json").Close();
+                WriteConfig();
+            }
+            else
+            {
+                ReadConfig();
+                SetConfigValue();
+            }
             var initbin = Directory.GetCurrentDirectory() + "/firmware/init.bin";
             if (!File.Exists(initbin))
             {
@@ -447,6 +559,7 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             });
             recivesTask.Start();
+
         }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -852,6 +965,7 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (httpProcess != null && !httpProcess.HasExited)
                 httpProcess.Kill();
+            WriteConfig();
         }
 
 
@@ -924,13 +1038,27 @@ namespace Aida64_Esp8266_DisplayControler
             Process.Start("https://github.com/FantasyGmm");
         }
 
+        private void 保存配置文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetConfigValue();
+            SetLogbox("保存中...");
+            WriteConfig();
+        }
+
+        private void 载入配置文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReadConfig();
+            SetLogbox("载入中...");
+            SetConfigValue();
+        }
+
         private void BtnStartPause_Click(object sender, EventArgs e)
         {
-
             if (btnStartPause.Text == "‖")
             {
                 resetBmp.Reset();
                 btnStartPause.Text = "▶";
+                cfgjson.isPlayGIF = Convert.ToInt32(false);
                 return;
             }
             else
@@ -947,6 +1075,7 @@ namespace Aida64_Esp8266_DisplayControler
                     return;
                 }
                 btnStartPause.Text = "‖";
+                cfgjson.isPlayGIF = Convert.ToInt32(true);
                 if (sendBmpTask == null)
                 {
                     sendBmpTask = new Task(() =>
@@ -973,6 +1102,7 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 resetInfo.Reset();
                 btnSendData.Text = "发送监测数据";
+                cfgjson.isSendData = Convert.ToInt32(false);
             }
             else
             {
@@ -981,6 +1111,7 @@ namespace Aida64_Esp8266_DisplayControler
                 string[] s;
                 if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                     return;
+                cfgjson.isSendData = Convert.ToInt32(true);
                 s = clientList[0].Split(':');
                 IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
                 btnSendData.Text = "停止发送数据";

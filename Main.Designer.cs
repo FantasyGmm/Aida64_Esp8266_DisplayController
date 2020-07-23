@@ -103,6 +103,8 @@
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.logBox = new System.Windows.Forms.TextBox();
+            this.保存配置文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.载入配置文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -136,7 +138,9 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.制作动画包ToolStripMenuItem});
+            this.制作动画包ToolStripMenuItem,
+            this.保存配置文件ToolStripMenuItem,
+            this.载入配置文件ToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 21);
             this.toolStripMenuItem1.Text = "文件";
@@ -144,7 +148,7 @@
             // 制作动画包ToolStripMenuItem
             // 
             this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.制作动画包ToolStripMenuItem.Text = "制作动画包";
             this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
             // 
@@ -161,21 +165,21 @@
             // 开机启动ToolStripMenuItem
             // 
             this.开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
-            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.开机启动ToolStripMenuItem.Text = "开机启动";
             this.开机启动ToolStripMenuItem.Click += new System.EventHandler(this.开机启动ToolStripMenuItem_Click);
             // 
             // 创建桌面快捷方式ToolStripMenuItem
             // 
             this.创建桌面快捷方式ToolStripMenuItem.Name = "创建桌面快捷方式ToolStripMenuItem";
-            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
             this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
             // 
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清空日志ToolStripMenuItem.Text = "清空日志";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
@@ -870,6 +874,20 @@
             this.logBox.Size = new System.Drawing.Size(679, 66);
             this.logBox.TabIndex = 23;
             // 
+            // 保存配置文件ToolStripMenuItem
+            // 
+            this.保存配置文件ToolStripMenuItem.Name = "保存配置文件ToolStripMenuItem";
+            this.保存配置文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存配置文件ToolStripMenuItem.Text = "保存配置文件";
+            this.保存配置文件ToolStripMenuItem.Click += new System.EventHandler(this.保存配置文件ToolStripMenuItem_Click);
+            // 
+            // 载入配置文件ToolStripMenuItem
+            // 
+            this.载入配置文件ToolStripMenuItem.Name = "载入配置文件ToolStripMenuItem";
+            this.载入配置文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.载入配置文件ToolStripMenuItem.Text = "载入配置文件";
+            this.载入配置文件ToolStripMenuItem.Click += new System.EventHandler(this.载入配置文件ToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1005,6 +1023,8 @@
         private System.Windows.Forms.TextBox logBox;
         private System.Windows.Forms.ToolStripMenuItem 清空日志ToolStripMenuItem;
         private System.Windows.Forms.Button CleanConfig;
+        private System.Windows.Forms.ToolStripMenuItem 保存配置文件ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 载入配置文件ToolStripMenuItem;
     }
 }
 
