@@ -20,6 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using Ionic.Zlib;
+using File = System.IO.File;
 
 namespace Aida64_Esp8266_DisplayControler
 {
@@ -368,13 +369,12 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
-
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/firmware"))
                 Directory.CreateDirectory("firmware");
-
+            if (!File.Exists("config.cfg"))
+                File.Create("config.cfg");
             var initbin = Directory.GetCurrentDirectory() + "/firmware/init.bin";
-
-            if (!System.IO.File.Exists(initbin))
+            if (!File.Exists(initbin))
             {
                 using (FileStream fs = new FileStream(initbin, FileMode.OpenOrCreate))
                 {
@@ -383,17 +383,11 @@ namespace Aida64_Esp8266_DisplayControler
                     fs.Write(ba, 0, ba.Length);
                 }
             }
-
-
             var path = Directory.GetCurrentDirectory();
             CtrPack.ZipDirectory(path, @"\");
-
             CtrPack cpk = new CtrPack(Directory.GetCurrentDirectory() + "/test.cpk", author: "CerTer", describe: "nidaye");
             //cpk.initFile();
             cpk.parseFile();
-
-
-
             FlushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher
             {
@@ -403,13 +397,9 @@ namespace Aida64_Esp8266_DisplayControler
             watcher.Created += DataChange;
             watcher.Deleted += DataChange;
             watcher.EnableRaisingEvents = true;
-
             cbxSerial.Items.AddRange(SerialPort.GetPortNames());
-
             if (cbxSerial.Items.Count > 0)
                 cbxSerial.SelectedIndex = 0;
-
-
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
@@ -910,7 +900,7 @@ namespace Aida64_Esp8266_DisplayControler
                     btnSerial.Enabled = true;
                 }));
             });
-            CMD = new Shell("esptool.exe", $"--port {sname} -b 1152000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
+            CMD = new Shell("esptool.exe", $"--port {sname} -b 256200  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
             CMD.Start();
         }
 
