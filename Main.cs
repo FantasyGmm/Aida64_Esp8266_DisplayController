@@ -49,6 +49,7 @@ namespace Aida64_Esp8266_DisplayControler
         [Serializable]
         public class ConfigJson
         {
+            public int isMini = Convert.ToInt32(false);
             public int tcpu;
             public int tmon;
             public int tgpu;
@@ -320,7 +321,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             if (len > 65535)
                 return null;
-
             MemoryStream mem = new MemoryStream();
             mem.WriteByte(cmd);
             mem.WriteByte(0x1);
@@ -471,35 +471,27 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void Main_Load(object sender, EventArgs e)
         {
+            if (!File.Exists("esptool.exe"))
+                File.WriteAllBytes("esptool.exe", Properties.Resources.esptool);
+            if (!File.Exists("httpserver.py"))
+                File.WriteAllBytes("httpserver.py", Properties.Resources.httpserver);
+            if (!File.Exists("说明.txt"))
+                File.WriteAllBytes("说明.txt", Properties.Resources.说明);
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/data"))
                 Directory.CreateDirectory("data");
             if (!Directory.Exists(Directory.GetCurrentDirectory() + "/firmware"))
                 Directory.CreateDirectory("firmware");
-            if (!File.Exists("config.json"))
-            {
-                File.Create("config.json").Close();
-                WriteConfig();
-            }
-            else
-            {
-                ReadConfig();
-                SetConfigValue();
-            }
             var initbin = Directory.GetCurrentDirectory() + "/firmware/init.bin";
             if (!File.Exists(initbin))
             {
                 using (FileStream fs = new FileStream(initbin, FileMode.OpenOrCreate))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
-                    byte[] ba = (byte[])Properties.Resources.ResourceManager.GetObject("init", null);
+                    byte[] ba = (byte[]) Properties.Resources.ResourceManager.GetObject("init", null);
                     fs.Write(ba, 0, ba.Length);
                 }
             }
-            var path = Directory.GetCurrentDirectory();
-            CtrPack.ZipDirectory(path, @"\");
-            CtrPack cpk = new CtrPack(Directory.GetCurrentDirectory() + "/test.cpk", author: "CerTer", describe: "nidaye");
-            //cpk.initFile();
-            cpk.parseFile();
+
             FlushPack(null);
             FileSystemWatcher watcher = new FileSystemWatcher
             {
@@ -529,7 +521,7 @@ namespace Aida64_Esp8266_DisplayControler
                             case PACKET_ALIVE:
                                 AddClient(remoteAddr);
 
-                                if (System.IO.File.Exists(binPath.Text))
+                                if (File.Exists(binPath.Text))
                                 {
 
                                     using (FileStream fs = new FileStream(binPath.Text, FileMode.Open))
@@ -559,7 +551,34 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             });
             recivesTask.Start();
-
+            if (!File.Exists("config.json"))
+            {
+                File.Create("config.json").Close();
+                WriteConfig();
+            }
+            else
+            {
+                ReadConfig();
+                if (Convert.ToBoolean(cfgjson.isMini))
+                {
+                    WindowState = FormWindowState.Minimized;
+                    ShowInTaskbar = false;
+                    notifyIcon1.Visible = true;
+                }
+                Task task = new Task(() =>
+                {
+                    while (true)
+                    {
+                        if (lbxClient.Items.Count > 0)
+                        {
+                            SetConfigValue();
+                            Sync.Send(SetLogbox,"成功连接到8266");
+                            break;
+                        }
+                    }
+                });
+                task.Start();
+            }
         }
         private void 清空日志ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -699,7 +718,6 @@ namespace Aida64_Esp8266_DisplayControler
 
             if (MessageBox.Show("复位将会丢失全部设置信息，是否确定？", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
                 return;
-
             string[] s = clientList[0].Split(':');
             byte[] ba = BuildPacket(PACKET_RESET);
             IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
@@ -918,6 +936,11 @@ namespace Aida64_Esp8266_DisplayControler
             {
                 ShowInTaskbar = false;
                 notifyIcon1.Visible = true;
+                cfgjson.isMini = Convert.ToInt32(true);
+            }
+            else
+            {
+                cfgjson.isMini = Convert.ToInt32(false);
             }
         }
 
@@ -1069,7 +1092,7 @@ namespace Aida64_Esp8266_DisplayControler
                     return;
                 }
                 packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
-                if (!System.IO.File.Exists(Directory.GetCurrentDirectory() + "/data/" + dataBox.Text))
+                if (!File.Exists(Directory.GetCurrentDirectory() + "/data/" + dataBox.Text))
                 {
                     MessageBox.Show("动画文件不存在!");
                     return;

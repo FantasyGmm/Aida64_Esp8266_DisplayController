@@ -63,9 +63,39 @@ namespace Aida64_Esp8266_DisplayControler.Properties {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
+        public static byte[] esptool {
+            get {
+                object obj = ResourceManager.GetObject("esptool", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        public static byte[] httpserver {
+            get {
+                object obj = ResourceManager.GetObject("httpserver", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
         public static byte[] init {
             get {
                 object obj = ResourceManager.GetObject("init", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        public static byte[] 说明 {
+            get {
+                object obj = ResourceManager.GetObject("说明", resourceCulture);
                 return ((byte[])(obj));
             }
         }
