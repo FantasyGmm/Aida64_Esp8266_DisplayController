@@ -1010,12 +1010,11 @@ namespace Aida64_Esp8266_DisplayControler
             btnSerial.Enabled = false;
             tsLbl.Text = "正在上传固件...";
             string sname = cbxSerial.Text;
-            string firmware = Directory.GetCurrentDirectory() + "\\firmware\\init.bin";
+            string firmware = "\"" + Directory.GetCurrentDirectory() + "\\firmware\\init.bin" + "\"";
             if (!string.IsNullOrEmpty(binPath.Text))
             {
-                firmware = binPath.Text;
+                firmware = "\"" + binPath.Text + "\"";
             }
-            
             var outdataHandler = new DataReceivedEventHandler((object o, DataReceivedEventArgs ee) =>
             {
                 var s = ee.Data;

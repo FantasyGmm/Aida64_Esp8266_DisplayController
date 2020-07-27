@@ -46,16 +46,16 @@ namespace Aida64_Esp8266_DisplayControler
         #region Methods
         public void Start()
         {
-            this._process.Start();
+            _process.Start();
             this._process.BeginOutputReadLine();
             this._process.BeginErrorReadLine();
         }
         
         public void Stop()
         {
-            this._process.Kill();
-            this._process.CancelOutputRead();
-            this._process.CancelErrorRead();
+            _process.Kill();
+            _process.CancelOutputRead();
+            _process.CancelErrorRead();
         }
         #endregion
 
