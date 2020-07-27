@@ -52,7 +52,12 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void BtnBrowser_Click(object sender, EventArgs e)
         {
-            if(isVideo.Checked)
+
+        }
+
+        private void btnBrowser_Click(object sender, EventArgs e)
+        {
+            if (isVideo.Checked)
             {
                 OpenFileDialog ofd = new OpenFileDialog
                 {
@@ -73,11 +78,13 @@ namespace Aida64_Esp8266_DisplayControler
             }
         }
 
-        private void BtnStart_Click(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs e)
         {
-            if(!isVideo.Checked)
+            if (!isVideo.Checked)
             {
-                isVideo.Enabled = false;
+                if (!Directory.Exists(tbxPath.Text))
+                    return;
+
                 hashtable.Clear();
                 threadPercent.Clear();
                 threadCount = Convert.ToInt32(tbxThread.Value);
@@ -86,8 +93,10 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
+                if (!File.Exists(tbxPath.Text))
+                    return;
 
-                if (!File.Exists(Directory.GetCurrentDirectory() + "\\ffmpeg.exe") && !File.Exists(main.cfgjson.ffpath))
+                if (!(main.CheckFileFromPath("ffmpeg.exe")) && !File.Exists(main.cfgjson.ffpath))
                 {
                     MessageBox.Show(this, "找不到ffmpeg，请手动指定路径", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -105,20 +114,19 @@ namespace Aida64_Esp8266_DisplayControler
                         MessageBox.Show(this, "找不到ffmpeg，处理终止！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    
+
 
                 }
 
-
-                isVideo.Enabled = false;
                 hashtable.Clear();
                 threadPercent.Clear();
-                GetPicFromVideo(tbxPath.Text,nbxWidth.Value.ToString()+"x"+nbxHeight.Value.ToString(),fpsnum.Value.ToString());
+                GetPicFromVideo(tbxPath.Text, nbxWidth.Value.ToString() + "x" + nbxHeight.Value.ToString(), fpsnum.Value.ToString());
                 threadCount = Convert.ToInt32(tbxThread.Value);
                 var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "\\VideoTempOutput");
                 MutilPack(files, threadCount);
             }
         }
+
 
 
         private void PackImage(object files)
@@ -239,14 +247,10 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void GetPicFromVideo(string VideoName, string WidthAndHeight,string FrameRate)
         {
-            if (string.IsNullOrEmpty(tbxPath.Text))
-                return;
 
-            
-   
-            
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\VideoTempOutput");
-            ProcessStartInfo startInfo = new ProcessStartInfo(main.cfgjson.ffpath)
+            var ffpath = main.cfgjson.ffpath == null ? "ffmpeg.exe" : main.cfgjson.ffpath;
+            ProcessStartInfo startInfo = new ProcessStartInfo(ffpath)
             {
                 WindowStyle = ProcessWindowStyle.Normal,
                 Arguments = @"-i """ + VideoName + @"""" + " -r " + FrameRate + " -f image2 -s " + WidthAndHeight + " " + @"""" + Directory.GetCurrentDirectory() + "\\VideoTempOutput\\%d.jpg" + @""""
@@ -267,5 +271,7 @@ namespace Aida64_Esp8266_DisplayControler
                 return;
             }
         }
+
+    
     }
 }

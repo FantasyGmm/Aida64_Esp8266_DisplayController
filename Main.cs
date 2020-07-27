@@ -394,6 +394,31 @@ namespace Aida64_Esp8266_DisplayControler
             httpProcess.Start();
         }
 
+        public bool CheckFileFromPath(string fname)
+        {
+            Process process = new Process();
+
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(fname);
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.CreateNoWindow = true;
+                process.StartInfo = startInfo;
+                process.Start();
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                process.Close();
+            }
+
+            return true;
+        }
+
         public void GetConfigValue()
         {
             cfgjson.tcpu = Convert.ToInt32(cpuTmp.Checked);
@@ -470,6 +495,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void Main_Load(object sender, EventArgs e)
         {
+
             if (!File.Exists("esptool.exe"))
                 File.WriteAllBytes("esptool.exe", Properties.Resources.esptool);
             if (!File.Exists("httpserver.py"))

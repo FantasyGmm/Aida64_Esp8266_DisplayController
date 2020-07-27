@@ -217,7 +217,7 @@
             // 
             this.版本号Aplha001ToolStripMenuItem.Name = "版本号Aplha001ToolStripMenuItem";
             this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.版本号Aplha001ToolStripMenuItem.Text = "V0.9.1";
+            this.版本号Aplha001ToolStripMenuItem.Text = "V0.9.2";
             // 
             // tmpBox
             // 
