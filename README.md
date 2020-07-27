@@ -1,5 +1,5 @@
 # Aida64_Esp8266_DisplayControler
-开发完了<hr>
+开发完了<hr> ![AppVeyor tests](https://img.shields.io/appveyor/tests/RERASER/aida64-esp8266-displaycontroller)
 ## 获取构建
 ### 在线构建 [![AppVeyor](https://img.shields.io/appveyor/build/RERASER/aida64-esp8266-displaycontroller?style=flat&logo=appveyor)](https://ci.appveyor.com/project/RERASER/aida64-esp8266-displaycontroller/build/artifacts)
 
