@@ -95,7 +95,7 @@ namespace Aida64_Esp8266_DisplayControler
         public List<string> clientList = new List<string>();
         public int packIndex = -1;
         public List<string> packList = new List<string>();
-        public int playPostion = 0; //播放进度
+        public int playPostion; //播放进度
         public Process httpProcess; //http服务器
         public Shell CMD;
         private string packfile;
@@ -433,8 +433,6 @@ namespace Aida64_Esp8266_DisplayControler
             gpuRpm.Checked = Convert.ToBoolean(cfgjson.rgpu);
             cpuVol.Checked = Convert.ToBoolean(cfgjson.pcpu);
             gpuVol.Checked = Convert.ToBoolean(cfgjson.pgpu);
-            lbxClient.SelectedIndex = cfgjson.clinetindex;
-            cbxSerial.SelectedIndex = cfgjson.serialindxe;
             dataBox.SelectedIndex = cfgjson.dataindex;
             nbxFPS.Value = cfgjson.fps;
             nbxWidth.Value = cfgjson.width;
@@ -565,13 +563,16 @@ namespace Aida64_Esp8266_DisplayControler
                     ShowInTaskbar = false;
                     notifyIcon1.Visible = true;
                 }
+                SetConfigValue();
                 Task task = new Task(() =>
                 {
                     while (true)
                     {
                         if (lbxClient.Items.Count > 0)
                         {
-                            SetConfigValue();
+                            lbxClient.SelectedIndex = cfgjson.clinetindex;
+                            if (cbxSerial.Items.Count >0)
+                                cbxSerial.SelectedIndex = cfgjson.serialindxe;
                             if (Convert.ToBoolean(cfgjson.isPlayGIF))
                             {
                                 btnStartPause.PerformClick();
@@ -632,7 +633,6 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void ProcPack(string file, int width, int height)
         {
-
             FileStream fs = new FileStream(file, FileMode.Open);
             MemoryStream ms = new MemoryStream();
             MemoryStream oms = new MemoryStream();
@@ -646,9 +646,7 @@ namespace Aida64_Esp8266_DisplayControler
             var formatter = new BinaryFormatter();
             PackData pack = (PackData)formatter.Deserialize(ms);
             Sync.Send(SetPlayInit, pack.img.Count);
-
             var imgList = pack.img.ToArray();
-
             for (playPostion = 0; playPostion < imgList.Length; playPostion++)
             {
                 resetBmp.WaitOne();
@@ -657,7 +655,7 @@ namespace Aida64_Esp8266_DisplayControler
                 {
                     if (packList[packIndex] != Path.GetFileName(file))
                     {
-                        file = Directory.GetCurrentDirectory() + "/data/" + packList[packIndex];
+                        file = Directory.GetCurrentDirectory() + "\\data\\" + packList[packIndex];
                         return;
                     }
 
@@ -980,8 +978,10 @@ namespace Aida64_Esp8266_DisplayControler
             resetBmp.Reset();
             btnStartPause.Text = "▶";
             playPostion = 0;
-            SetPlayStatus(new int[] { 0, 0 });
+            SetPlayStatus(new [] { 0, 0 });
             tbarPlay.Value = 0;
+            cfgjson.isPlayGIF = Convert.ToInt32(false);
+            SetLogbox("停止发送动画");
         }
 
         private void SelBin_Click(object sender, EventArgs e)
@@ -1086,19 +1086,21 @@ namespace Aida64_Esp8266_DisplayControler
         {
             if (btnStartPause.Text == "‖")
             {
+                SetLogbox("暂停发送动画");
                 resetBmp.Reset();
                 btnStartPause.Text = "▶";
                 cfgjson.isPlayGIF = Convert.ToInt32(false);
             }
             else
             {
+                SetLogbox("开始发送动画");
                 if (dataBox.SelectedIndex < 0)
                 {
                     MessageBox.Show("请选择动画文件!");
                     return;
                 }
-                packfile = Directory.GetCurrentDirectory() + "/data/" + dataBox.Text;
-                if (!File.Exists(Directory.GetCurrentDirectory() + "/data/" + dataBox.Text))
+                packfile = Directory.GetCurrentDirectory() + "\\data\\" + dataBox.Text;
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\data\\" + dataBox.Text))
                 {
                     MessageBox.Show("动画文件不存在!");
                     return;
