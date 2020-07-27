@@ -33,6 +33,8 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.制作动画包ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.保存配置文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.载入配置文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开机启动ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.创建桌面快捷方式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,8 +105,6 @@
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.保存配置文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.载入配置文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -148,9 +148,23 @@
             // 制作动画包ToolStripMenuItem
             // 
             this.制作动画包ToolStripMenuItem.Name = "制作动画包ToolStripMenuItem";
-            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.制作动画包ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.制作动画包ToolStripMenuItem.Text = "制作动画包";
             this.制作动画包ToolStripMenuItem.Click += new System.EventHandler(this.制作动画包ToolStripMenuItem_Click);
+            // 
+            // 保存配置文件ToolStripMenuItem
+            // 
+            this.保存配置文件ToolStripMenuItem.Name = "保存配置文件ToolStripMenuItem";
+            this.保存配置文件ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.保存配置文件ToolStripMenuItem.Text = "保存配置文件";
+            this.保存配置文件ToolStripMenuItem.Click += new System.EventHandler(this.保存配置文件ToolStripMenuItem_Click);
+            // 
+            // 载入配置文件ToolStripMenuItem
+            // 
+            this.载入配置文件ToolStripMenuItem.Name = "载入配置文件ToolStripMenuItem";
+            this.载入配置文件ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.载入配置文件ToolStripMenuItem.Text = "载入配置文件";
+            this.载入配置文件ToolStripMenuItem.Click += new System.EventHandler(this.载入配置文件ToolStripMenuItem_Click);
             // 
             // 设置ToolStripMenuItem
             // 
@@ -165,21 +179,21 @@
             // 开机启动ToolStripMenuItem
             // 
             this.开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
-            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开机启动ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.开机启动ToolStripMenuItem.Text = "开机启动";
             this.开机启动ToolStripMenuItem.Click += new System.EventHandler(this.开机启动ToolStripMenuItem_Click);
             // 
             // 创建桌面快捷方式ToolStripMenuItem
             // 
             this.创建桌面快捷方式ToolStripMenuItem.Name = "创建桌面快捷方式ToolStripMenuItem";
-            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.创建桌面快捷方式ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.创建桌面快捷方式ToolStripMenuItem.Text = "创建桌面快捷方式";
             this.创建桌面快捷方式ToolStripMenuItem.Click += new System.EventHandler(this.创建桌面快捷方式ToolStripMenuItem_Click);
             // 
             // 清空日志ToolStripMenuItem
             // 
             this.清空日志ToolStripMenuItem.Name = "清空日志ToolStripMenuItem";
-            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清空日志ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.清空日志ToolStripMenuItem.Text = "清空日志";
             this.清空日志ToolStripMenuItem.Click += new System.EventHandler(this.清空日志ToolStripMenuItem_Click);
             // 
@@ -195,15 +209,15 @@
             // 开源地址ToolStripMenuItem
             // 
             this.开源地址ToolStripMenuItem.Name = "开源地址ToolStripMenuItem";
-            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.开源地址ToolStripMenuItem.Text = "开源地址";
             this.开源地址ToolStripMenuItem.Click += new System.EventHandler(this.开源地址ToolStripMenuItem_Click);
             // 
             // 版本号Aplha001ToolStripMenuItem
             // 
             this.版本号Aplha001ToolStripMenuItem.Name = "版本号Aplha001ToolStripMenuItem";
-            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.版本号Aplha001ToolStripMenuItem.Text = "版本号:Aplha 0.01";
+            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.版本号Aplha001ToolStripMenuItem.Text = "V0.9.1";
             // 
             // tmpBox
             // 
@@ -873,20 +887,6 @@
             this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.logBox.Size = new System.Drawing.Size(679, 66);
             this.logBox.TabIndex = 23;
-            // 
-            // 保存配置文件ToolStripMenuItem
-            // 
-            this.保存配置文件ToolStripMenuItem.Name = "保存配置文件ToolStripMenuItem";
-            this.保存配置文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.保存配置文件ToolStripMenuItem.Text = "保存配置文件";
-            this.保存配置文件ToolStripMenuItem.Click += new System.EventHandler(this.保存配置文件ToolStripMenuItem_Click);
-            // 
-            // 载入配置文件ToolStripMenuItem
-            // 
-            this.载入配置文件ToolStripMenuItem.Name = "载入配置文件ToolStripMenuItem";
-            this.载入配置文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.载入配置文件ToolStripMenuItem.Text = "载入配置文件";
-            this.载入配置文件ToolStripMenuItem.Click += new System.EventHandler(this.载入配置文件ToolStripMenuItem_Click);
             // 
             // Main
             // 
