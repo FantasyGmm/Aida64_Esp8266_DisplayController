@@ -502,6 +502,11 @@ namespace Aida64_Esp8266_DisplayControler
             cbxSerial.Items.AddRange(SerialPort.GetPortNames());
             if (cbxSerial.Items.Count > 0)
                 cbxSerial.SelectedIndex = 0;
+
+            //lbxClient.SelectedIndex = cfgjson.clinetindex;
+            if (cbxSerial.Items.Count > 0)
+                cbxSerial.SelectedIndex = cfgjson.serialindxe;
+
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
             Udp = new UdpClient(remoteAddr);
@@ -570,9 +575,7 @@ namespace Aida64_Esp8266_DisplayControler
                     {
                         if (lbxClient.Items.Count > 0)
                         {
-                            lbxClient.SelectedIndex = cfgjson.clinetindex;
-                            if (cbxSerial.Items.Count >0)
-                                cbxSerial.SelectedIndex = cfgjson.serialindxe;
+              
                             if (Convert.ToBoolean(cfgjson.isPlayGIF))
                             {
                                 btnStartPause.PerformClick();
