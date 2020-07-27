@@ -70,13 +70,8 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.21.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>packages\Magick.NET-Q16-AnyCPU.7.21.0\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Magick.NET.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>packages\Magick.NET.Core.4.0.0\lib\net40\Magick.NET.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.15.4.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>packages\Magick.NET-Q16-AnyCPU.7.15.4\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -167,14 +162,14 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Magick.NET-Q16-AnyCPU.dll" />
+    <EmbeddedResource Include="Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Zlib.Portable.dll" />
     <None Include="Resources\ffmpeg.exe" />
     <None Include="Resources\esptool.exe" />
     <None Include="Resources\httpserver.py" />
     <None Include="Resources\说明.txt" />
     <Content Include="GM-Logo.ico" />
-    <EmbeddedResource Include="Magick.NET-Q16-AnyCPU.dll" />
-    <EmbeddedResource Include="Newtonsoft.Json.dll" />
-    <EmbeddedResource Include="Zlib.Portable.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

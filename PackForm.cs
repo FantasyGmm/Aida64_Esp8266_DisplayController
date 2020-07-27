@@ -86,6 +86,30 @@ namespace Aida64_Esp8266_DisplayControler
             }
             else
             {
+
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\ffmpeg.exe") && !File.Exists(main.cfgjson.ffpath))
+                {
+                    MessageBox.Show(this, "找不到ffmpeg，请手动指定路径", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    OpenFileDialog fd = new OpenFileDialog
+                    {
+                        Filter = "ffmpeg(ffmpeg.exe)|ffmpeg.exe"
+                    };
+
+                    if (fd.ShowDialog() == DialogResult.OK)
+                    {
+                        main.cfgjson.ffpath = fd.FileName;
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "找不到ffmpeg，处理终止！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    
+
+                }
+
+
                 isVideo.Enabled = false;
                 hashtable.Clear();
                 threadPercent.Clear();
@@ -215,13 +239,14 @@ namespace Aida64_Esp8266_DisplayControler
 
         public void GetPicFromVideo(string VideoName, string WidthAndHeight,string FrameRate)
         {
-            if(string.IsNullOrEmpty(tbxPath.Text))
-            {
+            if (string.IsNullOrEmpty(tbxPath.Text))
+                return;
 
-            }
-            string ffmpeg = Directory.GetCurrentDirectory() + "\\ffmpeg.exe";//ffmpeg执行文件的路径
+            
+   
+            
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\VideoTempOutput");
-            ProcessStartInfo startInfo = new ProcessStartInfo(ffmpeg)
+            ProcessStartInfo startInfo = new ProcessStartInfo(main.cfgjson.ffpath)
             {
                 WindowStyle = ProcessWindowStyle.Normal,
                 Arguments = @"-i """ + VideoName + @"""" + " -r " + FrameRate + " -f image2 -s " + WidthAndHeight + " " + @"""" + Directory.GetCurrentDirectory() + "\\VideoTempOutput\\%d.jpg" + @""""

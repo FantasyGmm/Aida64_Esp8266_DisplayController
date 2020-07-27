@@ -71,6 +71,7 @@ namespace Aida64_Esp8266_DisplayControler
             public int clinetindex;
             public int serialindxe;
             public string path;
+            public string ffpath;
             public int isPlayGIF = Convert.ToInt32(false);
             public int isSendData = Convert.ToInt32(false);
         }

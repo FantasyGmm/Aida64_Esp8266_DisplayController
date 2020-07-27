@@ -17,6 +17,7 @@ namespace Aida64_Esp8266_DisplayControler
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());
         }
+
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string resourceName = "Aida64_Esp8266_DisplayControler." + new AssemblyName(args.Name).Name + ".dll";
@@ -27,5 +28,6 @@ namespace Aida64_Esp8266_DisplayControler
                 return Assembly.Load(assemblyData);
             }
         }
+
     }
 }
