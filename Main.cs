@@ -572,6 +572,15 @@ namespace Aida64_Esp8266_DisplayControler
                         if (lbxClient.Items.Count > 0)
                         {
                             SetConfigValue();
+                            if (Convert.ToBoolean(cfgjson.isPlayGIF))
+                            {
+                                btnStartPause.PerformClick();
+                            }
+
+                            if (Convert.ToBoolean(cfgjson.isSendData))
+                            {
+                                btnSendData.PerformClick();
+                            }
                             Sync.Send(SetLogbox,"成功连接到8266");
                             break;
                         }
@@ -991,7 +1000,6 @@ namespace Aida64_Esp8266_DisplayControler
             WriteConfig();
         }
 
-
         private void BtnSerial_Click(object sender, EventArgs e)
         {
             if (cbxSerial.SelectedIndex < 0)
@@ -1082,7 +1090,6 @@ namespace Aida64_Esp8266_DisplayControler
                 resetBmp.Reset();
                 btnStartPause.Text = "▶";
                 cfgjson.isPlayGIF = Convert.ToInt32(false);
-                return;
             }
             else
             {
