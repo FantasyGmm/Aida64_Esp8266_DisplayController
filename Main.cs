@@ -400,14 +400,16 @@ namespace Aida64_Esp8266_DisplayControler
 
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo(fname);
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
-                startInfo.CreateNoWindow = true;
+                ProcessStartInfo startInfo = new ProcessStartInfo(fname)
+                {
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                };
                 process.StartInfo = startInfo;
                 process.Start();
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
