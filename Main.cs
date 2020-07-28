@@ -532,7 +532,6 @@ namespace Aida64_Esp8266_DisplayControler
             if (cbxSerial.Items.Count > 0)
                 cbxSerial.SelectedIndex = 0;
 
-            //lbxClient.SelectedIndex = cfgjson.clinetindex;
             if (cbxSerial.Items.Count > 0)
                 cbxSerial.SelectedIndex = cfgjson.serialindxe;
 

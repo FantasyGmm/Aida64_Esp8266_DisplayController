@@ -209,14 +209,14 @@
             // 开源地址ToolStripMenuItem
             // 
             this.开源地址ToolStripMenuItem.Name = "开源地址ToolStripMenuItem";
-            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开源地址ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.开源地址ToolStripMenuItem.Text = "开源地址";
             this.开源地址ToolStripMenuItem.Click += new System.EventHandler(this.开源地址ToolStripMenuItem_Click);
             // 
             // 版本号Aplha001ToolStripMenuItem
             // 
             this.版本号Aplha001ToolStripMenuItem.Name = "版本号Aplha001ToolStripMenuItem";
-            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.版本号Aplha001ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.版本号Aplha001ToolStripMenuItem.Text = "V0.9.2";
             // 
             // tmpBox
