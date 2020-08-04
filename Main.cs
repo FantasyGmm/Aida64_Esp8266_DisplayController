@@ -101,6 +101,9 @@ namespace Aida64_Esp8266_DisplayControler
         public Shell CMD;
         private string packfile;
         public ConfigJson cfgjson = new ConfigJson();
+        public Serial Com;
+
+
         public void GetAidaInfo()
         {
             StringBuilder tmp = new StringBuilder();
@@ -533,7 +536,11 @@ namespace Aida64_Esp8266_DisplayControler
                 cbxSerial.SelectedIndex = 0;
 
             if (cbxSerial.Items.Count > 0)
+            {
                 cbxSerial.SelectedIndex = cfgjson.serialindxe;
+                Com = new Serial(cbxSerial.Text, SerialDataReceived);
+            }
+                
 
             Sync = SynchronizationContext.Current;
             IPEndPoint remoteAddr = new IPEndPoint(IPAddress.Any, 8266);
@@ -713,6 +720,16 @@ namespace Aida64_Esp8266_DisplayControler
 
         private void BtnLed_Click(object sender, EventArgs e)
         {
+            if (Com == null)
+                Com = new Serial(cbxSerial.Text, SerialDataReceived);
+
+            if (!Com.IsOpen)
+                Com.Open();
+
+
+            Com.SendText("三sadIC快乐萨拉收到了奥术大师大所多");
+            return;
+
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
                 return;
             string[] s = clientList[0].Split(':');
@@ -1226,5 +1243,85 @@ namespace Aida64_Esp8266_DisplayControler
                 }
             }
         }
+
+
+        /// <summary>
+        /// 监听串口数据线程
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            var serialport = sender as SerialPort;
+
+            try
+            {
+                if (serialport.IsOpen)
+                {
+                    try
+                    {
+                        int byteNumber = serialport.BytesToRead;
+                        Thread.Sleep(20);
+
+                        //延时等待数据接收完毕。
+                        while ((byteNumber < serialport.BytesToRead) && (serialport.BytesToRead < 4800))
+                        {
+                            byteNumber = serialport.BytesToRead;
+                            Thread.Sleep(20);
+                        }
+
+                        int n = serialport.BytesToRead;
+                        byte[] buf = new byte[n];
+                        serialport.Read(buf, 0, n);
+                        Control.CheckForIllegalCrossThreadCalls = false;
+
+
+                        /*
+                         StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < n; i++)
+                        {
+                            string s;
+                            if (buf[i] < 16)
+                                s = "0" + Convert.ToString(buf[i], 16).ToUpper() + " ";
+                            else
+                                s = Convert.ToString(buf[i], 16).ToUpper() + " ";
+
+                            ASCIIEncoding ASCIITochar = new ASCIIEncoding();
+                            char[] ascii = ASCIITochar.GetChars(buf);
+                            logBox.Text += ascii[i];
+
+                            sb.Append(s);
+                        }
+                        */
+
+
+                        string str = Encoding.UTF8.GetString(buf);
+                        logBox.Text += str + "\r\n";
+
+                        //logBox.Text += sb.ToString() + "\r\n";
+                        //logBox.Text += ac + "\r\n";
+
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+                else
+                {
+                    TimeSpan waitTime = new TimeSpan(0, 0, 0, 0, 50);
+                    Thread.Sleep(waitTime);
+                }
+                Thread.Sleep(200);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+
+
     }
 }
+ 
