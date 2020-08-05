@@ -105,6 +105,7 @@
             this.tsLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.logBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip.SuspendLayout();
             this.tmpBox.SuspendLayout();
             this.utiBox.SuspendLayout();
@@ -566,6 +567,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.CleanConfig);
             this.panel1.Controls.Add(this.erase_flash);
             this.panel1.Controls.Add(this.label9);
@@ -888,6 +890,16 @@
             this.logBox.Size = new System.Drawing.Size(679, 66);
             this.logBox.TabIndex = 23;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(21, 233);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 23);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "测试信息获取";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.DebugBtn_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1025,6 +1037,7 @@
         private System.Windows.Forms.Button CleanConfig;
         private System.Windows.Forms.ToolStripMenuItem 保存配置文件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 载入配置文件ToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
     }
 }
 
