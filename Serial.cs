@@ -49,7 +49,7 @@ namespace Aida64_Esp8266_DisplayControler
             computer.HDDEnabled = true;
             computer.MainboardEnabled = true;
             computer.FanControllerEnabled = true;
-            computer.Accept(this.hardInfo);
+            computer.Accept(this);
             foreach (var hardware in computer.Hardware)
             {
                 if (hardware.HardwareType == HardwareType.CPU)
@@ -60,7 +60,6 @@ namespace Aida64_Esp8266_DisplayControler
                         {
                             if (sensor.Name == "CPU Core #" + i && sensor.SensorType == SensorType.Clock)
                             {
-                                SetLogbox(sensor.Name + " " + sensor.Value + " " + sensor.SensorType);
                                 hardInfo.CPUClock.Add((float)sensor.Value);
                                 continue;
                             }
