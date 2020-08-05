@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO.Ports;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -23,8 +20,6 @@ namespace Aida64_Esp8266_DisplayControler
             _serial.Handshake = Handshake.None;
             _serial.ReceivedBytesThreshold = 13;
             _serial.DataReceived += new SerialDataReceivedEventHandler(handler);
-
-            // _serial.DataReceived += new SerialDataReceivedEventHandler(Com_DataReceived);  
         }
 
 
