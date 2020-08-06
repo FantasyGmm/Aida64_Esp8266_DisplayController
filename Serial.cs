@@ -22,9 +22,9 @@ namespace Aida64_Esp8266_DisplayControler
             _serial.StopBits = StopBits.One;
             _serial.Handshake = Handshake.None;
             _serial.ReceivedBytesThreshold = 13;
+            _serial.RtsEnable = false;
+            _serial.DtrEnable = false;
             _serial.DataReceived += new SerialDataReceivedEventHandler(handler);
-
-            // _serial.DataReceived += new SerialDataReceivedEventHandler(Com_DataReceived);  
         }
 
 
