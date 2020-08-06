@@ -69,6 +69,9 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.15.4.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
       <HintPath>packages\Magick.NET-Q16-AnyCPU.7.15.4\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
@@ -78,9 +81,14 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
+    <Reference Include="OpenHardwareMonitorLib, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\OpenHardwareMonitorLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -135,6 +143,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include=".editorconfig" />
+    <None Include="app.manifest" />
     <None Include="Resources\init.bin" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -163,6 +172,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="OpenHardwareMonitorLib.dll" />
     <EmbeddedResource Include="Magick.NET-Q16-AnyCPU.dll" />
     <EmbeddedResource Include="Newtonsoft.Json.dll" />
     <EmbeddedResource Include="Zlib.Portable.dll" />

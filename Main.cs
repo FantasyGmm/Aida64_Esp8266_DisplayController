@@ -21,6 +21,7 @@ using System.IO.Ports;
 using System.Text.RegularExpressions;
 using Ionic.Zlib;
 using Newtonsoft.Json;
+using OpenHardwareMonitor.Hardware;
 using File = System.IO.File;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -102,7 +103,7 @@ namespace Aida64_Esp8266_DisplayControler
         private string packfile;
         public ConfigJson cfgjson = new ConfigJson();
         public Serial Com;
-
+        public HardInfo hardInfo = new HardInfo();
 
         public void GetAidaInfo()
         {
@@ -378,8 +379,6 @@ namespace Aida64_Esp8266_DisplayControler
                 return false;
             }
         }
-
-
         public void DoUpdate(string filename)
         {
 
@@ -727,7 +726,7 @@ namespace Aida64_Esp8266_DisplayControler
                 Com.Open();
 
 
-            Com.SendText("三sadIC快乐萨拉收到了奥术大师大所多");
+            Com.SendText("Fuck It");
             return;
 
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -1092,7 +1091,7 @@ namespace Aida64_Esp8266_DisplayControler
                     btnSerial.Enabled = true;
                 }));
             });
-            CMD = new Shell("esptool.exe", $"--port {sname} -b 256200  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
+            CMD = new Shell("esptool.exe", $"--port {sname} -b 600000  write_flash --flash_mode qio --flash_freq 80m 0x00000 {firmware}", Directory.GetCurrentDirectory(), outdataHandler, exitHandler);
             CMD.Start();
         }
 
@@ -1173,6 +1172,10 @@ namespace Aida64_Esp8266_DisplayControler
                     resetBmp.Set();
                 }
             }
+        }
+        private void DebugBtn_Click(object sender, EventArgs e)
+        {
+            hardInfo.GetHardInfo(hardInfo);
         }
 
         private void BtnSendData_Click(object sender, EventArgs e)
@@ -1293,17 +1296,14 @@ namespace Aida64_Esp8266_DisplayControler
                             sb.Append(s);
                         }
                         */
-
-
                         string str = Encoding.UTF8.GetString(buf);
                         logBox.Text += str + "\r\n";
-
                         //logBox.Text += sb.ToString() + "\r\n";
                         //logBox.Text += ac + "\r\n";
-
                     }
-                    catch (Exception ex)
+                    catch
                     {
+                        throw;
                     }
                 }
                 else
@@ -1313,14 +1313,11 @@ namespace Aida64_Esp8266_DisplayControler
                 }
                 Thread.Sleep(200);
             }
-            catch (Exception ex)
+            catch
             {
-
+                throw;
             }
         }
-
-
-
 
     }
 }
