@@ -21,7 +21,6 @@ using System.IO.Ports;
 using System.Text.RegularExpressions;
 using Ionic.Zlib;
 using Newtonsoft.Json;
-using OpenHardwareMonitor.Hardware;
 using File = System.IO.File;
 
 namespace Aida64_Esp8266_DisplayControler
@@ -103,7 +102,6 @@ namespace Aida64_Esp8266_DisplayControler
         private string packfile;
         public ConfigJson cfgjson = new ConfigJson();
         public Serial Com;
-        public HardInfo hardInfo = new HardInfo();
 
         public void GetAidaInfo()
         {
@@ -725,8 +723,12 @@ namespace Aida64_Esp8266_DisplayControler
             if (!Com.IsOpen)
                 Com.Open();
 
+            logBox.Clear();
+            Com.SendText("{\"type\":\"fuck\", \"ver\":\"beta\"}");
+            logBox.Clear();
+            Thread.Sleep(10);
 
-            Com.SendText("Fuck It");
+            Com.SendText("{\"type\":\"bich\", \"ver\":\"cc\"}");
             return;
 
             if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
@@ -1175,7 +1177,7 @@ namespace Aida64_Esp8266_DisplayControler
         }
         private void DebugBtn_Click(object sender, EventArgs e)
         {
-            hardInfo.GetHardInfo(hardInfo);
+            //
         }
 
         private void BtnSendData_Click(object sender, EventArgs e)
@@ -1191,11 +1193,11 @@ namespace Aida64_Esp8266_DisplayControler
                 if (!AIDAQuery())
                     return;
                 string[] s;
-                if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
-                    return;
+                //if (clientList.Count == 0 || clientList[0].IndexOf(":") < 0)
+                    //return;
                 cfgjson.isSendData = Convert.ToInt32(true);
-                s = clientList[0].Split(':');
-                IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
+                //s = clientList[0].Split(':');
+                //IPEndPoint addr = new IPEndPoint(IPAddress.Parse(s[0]), int.Parse(s[1]));
                 btnSendData.Text = "停止发送数据";
                 if (sendInfoTask == null)
                 {
@@ -1213,11 +1215,7 @@ namespace Aida64_Esp8266_DisplayControler
                             hddvalue.Clear();
                             GetAidaInfo();
                             QuerySelested();
-                            JObject jsobj = new JObject
-                            {
-                                {"l", selested.Count.ToString()},
-                                {"hl", hddid.Count.ToString()},
-                            };
+                            JObject jsonbj = new JObject{{"l", selested.Count.ToString()},{"hl", hddid.Count.ToString()}};
 
                             for (int i = 0; i < id.Count; i++)
                             {
@@ -1225,16 +1223,26 @@ namespace Aida64_Esp8266_DisplayControler
                                 {
                                     if (id[i] == sel)
                                     {
-                                        jsobj.Add(id[i], value[i]);
+                                        jsonbj.Add(id[i], value[i]);
                                     }
                                 }
                             }
                             for (int i = 0; i < hddid.Count; i++)
                             {
-                                jsobj.Add(hddid[i], hddvalue[i]);
+                                jsonbj.Add(hddid[i], hddvalue[i]);
                             }
-                            byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, Encoding.UTF8.GetBytes(jsobj.ToString()));
-                            Udp.Send(pack, pack.Length, addr);
+                            //byte[] pack = BuildPacket(PACKET_DISPLAY_INFO, Encoding.UTF8.GetBytes(jsonbj.ToString()));
+                            //Udp.Send(pack, pack.Length, addr);
+
+                            if (Com == null)
+                                Com = new Serial(cbxSerial.Text, SerialDataReceived);
+
+                            if (!Com.IsOpen)
+                                Com.Open();
+
+                            Com.SendText(jsonbj.ToString(Newtonsoft.Json.Formatting.None));
+
+
                             Thread.Sleep((int)nbxFPS.Value);
                         }
                     }, token);
